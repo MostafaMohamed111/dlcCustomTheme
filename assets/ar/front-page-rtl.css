@@ -1,0 +1,86 @@
+/* RTL Overrides for Front Page - Arabic */
+/* Keep same layout as English, only change text alignment to right */
+
+/* Hero Section - Keep same layout, no flipping */
+html[dir="rtl"] .hero-content {
+    direction: ltr !important; /* Force LTR layout */
+    text-align: center; /* Keep center alignment for hero */
+}
+
+html[dir="rtl"] .hero-buttons {
+    direction: ltr !important; /* Force LTR layout */
+    flex-direction: row !important; /* Keep same as English */
+}
+
+/* Hero text should be RTL for Arabic */
+html[dir="rtl"] .hero-company,
+html[dir="rtl"] .hero-title,
+html[dir="rtl"] .hero-subtitle {
+    direction: rtl; /* Text direction RTL */
+}
+
+/* Hero buttons text RTL */
+html[dir="rtl"] .btn-primary,
+html[dir="rtl"] .btn-secondary {
+    direction: rtl; /* Text direction RTL */
+}
+
+/* Section Headers */
+html[dir="rtl"] .section-header {
+    text-align: center; /* Keep center for headers */
+}
+
+/* About Section - Keep same grid layout (text on left, image on right) */
+html[dir="rtl"] .about-content {
+    direction: ltr; /* Force LTR layout to keep same as English */
+    grid-template-columns: 1fr 1fr; /* Same as English */
+}
+
+/* Keep same animations as English */
+html[dir="rtl"] .about-text {
+    transform: translateX(-50px); /* Same as English */
+}
+
+html[dir="rtl"] .about-text.animate {
+    transform: translateX(0);
+}
+
+html[dir="rtl"] .about-image {
+    transform: translateX(50px); /* Same as English */
+}
+
+html[dir="rtl"] .about-image.animate {
+    transform: translateX(0);
+}
+
+/* About text content - align right */
+html[dir="rtl"] .about-text h3,
+html[dir="rtl"] .about-text p {
+    text-align: right;
+}
+
+/* Stats - Keep same layout */
+html[dir="rtl"] .about-stats {
+    direction: ltr; /* Keep same order as English */
+}
+
+html[dir="rtl"] .stat-item {
+    text-align: center; /* Keep center for stats */
+}
+
+/* Services Section - Keep same layout */
+html[dir="rtl"] .services-grid {
+    direction: ltr; /* Keep same order as English */
+}
+
+html[dir="rtl"] .service-card {
+    text-align: center; /* Keep center alignment for service cards */
+}
+
+/* Service buttons */
+html[dir="rtl"] .service-btn {
+    direction: rtl; /* For text direction only */
+}
+
+/* Parallax Divider - No changes needed */
+/* Animations use same as English version, no RTL-specific animations needed */

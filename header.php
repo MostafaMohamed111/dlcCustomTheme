@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,14 +18,20 @@
 
             <div class="nav-right">
                 <?php
-                    wp_nav_menu( 
-                        array(
-                            'theme_location' => 'primary-menu',
-                            'container' => 'div',
-                            'container_class' => 'main-menu',
-                            'fallback_cb' => false,
-                        ) 
-                    );
+                    // Check if menu location exists and has a menu assigned
+                    if ( has_nav_menu( 'primary-menu' ) ) {
+                        wp_nav_menu( 
+                            array(
+                                'theme_location' => 'primary-menu',
+                                'container' => 'div',
+                                'container_class' => 'main-menu',
+                                'fallback_cb' => false,
+                            ) 
+                        );
+                    } else {
+                        // Fallback: Show a message or create a simple menu structure
+                        echo '<div class="main-menu"><ul><li><a href="#">Menu not assigned</a></li></ul></div>';
+                    }
                 ?>
                 <button class="btn-define">Define Presence</button>
             </div>
