@@ -13,13 +13,18 @@
                 </div>
                 <div class="footer-section">
                     <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#about">About Dag</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#secure">Secure yourself</a></li>
-                        <li><a href="#news">News</a></li>
-                        <li><a href="#contact">Contact Us</a></li>
-                    </ul>
+                        <?php if(has_nav_menu('footer-menu')): 
+                            
+                                wp_nav_menu( 
+                                    array(
+                                        'theme_location' => 'footer-menu',
+                                        'container' => 'div',
+                                        'container_class' => 'footer-menu',
+                                        'fallback_cb' => false,
+                                    ) 
+                                );
+                            endif;
+                            ?>
                 </div>
                 <div class="footer-section">
                     <h4>Services</h4>

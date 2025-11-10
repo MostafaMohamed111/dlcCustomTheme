@@ -74,6 +74,19 @@ function enqueue_theme_css() {
         wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('front-page');
     }
+
+    else if( is_page_template('services.php' ) || is_page_template('services-ar.php' )  ) {
+        // Services page
+        wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('services-page');
+
+        if($is_arabic_page) {
+            wp_register_style('services-page-rtl', get_template_directory_uri() . '/assets/ar/services-rtl.css', array('services-page'), '1.0.0', 'all');
+            wp_enqueue_style('services-page-rtl');
+        }
+
+        
+    }
     
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_theme_css' );
@@ -90,7 +103,11 @@ function enqueue_theme_scripts() {
     if ( is_front_page() || is_page_template('fornt-page-ar.php') ) {
         wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
         wp_enqueue_script( 'scroll-animations' );
+
+        
     }
+
+    
 
 }
 

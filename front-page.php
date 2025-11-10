@@ -66,7 +66,7 @@ get_header();
                 <h2 class="section-title">Our Services</h2>
                 <p class="section-subtitle"></p>
             </div>
-            <div class="services-grid">
+            <div class="services-grid ">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-comments"></i>

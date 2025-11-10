@@ -108,7 +108,7 @@ html[dir="rtl"] .footer-section ul li a {
 html[dir="rtl"] .social-links {
     direction: ltr !important; /* Force LTR layout */
     flex-direction: row !important; /* Keep same as English */
-    justify-content: flex-start;
+    justify-content: flex-end; /* Align to right */
 }
 
 html[dir="rtl"] .footer-bottom {
@@ -131,4 +131,26 @@ html[dir="rtl"] h5,
 html[dir="rtl"] h6 {
     direction: rtl;
     text-align: inherit;
+}
+
+/* Footer Responsive for RTL - Mobile */
+@media (max-width: 768px) {
+    html[dir="rtl"] .footer-section {
+        text-align: center;
+    }
+    
+    html[dir="rtl"] .footer-logo {
+        justify-content: center;
+    }
+    
+    html[dir="rtl"] .footer-section h4,
+    html[dir="rtl"] .footer-section p,
+    html[dir="rtl"] .footer-section ul,
+    html[dir="rtl"] .footer-section ul li {
+        text-align: center;
+    }
+    
+    html[dir="rtl"] .social-links {
+        justify-content: center; /* Center on mobile */
+    }
 }

@@ -14,13 +14,18 @@
                 </div>
                 <div class="footer-section">
                     <h4>روابط سريعة</h4>
-                    <ul>
-                        <li><a href="#about">عن داغ</a></li>
-                        <li><a href="#services">الخدمات</a></li>
-                        <li><a href="#secure">أمّن نفسك</a></li>
-                        <li><a href="#news">الأخبار</a></li>
-                        <li><a href="#contact">اتصل بنا</a></li>
-                    </ul>
+                    <?php if(has_nav_menu('footer-menu')): 
+                            
+                                wp_nav_menu( 
+                                    array(
+                                        'theme_location' => 'primary-ar-menu',
+                                        'container' => 'div',
+                                        'container_class' => 'footer-menu',
+                                        'fallback_cb' => false,
+                                    ) 
+                                );
+                            endif;
+                            ?>
                 </div>
                 <div class="footer-section">
                     <h4>الخدمات</h4>
