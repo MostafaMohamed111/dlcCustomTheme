@@ -85,6 +85,13 @@ function enqueue_theme_css() {
         
     }
 
+    else if( is_page_template('secure-yourself.php' ) || is_page_template('secure-yourself-ar.php' )  ) {
+        // Secure Yourself page
+        wp_register_style('secure-yourself-page', get_template_directory_uri() . '/assets/en/secure-yourself.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('secure-yourself-page');
+    }
+    
+
 
     else if(is_page_template('contact-us.php') || is_page_template('contact-us-ar.php') ) {
         // Contact Us page

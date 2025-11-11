@@ -1,19 +1,4 @@
 
-:root {
-    --primary-blue: #1a3a5f;
-    --dark-blue: #0f2537;
-    --light-blue: #2a5a8a;
-    --accent-color: #4A90E2;
-    --light-accent: #6BA3E8;
-    --white: #ffffff;
-    --light-gray: #f5f5f5;
-    --gray: #cccccc;
-    --dark-gray: #666666;
-    --text-dark: #333333;
-    --shadow: rgba(0, 0, 0, 0.1);
-    --shadow-lg: rgba(0, 0, 0, 0.2);
-}
-
 
 
 .hero {
