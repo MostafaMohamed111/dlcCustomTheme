@@ -25,14 +25,14 @@ Template Name: Services Page
             </div>
             <div class="companies col-lg-6 col-md-12">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies.png" alt="Corporate Law">
-                <h2>Corporate Law</h2>
+                <h2 class = "text-center">Corporate Law</h2>
                 <p>Our corporate law services include company formation, mergers and acquisitions, compliance, and corporate governance. We help businesses navigate complex legal landscapes to ensure smooth operations.</p>
                 <a class="service-btn btn" href="<?php echo get_permalink(get_page_by_path('companies-services')); ?>">Get Started</a>
 
             </div>
             <div class="individuals col-lg-6 col-md-12">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individuals.webp" alt="Individual Law">
-                <h2>Individual Law</h2>
+                <h2 class = "text-center">Individual Law</h2>
                 <p>Our individual law services include family law, estate planning, personal injury, and criminal defense. We provide personalized legal support to help individuals navigate their unique legal challenges.</p>
                 <a class="service-btn btn" href="<?php echo get_permalink(get_page_by_path('individuals-services')); ?>" >Get Started</a>
 

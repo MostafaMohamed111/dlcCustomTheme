@@ -84,7 +84,13 @@ function enqueue_theme_css() {
 
         
     }
-    
+
+
+    else if(is_page_template('contact-us.php') || is_page_template('contact-us-ar.php') ) {
+        // Contact Us page
+        wp_register_style('contact-us-page', get_template_directory_uri() . '/assets/en/contact-us.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('contact-us-page');
+    }
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_theme_css' );
 
@@ -100,11 +106,10 @@ function enqueue_theme_scripts() {
     wp_register_script( 'main-js', get_template_directory_uri() . '/assets/js/main.js', array(), '1.0.0', true );
     wp_enqueue_script( 'main-js' );
 
-    // Scroll animations script - load for front pages only
-    if ( is_front_page() || is_page_template('fornt-page-ar.php') ) {
+    // Scroll animations script - load for front pages and services pages
         wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
         wp_enqueue_script( 'scroll-animations' );
-    }
+    
 }
 
 add_action( 'wp_enqueue_scripts', 'enqueue_theme_scripts' );

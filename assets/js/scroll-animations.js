@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Select all elements to animate
     const animatedElements = document.querySelectorAll(
-        '.section-header, .about-text, .about-image, .stat-item, .parallax-divider, .service-card'
+        '.section-header, .about-text, .about-image, .stat-item, .parallax-divider, .service-card, .services-head, .services img, .companies, .individuals'
     );
 
     // Observe each element

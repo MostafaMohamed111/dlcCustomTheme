@@ -64,7 +64,7 @@ get_header('ar');
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="services-section">
+<section id="services" class="services-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">خدماتنا</h2>
@@ -72,24 +72,34 @@ get_header('ar');
             </div>
             <div class="row services-grid justify-content-center">
                 <div class="col-lg-4 col-md-6 col-sm-12 px-4 service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-comments"></i>
+                    <div class="card-content">
+
+                        <div class="service-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>طلب استشارة</h3>
+                        <p>احصل على نصائح قانونية من فريقنا المتمرس من المحامين. حدد موعدًا للاستشارة لمناقشة مسائل قانونية.</p>
+                        <button class="service-btn">تعرف أكثر</button>
+           
                     </div>
-                    <h3>طلب استشارة</h3>
-                    <p>احصل على نصائح قانونية من فريقنا المتمرس من المحامين. حدد موعدًا للاستشارة لمناقشة مسائل قانونية.</p>
-                    <button class="service-btn">تعرف أكثر</button>
-                </div>
+                         </div>
                 
                 <div class="col-lg-4 col-md-6 col-sm-12 px-4 service-card">
+                <div class="card-content">
                     <div class="service-icon">
                         <i class="fas fa-calculator"></i>
                     </div>
                     <h3>حاسبة نهاية الخدمة</h3>
                     <p>استخدم حاسبتنا المتقدمة لتحديد مكافأة نهاية الخدمة الخاصة بك وفقًا لقانون العمل السعودي.</p>
                     <button class="service-btn">احسب الآن</button>
+        
+                    </div>    
                 </div>
                 
-                <div class="col-lg-4 col-md-6 col-sm-12 px-4 service-card">
+            <div class="col-lg-4 col-md-6 col-sm-12 px-4 service-card">
+                    
+                
+                <div class="card-content">
                     <div class="service-icon">
                         <i class="fas fa-balance-scale"></i>
                     </div>
@@ -99,7 +109,8 @@ get_header('ar');
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 
 

@@ -367,10 +367,10 @@ nav .container .main-menu ul li.current-page-parent > a::after {
         align-items: center;
         padding: 0;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transform: translateY(-100%);
+        transform: translateY(-105%); /* keep fully offscreen */
         opacity: 0;
         visibility: hidden;
-        transition: all 0.3s ease;
+        transition: none; /* prevent flash on breakpoint change */
         z-index: 9998;
         max-height: calc(100vh - 70px);
         min-height: calc(100vh - 70px);
@@ -381,6 +381,7 @@ nav .container .main-menu ul li.current-page-parent > a::after {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
+        transition: transform 0.25s ease, opacity 0.2s ease; /* animate only when opening */
     }
     
     nav .container .main-menu {

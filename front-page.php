@@ -85,7 +85,7 @@ get_header();
                             <i class="fas fa-calculator"></i>
                         </div>
                         <h3>Calculate End of Service Gratuity</h3>
-                        <p>Use our advanced calculator to determine your end of service gratuity according to Saudi labor law.</p>
+                        <p>Calculate your end of service gratuity according to Saudi labor law using our advanced calculator with Dag.</p>
                         <button class="service-btn">Calculate Now</button>
            
                     </div>

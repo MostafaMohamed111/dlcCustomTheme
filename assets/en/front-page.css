@@ -374,7 +374,8 @@ section {
 }
 
 .card-content {
-    padding: 30px 0;
+    padding: 30px 15px ;
+    border-radius: 15px;
     background-color: var(--light-gray);    
 }
 

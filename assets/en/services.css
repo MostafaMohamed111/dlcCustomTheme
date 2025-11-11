@@ -85,7 +85,7 @@
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Hero animations */
+/* Keyframe Animations */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -97,27 +97,70 @@
     }
 }
 
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 
 .services-head {
-    margin-bottom: 50px ;
+    margin-bottom: 50px;
     font-size: 24px;
     color: var(--primary-blue);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.services{
+.services-head.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.services {
     width: 90%;
-    margin: 50px auto;  
-
-    
+    margin: 50px auto;
 }
-
-
 
 .services img {
     width: 100%;
     border-radius: 10px;
     box-shadow: 0 4px 8px var(--shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.services img.animate {
+    animation: fadeInScale 0.8s ease forwards;
 }
 
 .services img:hover {
@@ -125,21 +168,32 @@
     box-shadow: 0 8px 16px var(--shadow);
 }
 
-
 .companies, .individuals {
     background-color: var(--light-gray);
-    
     padding: 40px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
+.companies.animate {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+.individuals.animate {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+}
 
 .companies h2, .individuals h2 {
-    color : var(--light-blue);
+    color: var(--light-blue);
     margin: 20px 0;
 }
 
-
-.companies p , .individuals p {
+.companies p, .individuals p {
     color: var(--dark-gray);
     margin: 10px 0 30px 0;
     font-size: 18px;
