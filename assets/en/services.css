@@ -17,45 +17,84 @@
 
 
 .hero {
-
-    background: url("../images/servicesHero.webp");
-    background-size: cover;     /* keeps proportions */
-    background-position: center; /* centers the faces */
-    background-repeat: no-repeat;
-    
-    width: 100%;
     position: relative;
-
     height: 100vh;
     display: flex;
-    align-items: flex-end;      /* Align content to bottom */
-    justify-content: flex-start; /* Align content to left */
-    
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     color: var(--white);
-    margin-top: 70px;
+    margin-top: 0;
     padding-top: 70px;
     overflow: hidden;
+}
 
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../images/servicesHero.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.hero-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(15, 37, 55, 0.6) 0%, rgba(26, 58, 95, 0.5) 100%);
 }
 
 .hero-content {
-    padding: 40px 70px;
-    max-width: 800px;
-    text-align: left;
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    padding: 0 20px;
+    animation: fadeInUp 1s ease;
 }
 
 
 
 .hero-company {
-    font-size: 48px;
-    font-weight: 700;
+    font-size: 72px;
+    font-weight: bold;
+    color: var(--white);
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
+}
+
+.hero-title {
+    font-size: 56px;
+    font-weight: 600;
     margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-subtitle {
     font-size: 24px;
-    font-weight: 400;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    opacity: 0.95;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Hero animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
@@ -134,7 +173,7 @@
         padding: 0;
         width: 100%;
     }
-
+    
     .companies, .individuals {
         padding: 40px 0px;
     }

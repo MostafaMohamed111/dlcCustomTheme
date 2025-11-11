@@ -30,10 +30,9 @@ html[dir="rtl"] .section-header {
     text-align: center; /* Keep center for headers */
 }
 
-/* About Section - Keep same grid layout (text on left, image on right) */
+/* About Section - Keep same layout with Bootstrap grid */
 html[dir="rtl"] .about-content {
-    direction: ltr; /* Force LTR layout to keep same as English */
-    grid-template-columns: 1fr 1fr; /* Same as English */
+    direction: ltr !important; /* Force LTR layout for Bootstrap grid */
 }
 
 /* Keep same animations as English */
@@ -59,18 +58,18 @@ html[dir="rtl"] .about-text p {
     text-align: right;
 }
 
-/* Stats - Keep same layout */
+/* Stats - Keep same layout with Bootstrap grid */
 html[dir="rtl"] .about-stats {
-    direction: ltr; /* Keep same order as English */
+    direction: ltr !important; /* Force LTR for Bootstrap grid */
 }
 
 html[dir="rtl"] .stat-item {
     text-align: center; /* Keep center for stats */
 }
 
-/* Services Section - Keep same layout */
+/* Services Section - Keep same layout with Bootstrap grid */
 html[dir="rtl"] .services-grid {
-    direction: ltr; /* Keep same order as English */
+    direction: ltr !important; /* Force LTR for Bootstrap grid */
 }
 
 html[dir="rtl"] .service-card {

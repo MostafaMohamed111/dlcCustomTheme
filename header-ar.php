@@ -16,6 +16,12 @@
                 </a>
             </div>
 
+            <button class="mobile-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <div class="nav-right">
                 <?php
                     wp_nav_menu( 

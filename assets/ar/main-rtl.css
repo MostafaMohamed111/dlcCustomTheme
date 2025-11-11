@@ -11,12 +11,10 @@ html[dir="rtl"] body {
 /* Force LTR layout for navigation structure */
 html[dir="rtl"] nav .container {
     direction: ltr !important; /* Force LTR layout */
-    flex-direction: row !important; /* Keep same as English */
 }
 
 html[dir="rtl"] .nav-right {
     direction: ltr !important; /* Force LTR layout */
-    flex-direction: row !important; /* Keep same as English */
     order: 1 !important; /* Keep second (right side) */
 }
 
@@ -26,7 +24,6 @@ html[dir="rtl"] nav .container .main-menu {
 
 html[dir="rtl"] nav .container .main-menu ul {
     direction: ltr !important; /* Force LTR layout */
-    flex-direction: row !important; /* Keep same order as English */
 }
 
 /* Menu text should be RTL for Arabic */
@@ -42,6 +39,35 @@ html[dir="rtl"] nav .container .main-menu ul li a {
 html[dir="rtl"] nav .container .main-menu ul li a::after {
     right: 0; /* Keep on right side */
     left: auto;
+}
+
+/* Active state for RTL navigation */
+html[dir="rtl"] nav .container .main-menu ul li.current-menu-item > a,
+html[dir="rtl"] nav .container .main-menu ul li.current-page-ancestor > a,
+html[dir="rtl"] nav .container .main-menu ul li.current-page-parent > a {
+    color: var(--accent-color);
+}
+
+html[dir="rtl"] nav .container .main-menu ul li.current-menu-item > a::after,
+html[dir="rtl"] nav .container .main-menu ul li.current-page-ancestor > a::after,
+html[dir="rtl"] nav .container .main-menu ul li.current-page-parent > a::after {
+    width: 100%;
+}
+
+/* Footer active state for RTL */
+html[dir="rtl"] .footer-menu ul li.current-menu-item > a,
+html[dir="rtl"] .footer-menu ul li.current-page-ancestor > a,
+html[dir="rtl"] .footer-menu ul li.current-page-parent > a {
+    color: var(--accent-color);
+}
+
+html[dir="rtl"] .footer-menu ul li.current-menu-item > a::before,
+html[dir="rtl"] .footer-menu ul li.current-page-ancestor > a::before,
+html[dir="rtl"] .footer-menu ul li.current-page-parent > a::before {
+    content: '←';
+    margin-left: 5px;
+    margin-right: 0;
+    color: var(--accent-color);
 }
 
 /* Logo - Keep on left side (same as English) */
@@ -133,6 +159,28 @@ html[dir="rtl"] h6 {
     text-align: inherit;
 }
 
+
+/* Navigation Responsive for RTL - Mobile */
+@media screen and (max-width: 768px) {
+    /* Mobile hover/active - background highlight for RTL */
+    html[dir="rtl"] nav .container .main-menu ul li a::after {
+        display: none; /* Remove underline on mobile */
+    }
+    
+    html[dir="rtl"] nav .container .main-menu ul li a:hover,
+    html[dir="rtl"] nav .container .main-menu ul li.current-menu-item > a,
+    html[dir="rtl"] nav .container .main-menu ul li.current-page-ancestor > a,
+    html[dir="rtl"] nav .container .main-menu ul li.current-page-parent > a {
+        background-color: rgba(74, 144, 226, 0.2);
+        color: var(--white);
+    }
+    
+    html[dir="rtl"] .btn-define {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
 /* Footer Responsive for RTL - Mobile */
 @media (max-width: 768px) {
     html[dir="rtl"] .footer-section {
@@ -152,5 +200,11 @@ html[dir="rtl"] h6 {
     
     html[dir="rtl"] .social-links {
         justify-content: center; /* Center on mobile */
+    }
+    
+    html[dir="rtl"] .footer-menu ul li.current-menu-item > a::before,
+    html[dir="rtl"] .footer-menu ul li.current-page-ancestor > a::before,
+    html[dir="rtl"] .footer-menu ul li.current-page-parent > a::before {
+        display: none; /* Hide arrow on mobile */
     }
 }

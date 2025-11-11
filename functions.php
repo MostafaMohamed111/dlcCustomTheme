@@ -80,10 +80,7 @@ function enqueue_theme_css() {
         wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('services-page');
 
-        if($is_arabic_page) {
-            wp_register_style('services-page-rtl', get_template_directory_uri() . '/assets/ar/services-rtl.css', array('services-page'), '1.0.0', 'all');
-            wp_enqueue_style('services-page-rtl');
-        }
+        
 
         
     }
@@ -99,16 +96,15 @@ function enqueue_theme_scripts() {
     wp_register_script( 'bootstrap-js', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array( 'jquery' ), '4.5.2', true );
     wp_enqueue_script( 'bootstrap-js' );
 
-    // Scroll animations script - load for both English and Arabic front pages
+    // Main theme script - mobile menu and general functionality (load on all pages)
+    wp_register_script( 'main-js', get_template_directory_uri() . '/assets/js/main.js', array(), '1.0.0', true );
+    wp_enqueue_script( 'main-js' );
+
+    // Scroll animations script - load for front pages only
     if ( is_front_page() || is_page_template('fornt-page-ar.php') ) {
         wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
         wp_enqueue_script( 'scroll-animations' );
-
-        
     }
-
-    
-
 }
 
 add_action( 'wp_enqueue_scripts', 'enqueue_theme_scripts' );

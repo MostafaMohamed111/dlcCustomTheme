@@ -7,12 +7,12 @@ Template Name: Services Arabic
 ?>
 
  <div class="hero">
+        <div class="hero-background"></div>
         <div class="hero-content">
             <h1 class="hero-company">خدماتنا</h1>
             <h2 class="hero-title">حلول قانونية شاملة</h2>
             <p class="hero-subtitle">استكشف مجموعة خدماتنا القانونية المصممة لتلبية احتياجاتك.</p>
         </div>
-
     </div>
 
 
