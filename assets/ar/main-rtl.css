@@ -147,17 +147,6 @@ html[dir="rtl"] .container {
     direction: rtl; /* For text direction only */
 }
 
-/* General text alignment for RTL */
-html[dir="rtl"] p,
-html[dir="rtl"] h1,
-html[dir="rtl"] h2,
-html[dir="rtl"] h3,
-html[dir="rtl"] h4,
-html[dir="rtl"] h5,
-html[dir="rtl"] h6 {
-    direction: rtl;
-    text-align: inherit;
-}
 
 
 /* Navigation Responsive for RTL - Mobile */
