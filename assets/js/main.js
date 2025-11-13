@@ -40,3 +40,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+// Function to open/toggle mobile nav (used in header.php)
+function toggleMobileNav() {
+    const mobileNav = document.querySelector('.mobile-nav');
+    const body = document.body;
+    
+    if (mobileNav) {
+        // Add active class to trigger slide-in animation
+        mobileNav.classList.add('active');
+        // Disable body scroll
+        body.style.overflow = 'hidden';
+    }
+}
+
+// Function to close mobile nav (used in header.php)
+function closeMobileNav() {
+    const mobileNav = document.querySelector('.mobile-nav');
+    const body = document.body;
+    
+    if (mobileNav) {
+        // Remove active class to trigger slide-out animation
+        mobileNav.classList.remove('active');
+        // Re-enable body scroll
+        body.style.overflow = '';
+    }
+}
+
+// Ensure mobile nav is closed on page load (no animation on page changes)
+window.addEventListener('DOMContentLoaded', function() {
+    const mobileNav = document.querySelector('.mobile-nav');
+    const body = document.body;
+    
+    if (mobileNav) {
+        // Remove any active state without animation
+        mobileNav.style.transition = 'none';
+        mobileNav.classList.remove('active');
+        body.style.overflow = '';
+        
+        // Re-enable transition after a brief moment
+        setTimeout(function() {
+            mobileNav.style.transition = '';
+        }, 50);
+    }
+});

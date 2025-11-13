@@ -57,8 +57,8 @@ function enqueue_theme_css() {
 
     // Enqueue main RTL overrides for Arabic pages (header, footer, navigation)
     if ( $is_arabic_page ) {
-        wp_register_style('main-rtl', get_template_directory_uri() . '/assets/ar/main-rtl.css', array('main'), '1.0.1', 'all');
-        wp_enqueue_style('main-rtl');
+        wp_register_style('main-ar', get_template_directory_uri() . '/assets/ar/main-ar.css', array('main'), '1.0.1', 'all');
+        wp_enqueue_style('main-ar');
     }
 
     // Enqueue front-page specific CSS

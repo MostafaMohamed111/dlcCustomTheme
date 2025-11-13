@@ -27,23 +27,32 @@ get_header();
                 <h2 class="section-title">Who We Are</h2>
                 <p class="section-subtitle"></p>
             </div>
-            <div class="row about-content align-items-center gx-5">
+            <div class="row about-content align-items-center overflow-hidden ">
                 <div class="col-lg-6 col-md-12  about-text">
                     <h3>Excellence in Legal Services</h3>
                     <p>Dag Law Firm & Consultation is a leading legal practice based in Riyadh, Saudi Arabia. We provide comprehensive legal services and consultations to individuals and businesses across the Kingdom.</p>
                     <p>Our team of experienced lawyers and legal consultants is dedicated to delivering accurate, timely, and effective legal solutions tailored to your specific needs.</p>
-                    <div class="row about-stats">
+                  <div class="row about-stats">
                         <div class="col-md-4 col-sm-4 col-12 stat-item">
+                        <div class="static-item-inner">
                             <h4>500+</h4>
-                            <p>Cases Resolved</p>
+                            <p>Cases Resolved</p>    
+
+                        </div>    
+                        
                         </div>
-                        <div class="col-md-4 col-sm-4 col-12 stat-item">
+                        <div class="col-md-4 col-sm-4 col-12 px-2 stat-item">
+                        <div class="static-item-inner">    
                             <h4>15+</h4>
                             <p>Years Experience</p>
                         </div>
-                        <div class="col-md-4 col-sm-4 col-12 stat-item">
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-12 px-2 stat-item">
+                        <div class="static-item-inner">
                             <h4>50+</h4>
                             <p>Expert Lawyers</p>
+                        </div>    
+                       
                         </div>
                     </div>
                 </div>
@@ -67,7 +76,7 @@ get_header();
                 <p class="section-subtitle"></p>
             </div>
             <div class="row services-grid justify-content-center ">
-                <div class="col-lg-4 col-md-6 col-sm-12 px-4 service-card">
+                <div class="col-lg-4 col-md-6 col-sm-12  service-card">
                     <div class="card-content">
                         <div class="service-icon">  
                             <i class="fas fa-comments"></i>
@@ -79,7 +88,7 @@ get_header();
                     
                 </div>
                 
-                <div class="col-lg-4 col-md-6 col-sm-12 px-4 service-card">
+                <div class="col-lg-4 col-md-6 col-sm-12  service-card">
                     <div class="card-content">
                         <div class="service-icon">
                             <i class="fas fa-calculator"></i>
@@ -91,7 +100,7 @@ get_header();
                     </div>
                          </div>
                 
-                <div class="col-lg-4 col-md-6 col-sm-12 px-4 service-card">
+                <div class="col-lg-4 col-md-6 col-sm-12  service-card">
                     <div class="card-content">
                         <div class="service-icon">
                             <i class="fas fa-balance-scale"></i>

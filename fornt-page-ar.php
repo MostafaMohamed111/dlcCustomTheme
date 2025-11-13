@@ -31,23 +31,29 @@ get_header('ar');
                 <h2 class="section-title">من نحن</h2>
                 <p class="section-subtitle"></p>
             </div>
-            <div class="row about-content align-items-center gx-5">
+            <div class="row about-content align-items-center  overflow-hidden">
                 <div class="col-lg-6 col-md-12 about-text">
                     <h3>التميز في الخدمات القانونية</h3>
                     <p>شركة داغ للمحاماة و الاستشارات القانونية هي مؤسسة قانونية رائدة مقرها الرياض، المملكة العربية السعودية. نحن نقدم خدمات قانونية شاملة واستشارات للأفراد والشركات في جميع أنحاء المملكة.</p>
                     <p>فريقنا من المحامين والاستشاريين القانونيين ذوي الخبرة ملتزم بتقديم حلول قانونية دقيقة وفي الوقت المناسب وفعالة تلبي احتياجاتك الخاصة.</p>
                     <div class="row about-stats">
                         <div class="col-md-4 col-sm-4 col-12 stat-item">
+                        <div class="static-item-inner">
                             <h4>500+</h4>
                             <p>القضايا المحلولة</p>
                         </div>
-                        <div class="col-md-4 col-sm-4 col-12 stat-item">
-                            <h4>15+</h4>
-                            <p>سنوات الخبرة</p>
                         </div>
                         <div class="col-md-4 col-sm-4 col-12 stat-item">
-                            <h4>50+</h4>
-                            <p>محامون خبراء</p>
+                            <div class="static-item-inner">
+                                <h4>15+</h4>
+                                <p>سنوات الخبرة</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-12 stat-item">
+                            <div class="static-item-inner">
+                                <h4>50+</h4>
+                                <p>محامون خبراء</p>
+                            </div>
                         </div>
                     </div>
                 </div>
