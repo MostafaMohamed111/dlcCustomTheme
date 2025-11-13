@@ -42,13 +42,12 @@ nav {
     z-index: 9999;
 }
 
-nav .container {
+nav .nav-container {
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     margin: 0 auto;
-    max-width: 1200px;
     width: 100%;
     padding: 0 15px;
 }
@@ -106,7 +105,7 @@ nav .logo a img {
     flex-shrink: 0;
 }
 
-nav .container .main-menu {
+nav .nav-container .main-menu {
     display: flex !important;
     align-items: center;
     height: 100%;
@@ -117,12 +116,12 @@ nav .container .main-menu {
     min-width: 0;
 }
 
-nav .container .main-menu ul {
+nav .nav-container .main-menu ul {
     align-items: center;
     height: 100%;
     list-style: none;
     display: flex !important;
-    gap: 2rem;
+    gap: 4rem;
     margin: 0;
     padding: 0;
     visibility: visible !important;
@@ -133,14 +132,14 @@ nav .container .main-menu ul {
 
 
 
-nav .container .main-menu ul li {
+nav .nav-container .main-menu ul li {
     display: flex;
     align-items: center;
     visibility: visible !important;
     flex-shrink: 0;
 }
 
-nav .container .main-menu ul li a {
+nav .nav-container .main-menu ul li a {
     color: var(--white);
     text-decoration: none;
     font-size: 16px;
@@ -155,14 +154,14 @@ nav .container .main-menu ul li a {
 
 
 
-nav .container .main-menu ul li a:hover,
-nav .container .main-menu ul li.current-menu-item > a,
-nav .container .main-menu ul li.current-page-ancestor > a,
-nav .container .main-menu ul li.current-page-parent > a {
+nav .nav-container .main-menu ul li a:hover,
+nav .nav-container .main-menu ul li.current-menu-item > a,
+nav .nav-container .main-menu ul li.current-page-ancestor > a,
+nav .nav-container .main-menu ul li.current-page-parent > a {
     color: var(--accent-color);
 }
     
-nav .container .main-menu ul li a::after {
+nav .nav-container .main-menu ul li a::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -173,10 +172,10 @@ nav .container .main-menu ul li a::after {
     transition: width 0.3s ease;
 }
 
-nav .container .main-menu ul li a:hover::after,
-nav .container .main-menu ul li.current-menu-item > a::after,
-nav .container .main-menu ul li.current-page-ancestor > a::after,
-nav .container .main-menu ul li.current-page-parent > a::after {
+nav .nav-container .main-menu ul li a:hover::after,
+nav .nav-container .main-menu ul li.current-menu-item > a::after,
+nav .nav-container .main-menu ul li.current-page-ancestor > a::after,
+nav .nav-container .main-menu ul li.current-page-parent > a::after {
     width: 100%;
 }
 
@@ -332,11 +331,11 @@ nav .container .main-menu ul li.current-page-parent > a::after {
 
 /* Responsive Navigation */
 @media screen and (max-width: 992px) {
-    nav .container .main-menu ul {
+    nav .nav-container .main-menu ul {
         gap: 1.5rem;
     }
     
-    nav .container .main-menu ul li a {
+    nav .nav-container .main-menu ul li a {
         font-size: 16px;
     }
     
@@ -351,7 +350,7 @@ nav .container .main-menu ul li.current-page-parent > a::after {
         display: flex;
     }
     
-    nav .container {
+    nav .nav-container {
         padding: 0 15px;
         position: relative;
     }
@@ -384,7 +383,7 @@ nav .container .main-menu ul li.current-page-parent > a::after {
         transition: transform 0.25s ease, opacity 0.2s ease; /* animate only when opening */
     }
     
-    nav .container .main-menu {
+    nav .nav-container .main-menu {
         width: 100%;
         display: flex !important;
         justify-content: center;
@@ -393,19 +392,19 @@ nav .container .main-menu ul li.current-page-parent > a::after {
         padding: 30px 20px;
     }
     
-    nav .container .main-menu ul {
+    nav .nav-container .main-menu ul {
         flex-direction: column;
         gap: 20px;
         width: 100%;
         align-items: center;
     }
     
-    nav .container .main-menu ul li {
+    nav .nav-container .main-menu ul li {
         width: 100%;
         text-align: center;
     }
     
-    nav .container .main-menu ul li a {
+    nav .nav-container .main-menu ul li a {
         font-size: 18px;
         padding: 12px 20px;
         width: 100%;
@@ -414,14 +413,14 @@ nav .container .main-menu ul li.current-page-parent > a::after {
     }
     
     /* Mobile hover/active - background highlight instead of underline */
-    nav .container .main-menu ul li a::after {
+    nav .nav-container .main-menu ul li a::after {
         display: none; /* Remove underline on mobile */
     }
     
-    nav .container .main-menu ul li a:hover,
-    nav .container .main-menu ul li.current-menu-item > a,
-    nav .container .main-menu ul li.current-page-ancestor > a,
-    nav .container .main-menu ul li.current-page-parent > a {
+    nav .nav-container .main-menu ul li a:hover,
+    nav .nav-container .main-menu ul li.current-menu-item > a,
+    nav .nav-container .main-menu ul li.current-page-ancestor > a,
+    nav .nav-container .main-menu ul li.current-page-parent > a {
         background-color: rgba(74, 144, 226, 0.2);
         color: var(--white);
     }
@@ -441,7 +440,7 @@ nav .container .main-menu ul li.current-page-parent > a::after {
 }
 
 @media screen and (max-width: 576px) {
-    nav .container .main-menu ul li a {
+    nav .nav-container .main-menu ul li a {
         font-size: 16px;
     }
     

@@ -9,7 +9,7 @@
 <body>
 
     <Nav>
-        <div class= "container ">
+        <div class= "container-fluid nav-container ">
             <div class="logo">
                 <a href="<?php echo home_url(); ?>">
                     <img src= "<?php echo get_template_directory_uri(); ?>/assets/images/DLC_logo.webp" alt="Dag Law Firm And Consultation Logo">
