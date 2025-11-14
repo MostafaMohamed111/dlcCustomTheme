@@ -30,11 +30,24 @@ body {
 
 
 nav {    
+   
+    z-index: 1000;
     background-color: var(--dark-blue);
     color: var(--white);
 }
 
+.top-nav {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
 .nav-body{
+    
+
     height: 90px;
 
     text-align: center;

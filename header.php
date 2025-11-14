@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <nav>
+    <nav class="top-nav">
         <div class= "container-fluid site-nav">
             <div class="row nav-body">
                 <div class="col-1 ms-3 logo-container">
