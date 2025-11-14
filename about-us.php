@@ -116,4 +116,169 @@ get_header(); ?>
 
 
 
+<section class="mission-section">
+    <div class="container">
+        <h2 class="mission-title">Our Mission</h2>
+        <div class="mission-grid">
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <p class="mission-text">Implementing digital transformation in alignment with Saudi Arabia's Vision 2030.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <p class="mission-text">Utilizing all our legal knowledge and tools to achieve justice and restore rights.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <p class="mission-text">Becoming the trusted legal partner for our clients, always striving to provide them with the best services.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <p class="mission-text">Protecting and safeguarding our clients' legal interests.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-gavel"></i>
+                </div>
+                <p class="mission-text">Ensuring the preservation and restoration of rights to their rightful owners while efficiently seizing opportunities.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-file-contract"></i>
+                </div>
+                <p class="mission-text">Legally documenting our clients' rights in accordance with local and applicable laws.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-ban"></i>
+                </div>
+                <p class="mission-text">Shielding our clients from penalties and legal disputes.</p>
+            </div>
+            <div class="mission-card">
+                <div class="mission-icon">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <p class="mission-text">Enhancing legal awareness among our clients to help them avoid legal challenges.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="values-section">
+    <div class="container">
+        <h2 class="values-title">Our Values</h2>
+        <div class="values-carousel-wrapper">
+            <button class="carousel-btn carousel-btn-prev" id="carouselPrev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="values-carousel" id="valuesCarousel">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <h3 class="value-title">Professionalism and Excellence</h3>
+                    <p class="value-description">Ensuring a high level of quality and expertise in all our legal services, delivering exceptional results for our clients.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fa-solid fa-eye"></i>
+                    </div>
+                    <h3 class="value-title">Transparency and Commitment</h3>
+                    <p class="value-description">Maintaining open communication and unwavering dedication to our clients' success and legal protection.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <h3 class="value-title">Our Clients</h3>
+                    <p class="value-description">Placing our clients at the heart of everything we do, prioritizing their needs and building lasting relationships.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="value-title">Confidentiality and Privacy</h3>
+                    <p class="value-description">Safeguarding our clients' interests with utmost dedication, ensuring complete confidentiality and privacy protection.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <h3 class="value-title">Available to Support</h3>
+                    <p class="value-description">Always available to support our clients whenever they need our services, providing timely and reliable assistance.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 class="value-title">Continuous Development</h3>
+                    <p class="value-description">Continuously developing and staying up to date with legal updates in Saudi Arabia to serve our clients better.</p>
+                </div>
+            </div>
+            <button class="carousel-btn carousel-btn-next" id="carouselNext">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <div class="carousel-indicators">
+                <span class="indicator active" data-slide="0"></span>
+                <span class="indicator" data-slide="1"></span>
+                <span class="indicator" data-slide="2"></span>
+                <span class="indicator" data-slide="3"></span>
+                <span class="indicator" data-slide="4"></span>
+                <span class="indicator" data-slide="5"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="vision-section">
+    <div class="container">
+        <div class="vision-content">
+            <h2 class="vision-title">Our Vision</h2>
+            <p class="vision-text">
+                Leaving our unique mark in the legal field in Saudi Arabia and becoming one of the most prominent legal entities that everyone turns to with confidence in our professionalism, expertise, and commitment to Saudi Vision 2030.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="achievements-section">
+    <div class="container">
+        <h2 class="achievements-title">Achievements</h2>
+        <p class="achievements-intro">
+            Since the inception of Dag Law Firm, providing legal advice, client satisfaction, and meeting their needs has been our compass and our constant goal. Through our work, we have been pleased to be successful partners for a group of prestigious institutions and organizations, and their expression of satisfaction with this distinguished partnership is what we have.
+        </p>
+        
+        <div class="achievements-grid">
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="567">0</div>
+                <div class="achievement-label">Cases</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="5437">0</div>
+                <div class="achievement-label">Contracts</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="633">0</div>
+                <div class="achievement-label">Clients</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="459">0</div>
+                <div class="achievement-label">Intellectual Properties</div>
+            </div>
+        </div>
+        
+        <p class="achievements-conclusion">
+            We are proud of what we have accomplished since the beginning of our journey.
+        </p>
+    </div>
+</section>
+
 <?php get_footer(); ?>
