@@ -119,9 +119,22 @@ function enqueue_theme_css() {
     }
 
     else if (is_archive()) {
-        // Archive page
-        wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('archive-page');
+        // Check if it's a news category
+        $is_news_category = false;
+        $queried_object = get_queried_object();
+        if (isset($queried_object->slug) && strpos($queried_object->slug, 'news') !== false) {
+            $is_news_category = true;
+        }
+        
+        if ($is_news_category) {
+            // News archive page
+            wp_register_style('news-page', get_template_directory_uri() . '/assets/en/news.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('news-page');
+        } else {
+            // Blog archive page
+            wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('archive-page');
+        }
     }
 
     else if (is_single() && get_post_type() == 'post') {
@@ -175,34 +188,121 @@ function theme_register_menus() {
 
 add_action('init', 'theme_register_menus');
 
-// Keep Blog menu item active on category pages
-function keep_blog_menu_active($classes, $item) {
-    // Check if we're on a blog/category page
+// Keep correct menu item active based on category (Blog or News)
+function keep_correct_menu_active($classes, $item) {
+    // Check if we're on a category/archive/post page
     if (is_category() || is_archive() || (is_single() && get_post_type() == 'post')) {
-        // Get the Blog category
-        $blog_category = get_category_by_slug('blog');
-        if (!$blog_category) {
-            $blog_category = get_term_by('name', 'Blog', 'category');
+        $queried_object = get_queried_object();
+        $is_news_category = false;
+        $is_blog_category = false;
+        
+        // Determine if we're viewing news or blog
+        if (is_category() && isset($queried_object->slug)) {
+            $slug = $queried_object->slug;
+            // Check if it's a news category (news or news-ar)
+            if ($slug === 'news' || $slug === 'news-ar' || strpos($slug, 'news') !== false) {
+                $is_news_category = true;
+            } else {
+                // Check if it's a blog category or child of blog
+                $blog_category = get_category_by_slug('blog');
+                $blog_ar_category = get_category_by_slug('blog-ar');
+                
+                // Check if current category is blog, blog-ar, or a child of blog
+                if ($slug === 'blog' || $slug === 'blog-ar' || 
+                    ($blog_category && cat_is_ancestor_of($blog_category->term_id, $queried_object->term_id)) ||
+                    ($blog_ar_category && cat_is_ancestor_of($blog_ar_category->term_id, $queried_object->term_id))) {
+                    $is_blog_category = true;
+                }
+            }
+        } elseif (is_archive() && !is_category()) {
+            // On main archive page - check if it's blog archive
+            $is_blog_category = true;
+        } elseif (is_single() && get_post_type() == 'post') {
+            // On single post - check post categories
+            $post_categories = get_the_category();
+            foreach ($post_categories as $cat) {
+                if ($cat->slug === 'news' || $cat->slug === 'news-ar' || strpos($cat->slug, 'news') !== false) {
+                    $is_news_category = true;
+                    break;
+                } elseif ($cat->slug === 'blog' || $cat->slug === 'blog-ar') {
+                    $is_blog_category = true;
+                    break;
+                } else {
+                    // Check if it's a child of blog category
+                    $blog_category = get_category_by_slug('blog');
+                    $blog_ar_category = get_category_by_slug('blog-ar');
+                    if (($blog_category && cat_is_ancestor_of($blog_category->term_id, $cat->term_id)) ||
+                        ($blog_ar_category && cat_is_ancestor_of($blog_ar_category->term_id, $cat->term_id))) {
+                        $is_blog_category = true;
+                        break;
+                    }
+                }
+            }
         }
         
-        // Check if this menu item links to the blog category or posts page
+        // Get menu item URL
+        $menu_url = $item->url;
+        
+        // Check if this menu item is for Blog
+        $blog_category = get_category_by_slug('blog');
+        $blog_ar_category = get_category_by_slug('blog-ar');
+        $is_blog_menu_item = false;
+        $is_news_menu_item = false;
+        
         if ($blog_category) {
             $blog_url = get_category_link($blog_category->term_id);
-        } else {
-            $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url();
+            if (strpos($menu_url, $blog_url) !== false || 
+                strpos($menu_url, '/category/blog') !== false ||
+                strpos($menu_url, '/blog') !== false) {
+                $is_blog_menu_item = true;
+            }
         }
         
-        // If this menu item URL matches blog URL, add active class
-        if (strpos($item->url, $blog_url) !== false || 
-            (is_category() && strpos($item->url, '/category/') !== false) ||
-            (is_archive() && strpos($item->url, '/blog') !== false)) {
+        if ($blog_ar_category) {
+            $blog_ar_url = get_category_link($blog_ar_category->term_id);
+            if (strpos($menu_url, $blog_ar_url) !== false || 
+                strpos($menu_url, '/category/blog-ar') !== false) {
+                $is_blog_menu_item = true;
+            }
+        }
+        
+        // Check if this menu item is for News
+        $news_category = get_category_by_slug('news');
+        $news_ar_category = get_category_by_slug('news-ar');
+        
+        if ($news_category) {
+            $news_url = get_category_link($news_category->term_id);
+            if (strpos($menu_url, $news_url) !== false || 
+                strpos($menu_url, '/category/news') !== false) {
+                $is_news_menu_item = true;
+            }
+        }
+        
+        if ($news_ar_category) {
+            $news_ar_url = get_category_link($news_ar_category->term_id);
+            if (strpos($menu_url, $news_ar_url) !== false || 
+                strpos($menu_url, '/category/news-ar') !== false) {
+                $is_news_menu_item = true;
+            }
+        }
+        
+        // Remove existing active classes first
+        $classes = array_diff($classes, array('current-menu-item', 'current_page_item', 'current_page_parent', 'current_page_ancestor'));
+        
+        // Only add active class if the menu item type matches the current page type
+        if ($is_news_category && $is_news_menu_item) {
+            $classes[] = 'current-menu-item';
+        } elseif ($is_blog_category && $is_blog_menu_item) {
+            $classes[] = 'current-menu-item';
+        } elseif (!$is_news_category && !$is_blog_category && $is_blog_menu_item) {
+            // Default to blog if we can't determine (for archive pages)
             $classes[] = 'current-menu-item';
         }
     }
     
     return $classes;
 }
-add_filter('nav_menu_css_class', 'keep_blog_menu_active', 10, 2);
+add_filter('nav_menu_css_class', 'keep_correct_menu_active', 10, 2);
 
 // Show Blog category posts on main archive/blog page and set posts per page
 function show_blog_category_posts($query) {
@@ -262,10 +362,24 @@ function save_language_metabox($post_id) {
 }
 add_action('save_post', 'save_language_metabox');
 
-// Helper function to get previous post filtered by language
-function get_previous_post_by_language($in_same_term = false, $excluded_terms = '', $taxonomy = 'category', $language = 'en') {
+// Helper function to get previous post filtered by language and category type (news/blog)
+function get_previous_post_by_language_and_category($language = 'en') {
     global $post;
     $current_post_date = $post->post_date;
+    
+    // Determine if current post is news or blog
+    $post_categories = get_the_category($post->ID);
+    $is_news_post = false;
+    $category_ids = array();
+    
+    foreach ($post_categories as $cat) {
+        $category_ids[] = $cat->term_id;
+        // Check if it's a news category
+        if ($cat->slug === 'news' || $cat->slug === 'news-ar' || strpos($cat->slug, 'news') !== false) {
+            $is_news_post = true;
+            break;
+        }
+    }
     
     $query_args = array(
         'post_type' => 'post',
@@ -288,14 +402,54 @@ function get_previous_post_by_language($in_same_term = false, $excluded_terms = 
         'post__not_in' => array($post->ID)
     );
     
-    if ($in_same_term && $taxonomy) {
-        $terms = wp_get_post_terms($post->ID, $taxonomy, array('fields' => 'ids'));
-        if (!empty($terms)) {
+    // Filter by category type
+    if ($is_news_post) {
+        // Only get news posts
+        $news_category = get_category_by_slug('news');
+        $news_ar_category = get_category_by_slug('news-ar');
+        $news_cat_ids = array();
+        if ($news_category) $news_cat_ids[] = $news_category->term_id;
+        if ($news_ar_category) $news_cat_ids[] = $news_ar_category->term_id;
+        
+        if (!empty($news_cat_ids)) {
             $query_args['tax_query'] = array(
                 array(
-                    'taxonomy' => $taxonomy,
+                    'taxonomy' => 'category',
                     'field' => 'term_id',
-                    'terms' => $terms
+                    'terms' => $news_cat_ids,
+                    'operator' => 'IN'
+                )
+            );
+        }
+    } else {
+        // Only get blog posts (blog, blog-ar, and their children)
+        $blog_category = get_category_by_slug('blog');
+        $blog_ar_category = get_category_by_slug('blog-ar');
+        $blog_cat_ids = array();
+        if ($blog_category) $blog_cat_ids[] = $blog_category->term_id;
+        if ($blog_ar_category) $blog_cat_ids[] = $blog_ar_category->term_id;
+        
+        // Get all children of blog categories
+        if ($blog_category) {
+            $blog_children = get_term_children($blog_category->term_id, 'category');
+            if (!is_wp_error($blog_children)) {
+                $blog_cat_ids = array_merge($blog_cat_ids, $blog_children);
+            }
+        }
+        if ($blog_ar_category) {
+            $blog_ar_children = get_term_children($blog_ar_category->term_id, 'category');
+            if (!is_wp_error($blog_ar_children)) {
+                $blog_cat_ids = array_merge($blog_cat_ids, $blog_ar_children);
+            }
+        }
+        
+        if (!empty($blog_cat_ids)) {
+            $query_args['tax_query'] = array(
+                array(
+                    'taxonomy' => 'category',
+                    'field' => 'term_id',
+                    'terms' => $blog_cat_ids,
+                    'operator' => 'IN'
                 )
             );
         }
@@ -305,10 +459,24 @@ function get_previous_post_by_language($in_same_term = false, $excluded_terms = 
     return $query->have_posts() ? $query->posts[0] : null;
 }
 
-// Helper function to get next post filtered by language
-function get_next_post_by_language($in_same_term = false, $excluded_terms = '', $taxonomy = 'category', $language = 'en') {
+// Helper function to get next post filtered by language and category type (news/blog)
+function get_next_post_by_language_and_category($language = 'en') {
     global $post;
     $current_post_date = $post->post_date;
+    
+    // Determine if current post is news or blog
+    $post_categories = get_the_category($post->ID);
+    $is_news_post = false;
+    $category_ids = array();
+    
+    foreach ($post_categories as $cat) {
+        $category_ids[] = $cat->term_id;
+        // Check if it's a news category
+        if ($cat->slug === 'news' || $cat->slug === 'news-ar' || strpos($cat->slug, 'news') !== false) {
+            $is_news_post = true;
+            break;
+        }
+    }
     
     $query_args = array(
         'post_type' => 'post',
@@ -331,14 +499,54 @@ function get_next_post_by_language($in_same_term = false, $excluded_terms = '', 
         'post__not_in' => array($post->ID)
     );
     
-    if ($in_same_term && $taxonomy) {
-        $terms = wp_get_post_terms($post->ID, $taxonomy, array('fields' => 'ids'));
-        if (!empty($terms)) {
+    // Filter by category type
+    if ($is_news_post) {
+        // Only get news posts
+        $news_category = get_category_by_slug('news');
+        $news_ar_category = get_category_by_slug('news-ar');
+        $news_cat_ids = array();
+        if ($news_category) $news_cat_ids[] = $news_category->term_id;
+        if ($news_ar_category) $news_cat_ids[] = $news_ar_category->term_id;
+        
+        if (!empty($news_cat_ids)) {
             $query_args['tax_query'] = array(
                 array(
-                    'taxonomy' => $taxonomy,
+                    'taxonomy' => 'category',
                     'field' => 'term_id',
-                    'terms' => $terms
+                    'terms' => $news_cat_ids,
+                    'operator' => 'IN'
+                )
+            );
+        }
+    } else {
+        // Only get blog posts (blog, blog-ar, and their children)
+        $blog_category = get_category_by_slug('blog');
+        $blog_ar_category = get_category_by_slug('blog-ar');
+        $blog_cat_ids = array();
+        if ($blog_category) $blog_cat_ids[] = $blog_category->term_id;
+        if ($blog_ar_category) $blog_cat_ids[] = $blog_ar_category->term_id;
+        
+        // Get all children of blog categories
+        if ($blog_category) {
+            $blog_children = get_term_children($blog_category->term_id, 'category');
+            if (!is_wp_error($blog_children)) {
+                $blog_cat_ids = array_merge($blog_cat_ids, $blog_children);
+            }
+        }
+        if ($blog_ar_category) {
+            $blog_ar_children = get_term_children($blog_ar_category->term_id, 'category');
+            if (!is_wp_error($blog_ar_children)) {
+                $blog_cat_ids = array_merge($blog_cat_ids, $blog_ar_children);
+            }
+        }
+        
+        if (!empty($blog_cat_ids)) {
+            $query_args['tax_query'] = array(
+                array(
+                    'taxonomy' => 'category',
+                    'field' => 'term_id',
+                    'terms' => $blog_cat_ids,
+                    'operator' => 'IN'
                 )
             );
         }

@@ -194,9 +194,9 @@
                         </div>
                         <div class="post-navigation-inline">
                             <?php
-                            // Get previous/next posts filtered by English language only
-                            $prev_post = get_previous_post_by_language(false, '', 'category', 'en');
-                            $next_post = get_next_post_by_language(false, '', 'category', 'en');
+                            // Get previous/next posts filtered by English language and category type (news/blog)
+                            $prev_post = get_previous_post_by_language_and_category('en');
+                            $next_post = get_next_post_by_language_and_category('en');
                             ?>
                             <?php if ( $prev_post ) : ?>
                                 <a href="<?php echo get_permalink($prev_post->ID); ?>" class="nav-arrow nav-prev" title="<?php echo esc_attr(get_the_title($prev_post->ID)); ?>">

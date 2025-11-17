@@ -43,8 +43,37 @@
                         <?php
                         $arabic_url = home_url('/front-page-ar/');
                         
+                        // Check if we're on a news category or news post
+                        $is_news_page = false;
+                        if (is_category()) {
+                            $queried_object = get_queried_object();
+                            if (isset($queried_object->slug) && ($queried_object->slug === 'news' || strpos($queried_object->slug, 'news') !== false)) {
+                                $is_news_page = true;
+                            }
+                        } elseif (is_single() && get_post_type() == 'post') {
+                            $post_categories = get_the_category();
+                            foreach ($post_categories as $cat) {
+                                if ($cat->slug === 'news' || strpos($cat->slug, 'news') !== false) {
+                                    $is_news_page = true;
+                                    break;
+                                }
+                            }
+                        } elseif (is_archive() || is_tag()) {
+                            $queried_object = get_queried_object();
+                            if (isset($queried_object->slug) && strpos($queried_object->slug, 'news') !== false) {
+                                $is_news_page = true;
+                            }
+                        }
+                        
+                        if ($is_news_page) {
+                            // Switch to Arabic news category
+                            $news_ar_category = get_category_by_slug('news-ar');
+                            if ($news_ar_category) {
+                                $arabic_url = get_category_link($news_ar_category->term_id);
+                            }
+                        }
                         // If on a blog post, switch to Arabic blog archive
-                        if (is_single() && get_post_type() == 'post') {
+                        elseif (is_single() && get_post_type() == 'post') {
                             $blog_ar_category = get_category_by_slug('blog-ar');
                             if ($blog_ar_category) {
                                 $arabic_url = get_category_link($blog_ar_category->term_id);
@@ -102,8 +131,37 @@
                             <?php
                             $arabic_url = home_url('/front-page-ar/');
                             
+                            // Check if we're on a news category or news post
+                            $is_news_page = false;
+                            if (is_category()) {
+                                $queried_object = get_queried_object();
+                                if (isset($queried_object->slug) && ($queried_object->slug === 'news' || strpos($queried_object->slug, 'news') !== false)) {
+                                    $is_news_page = true;
+                                }
+                            } elseif (is_single() && get_post_type() == 'post') {
+                                $post_categories = get_the_category();
+                                foreach ($post_categories as $cat) {
+                                    if ($cat->slug === 'news' || strpos($cat->slug, 'news') !== false) {
+                                        $is_news_page = true;
+                                        break;
+                                    }
+                                }
+                            } elseif (is_archive() || is_tag()) {
+                                $queried_object = get_queried_object();
+                                if (isset($queried_object->slug) && strpos($queried_object->slug, 'news') !== false) {
+                                    $is_news_page = true;
+                                }
+                            }
+                            
+                            if ($is_news_page) {
+                                // Switch to Arabic news category
+                                $news_ar_category = get_category_by_slug('news-ar');
+                                if ($news_ar_category) {
+                                    $arabic_url = get_category_link($news_ar_category->term_id);
+                                }
+                            }
                             // If on a blog post, switch to Arabic blog archive
-                            if (is_single() && get_post_type() == 'post') {
+                            elseif (is_single() && get_post_type() == 'post') {
                                 $blog_ar_category = get_category_by_slug('blog-ar');
                                 if ($blog_ar_category) {
                                     $arabic_url = get_category_link($blog_ar_category->term_id);

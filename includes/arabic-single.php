@@ -197,9 +197,9 @@
                         </div>
                         <div class="post-navigation-inline">
                             <?php
-                            // Get previous/next posts filtered by Arabic language only
-                            $prev_post = get_previous_post_by_language(false, '', 'category', 'ar');
-                            $next_post = get_next_post_by_language(false, '', 'category', 'ar');
+                            // Get previous/next posts filtered by Arabic language and category type (news/blog)
+                            $prev_post = get_previous_post_by_language_and_category('ar');
+                            $next_post = get_next_post_by_language_and_category('ar');
                             ?>
                             <?php if ( $next_post ) : ?>
                                 <a href="<?php echo get_permalink($next_post->ID); ?>" class="nav-arrow nav-next" title="<?php echo esc_attr(get_the_title($next_post->ID)); ?>">
