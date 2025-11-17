@@ -234,6 +234,24 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+    
+    // Categories Toggle Menu for Companies Services
+    const categoriesToggle = document.querySelector('.categories-toggle-btn');
+    const categoriesWidget = document.querySelector('.categories-widget');
+    
+    if (categoriesToggle && categoriesWidget) {
+        categoriesToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            categoriesWidget.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!categoriesWidget.contains(e.target)) {
+                categoriesWidget.classList.remove('active');
+            }
+        });
+    }
 });
 
 // Comments AJAX and View All

@@ -290,15 +290,10 @@
         
         <div class="back-to-posts">
             <?php 
-            // Get Arabic blog category (blog-ar)
-            $blog_category = get_category_by_slug('blog-ar');
-            if (!$blog_category) {
-                // Fallback: try to find by name
-                $blog_category = get_term_by('name', 'المدونه', 'category');
-            }
-            $back_url = $blog_category ? get_category_link($blog_category->term_id) : (get_permalink(get_option('page_for_posts')) ?: home_url());
+            // Get the correct archive URL based on post type (news/blog) and language
+            $back_url = dlc_get_post_archive_url(get_the_ID(), 'ar');
             ?>
-            <a href="<?php echo $back_url; ?>" class="back-btn">
+            <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
                 <i class="fa-solid fa-arrow-left"></i>
                 العودة إلى جميع المنشورات
             </a>

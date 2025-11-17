@@ -27,14 +27,22 @@ Template Name: Services Page
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies.png" alt="Corporate Law">
                 <h2 class = "text-center">Corporate Law</h2>
                 <p>Our corporate law services include company formation, mergers and acquisitions, compliance, and corporate governance. We help businesses navigate complex legal landscapes to ensure smooth operations.</p>
-                <a class="service-btn btn" href="<?php echo get_permalink(get_page_by_path('companies-services')); ?>">Get Started</a>
+                <?php
+                $companies_category = get_category_by_slug('companies-services');
+                $companies_url = $companies_category ? get_category_link($companies_category->term_id) : '#';
+                ?>
+                <a class="service-btn btn" href="<?php echo $companies_url; ?>">Get Started</a>
 
             </div>
             <div class="individuals col-lg-6 col-md-12">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individuals.webp" alt="Individual Law">
                 <h2 class = "text-center">Individual Law</h2>
                 <p>Our individual law services include family law, estate planning, personal injury, and criminal defense. We provide personalized legal support to help individuals navigate their unique legal challenges.</p>
-                <a class="service-btn btn" href="<?php echo get_permalink(get_page_by_path('individuals-services')); ?>" >Get Started</a>
+                <?php
+                $individual_category = get_category_by_slug('individual-services');
+                $individual_url = $individual_category ? get_category_link($individual_category->term_id) : '#';
+                ?>
+                <a class="service-btn btn" href="<?php echo $individual_url; ?>" >Get Started</a>
 
             </div>
         </div>            
