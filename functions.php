@@ -1,4 +1,3 @@
-
 <?php
 
 
@@ -347,4 +346,45 @@ function get_next_post_by_language($in_same_term = false, $excluded_terms = '', 
     
     $query = new WP_Query($query_args);
     return $query->have_posts() ? $query->posts[0] : null;
+}
+
+// Enable post thumbnails and HTML5 comment support
+add_theme_support( 'post-thumbnails' );
+add_theme_support( 'html5', array( 'comment-form', 'comment-list', 'gallery', 'caption' ) );
+
+// Custom comment callback to remove "says" text
+function dlc_custom_comment_callback($comment, $args, $depth) {
+    $GLOBALS['comment'] = $comment;
+    ?>
+    <li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
+        <div class="comment-body">
+            <div class="comment-meta">
+                <?php echo get_avatar($comment, 48, '', '', array('class' => 'comment-avatar')); ?>
+                <div class="comment-author-meta">
+                    <span class="comment-author">
+                        <span class="fn"><?php comment_author(); ?></span>
+                    </span>
+                    <span class="comment-metadata">
+                        <a href="<?php echo esc_url(get_comment_link($comment->comment_ID)); ?>">
+                            <time datetime="<?php comment_time('c'); ?>">
+                                <?php printf(__('%1$s at %2$s'), get_comment_date(), get_comment_time()); ?>
+                            </time>
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="comment-content">
+                <?php comment_text(); ?>
+            </div>
+            <?php if ($args['max_depth'] != 1 && comments_open()) : ?>
+                <div class="reply">
+                    <?php comment_reply_link(array_merge($args, array(
+                        'reply_text' => __('Reply', 'dlc'),
+                        'depth' => $depth,
+                        'max_depth' => $args['max_depth']
+                    ))); ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php
 }

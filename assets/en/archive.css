@@ -180,7 +180,8 @@
 .post-thumbnail {
     position: relative;
     width: 100%;
-    height: 200px;
+    aspect-ratio: 16 / 9;
+    min-height: 220px;
     overflow: hidden;
     border-radius: 12px 12px 0 0;
     background-color: var(--light-gray);
@@ -197,6 +198,8 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimizeQuality;
 }
 
 .post-card:hover .post-image {
@@ -270,7 +273,7 @@
 .post-footer {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     margin-top: auto;
     gap: 15px;
     flex-wrap: wrap;

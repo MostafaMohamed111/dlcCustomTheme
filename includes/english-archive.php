@@ -139,7 +139,13 @@
                                 <?php if ( has_post_thumbnail() ) : ?>
                                     <div class="post-thumbnail">
                                         <a href="<?php the_permalink(); ?>">
-                                            <?php the_post_thumbnail('medium_large', array('class' => 'post-image')); ?>
+                                            <?php the_post_thumbnail(
+                                                'large',
+                                                array(
+                                                    'class' => 'post-image',
+                                                    'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px'
+                                                )
+                                            ); ?>
                                         </a>
                                         <div class="post-category-badge">
                                             <?php

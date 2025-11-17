@@ -59,9 +59,9 @@
                         }
                         // If on a page, use slug-based approach
                         elseif (is_page()) {
-                            $current_slug = get_post_field('post_name', get_the_ID());
-                            $arabic_slug = $current_slug . '-ar';
-                            $arabic_page = get_page_by_path($arabic_slug);
+                        $current_slug = get_post_field('post_name', get_the_ID());
+                        $arabic_slug = $current_slug . '-ar';
+                        $arabic_page = get_page_by_path($arabic_slug);
                             if ($arabic_page) {
                                 $arabic_url = get_permalink($arabic_page);
                             }
@@ -118,9 +118,9 @@
                             }
                             // If on a page, use slug-based approach
                             elseif (is_page()) {
-                                $current_slug = get_post_field('post_name', get_the_ID());
-                                $arabic_slug = $current_slug . '-ar';
-                                $arabic_page = get_page_by_path($arabic_slug);
+                            $current_slug = get_post_field('post_name', get_the_ID());
+                            $arabic_slug = $current_slug . '-ar';
+                            $arabic_page = get_page_by_path($arabic_slug);
                                 if ($arabic_page) {
                                     $arabic_url = get_permalink($arabic_page);
                                 }

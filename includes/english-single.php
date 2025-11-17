@@ -11,7 +11,13 @@
                     <header class="post-header">
                         <?php if ( has_post_thumbnail() ) : ?>
                             <div class="post-featured-image">
-                                <?php the_post_thumbnail('full', array('class' => 'featured-img')); ?>
+                                <?php the_post_thumbnail(
+                                    'full',
+                                    array(
+                                        'class' => 'featured-img',
+                                        'sizes' => '(max-width: 1024px) 100vw, 1024px'
+                                    )
+                                ); ?>
                             </div>
                         <?php endif; ?>
                         
@@ -75,6 +81,97 @@
                             </div>
                         <?php endif; ?>
                     </div>
+
+                    <?php if ( comments_open() || get_comments_number() ) : ?>
+                        <section class="post-comments" id="comments">
+                            <h3 class="comments-title">
+                                <i class="fa-solid fa-comment"></i>
+                                Comments
+                            </h3>
+
+                            <?php
+                            $approved_comments = get_comments( array(
+                                'post_id' => get_the_ID(),
+                                'status'  => 'approve',
+                                'orderby' => 'comment_date_gmt',
+                                'order'   => 'ASC',
+                            ) );
+                            ?>
+                            
+                            <?php if ( ! empty( $approved_comments ) ) : ?>
+                                <?php 
+                                $total_comments = count($approved_comments);
+                                $initial_display = 3;
+                                $show_more_button = $total_comments > $initial_display;
+                                $comments_to_show = $show_more_button ? array_slice($approved_comments, 0, $initial_display) : $approved_comments;
+                                ?>
+                                <ol class="comment-list" data-total="<?php echo $total_comments; ?>" data-shown="<?php echo count($comments_to_show); ?>">
+                                    <?php wp_list_comments( array(
+                                        'avatar_size' => 48,
+                                        'style'       => 'ol',
+                                        'short_ping'  => true,
+                                        'max_depth'   => 3,
+                                        'callback'    => 'dlc_custom_comment_callback',
+                                    ), $comments_to_show ); ?>
+                                </ol>
+                                <?php if ( $show_more_button ) : ?>
+                                    <button class="view-all-comments-btn" data-post-id="<?php echo get_the_ID(); ?>">
+                                        View All Comments (<?php echo $total_comments; ?>)
+                                    </button>
+                                    <button class="hide-comments-btn" data-post-id="<?php echo get_the_ID(); ?>" style="display: none;">
+                                        Hide Comments
+                                    </button>
+                                    <ol class="comment-list comment-list-hidden" style="display: none;">
+                                        <?php wp_list_comments( array(
+                                            'avatar_size' => 48,
+                                            'style'       => 'ol',
+                                            'short_ping'  => true,
+                                            'max_depth'   => 3,
+                                            'callback'    => 'dlc_custom_comment_callback',
+                                        ), array_slice($approved_comments, $initial_display) ); ?>
+                                    </ol>
+                                <?php endif; ?>
+                            <?php else : ?>
+                                <p class="no-comments">Be the first to share your thoughts.</p>
+                            <?php endif; ?>
+
+                            <?php
+                            $commenter = wp_get_current_commenter();
+                            $req       = get_option( 'require_name_email' );
+                            $aria_req  = $req ? ' aria-required="true"' : '';
+                            $required  = $req ? ' *' : '';
+
+                            $fields = array(
+                                'author' => '<div class="comment-form-field half">
+                                                <label for="author">Name' . $required . '</label>
+                                                <input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ?? '' ) . '"' . $aria_req . '>
+                                            </div>',
+                                'email'  => '<div class="comment-form-field half">
+                                                <label for="email">Email' . $required . '</label>
+                                                <input id="email" name="email" type="email" value="' . esc_attr( $commenter['comment_author_email'] ?? '' ) . '"' . $aria_req . '>
+                                            </div>',
+                            );
+                            $fields = apply_filters( 'comment_form_default_fields', $fields );
+
+                            comment_form( array(
+                                'title_reply'          => '',
+                                'label_submit'         => __('Comment', 'dlc'),
+                                'class_form'           => 'comment-form-styled',
+                                'class_submit'         => 'comment-submit-btn',
+                                'comment_notes_before' => '',
+                                'comment_notes_after'  => '',
+                                'logged_in_as'         => '',
+                                'fields'               => $fields,
+                                'comment_field'        => '<div class="comment-form-field">
+                                                                <label for="comment">Comment *</label>
+                                                                <textarea id="comment" name="comment" rows="5" required></textarea>
+                                                            </div>',
+                                'id_form'              => 'commentform',
+                                'id_submit'            => 'submit',
+                            ) );
+                            ?>
+                        </section>
+                    <?php endif; ?>
                     
                     <!-- Post Footer -->
                     <footer class="post-footer-single">

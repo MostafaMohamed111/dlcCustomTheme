@@ -235,3 +235,132 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Comments AJAX and View All
+document.addEventListener('DOMContentLoaded', function() {
+    // View All Comments Button
+    const viewAllBtn = document.querySelector('.view-all-comments-btn');
+    const hideCommentsBtn = document.querySelector('.hide-comments-btn');
+    
+    if (viewAllBtn) {
+        viewAllBtn.addEventListener('click', function() {
+            const hiddenList = document.querySelector('.comment-list-hidden');
+            if (hiddenList) {
+                hiddenList.style.display = 'block';
+                viewAllBtn.style.display = 'none';
+                if (hideCommentsBtn) {
+                    hideCommentsBtn.style.display = 'block';
+                }
+                // Scroll to show new comments
+                hiddenList.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    }
+    
+    // Hide Comments Button
+    if (hideCommentsBtn) {
+        hideCommentsBtn.addEventListener('click', function() {
+            const hiddenList = document.querySelector('.comment-list-hidden');
+            if (hiddenList) {
+                hiddenList.style.display = 'none';
+                hideCommentsBtn.style.display = 'none';
+                if (viewAllBtn) {
+                    viewAllBtn.style.display = 'block';
+                }
+                // Scroll back to view all button
+                if (viewAllBtn) {
+                    viewAllBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    }
+
+    // AJAX Comment Form Submission - Prevent page reload
+    const commentForm = document.getElementById('commentform');
+    if (commentForm) {
+        commentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(commentForm);
+            const submitBtn = commentForm.querySelector('#submit');
+            const originalText = submitBtn ? submitBtn.value : 'Comment';
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.value = 'Submitting...';
+            }
+            
+            // Use WordPress comment form action URL
+            const actionUrl = commentForm.action;
+            
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(data => {
+                // Reset form
+                commentForm.reset();
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.value = originalText;
+                }
+                
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'comment-success';
+                successMsg.style.cssText = 'background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin: 15px 0;';
+                successMsg.textContent = 'Your comment is awaiting moderation.';
+                commentForm.parentNode.insertBefore(successMsg, commentForm);
+                
+                setTimeout(() => {
+                    successMsg.remove();
+                }, 5000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.value = originalText;
+                }
+                alert('There was an error submitting your comment. Please try again.');
+            });
+        });
+    }
+
+    // AJAX Reply Links
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.comment-reply-link')) {
+            e.preventDefault();
+            const replyLink = e.target.closest('.comment-reply-link');
+            const commentId = replyLink.getAttribute('data-commentid');
+            const respondId = replyLink.getAttribute('data-respond-id');
+            
+            // Scroll to comment form
+            const commentForm = document.getElementById('commentform');
+            if (commentForm) {
+                commentForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Set parent comment ID if reply form exists
+                const commentParent = document.getElementById('comment_parent');
+                if (commentParent) {
+                    commentParent.value = commentId;
+                }
+                
+                // Focus on comment textarea
+                const commentTextarea = document.getElementById('comment');
+                if (commentTextarea) {
+                    setTimeout(() => {
+                        commentTextarea.focus();
+                    }, 300);
+                }
+            }
+        }
+    });
+});

@@ -59,7 +59,7 @@
                         }
                         // If on a page, use slug-based approach
                         elseif (is_page()) {
-                            $current_slug = get_post_field('post_name', get_the_ID());
+                        $current_slug = get_post_field('post_name', get_the_ID());
                             $english_slug = str_replace('-ar', '', $current_slug);
                             $english_page = get_page_by_path($english_slug);
                             if ($english_page) {
@@ -118,7 +118,7 @@
                             }
                             // If on a page, use slug-based approach
                             elseif (is_page()) {
-                                $current_slug = get_post_field('post_name', get_the_ID());
+                            $current_slug = get_post_field('post_name', get_the_ID());
                                 $english_slug = str_replace('-ar', '', $current_slug);
                                 $english_page = get_page_by_path($english_slug);
                                 if ($english_page) {
