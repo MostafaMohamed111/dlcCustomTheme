@@ -41,16 +41,33 @@
                 <div class="col-1">
                     <div class="language-changer language-changer-desktop">
                         <?php
-                        // Get current page slug
-                        $current_slug = get_post_field('post_name', get_the_ID());
-                        // Add -ar to the slug
-                        $arabic_slug = $current_slug . '-ar';
-                        // Get the Arabic page by slug
-                        $arabic_page = get_page_by_path($arabic_slug);
-                        // Get permalink or fallback to home
-                        $arabic_url = $arabic_page ? get_permalink($arabic_page) : home_url('/front-page-ar/');
+                        $arabic_url = home_url('/front-page-ar/');
+                        
+                        // If on a blog post, switch to Arabic blog archive
+                        if (is_single() && get_post_type() == 'post') {
+                            $blog_ar_category = get_category_by_slug('blog-ar');
+                            if ($blog_ar_category) {
+                                $arabic_url = get_category_link($blog_ar_category->term_id);
+                            }
+                        }
+                        // If on blog archive/category, switch to Arabic blog archive
+                        elseif (is_archive() || is_category() || is_tag()) {
+                            $blog_ar_category = get_category_by_slug('blog-ar');
+                            if ($blog_ar_category) {
+                                $arabic_url = get_category_link($blog_ar_category->term_id);
+                            }
+                        }
+                        // If on a page, use slug-based approach
+                        elseif (is_page()) {
+                            $current_slug = get_post_field('post_name', get_the_ID());
+                            $arabic_slug = $current_slug . '-ar';
+                            $arabic_page = get_page_by_path($arabic_slug);
+                            if ($arabic_page) {
+                                $arabic_url = get_permalink($arabic_page);
+                            }
+                        }
                         ?>
-                        <a href="<?php echo $arabic_url; ?>">
+                        <a href="<?php echo esc_url($arabic_url); ?>">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/images/arabic-language-changer.svg" alt="Language Icon" class="language-icon">
                         </a>
                     </div>
@@ -83,16 +100,33 @@
                         </div>
                         <div class="language-changer mobile-language-changer">
                             <?php
-                            // Get current page slug
-                            $current_slug = get_post_field('post_name', get_the_ID());
-                            // Add -ar to the slug
-                            $arabic_slug = $current_slug . '-ar';
-                            // Get the Arabic page by slug
-                            $arabic_page = get_page_by_path($arabic_slug);
-                            // Get permalink or fallback to home
-                            $arabic_url = $arabic_page ? get_permalink($arabic_page) : home_url('/front-page-ar/');
+                            $arabic_url = home_url('/front-page-ar/');
+                            
+                            // If on a blog post, switch to Arabic blog archive
+                            if (is_single() && get_post_type() == 'post') {
+                                $blog_ar_category = get_category_by_slug('blog-ar');
+                                if ($blog_ar_category) {
+                                    $arabic_url = get_category_link($blog_ar_category->term_id);
+                                }
+                            }
+                            // If on blog archive/category, switch to Arabic blog archive
+                            elseif (is_archive() || is_category() || is_tag()) {
+                                $blog_ar_category = get_category_by_slug('blog-ar');
+                                if ($blog_ar_category) {
+                                    $arabic_url = get_category_link($blog_ar_category->term_id);
+                                }
+                            }
+                            // If on a page, use slug-based approach
+                            elseif (is_page()) {
+                                $current_slug = get_post_field('post_name', get_the_ID());
+                                $arabic_slug = $current_slug . '-ar';
+                                $arabic_page = get_page_by_path($arabic_slug);
+                                if ($arabic_page) {
+                                    $arabic_url = get_permalink($arabic_page);
+                                }
+                            }
                             ?>
-                            <a href="<?php echo $arabic_url; ?>">
+                            <a href="<?php echo esc_url($arabic_url); ?>">
                                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/arabic-language-changer.svg" alt="Language Icon" class="language-icon">
                             </a>
                         </div>

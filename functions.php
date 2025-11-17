@@ -103,6 +103,18 @@ function enqueue_theme_css() {
         wp_enqueue_style('about-us-page');
     }
 
+    else if (is_archive()) {
+        // Archive page
+        wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('archive-page');
+    }
+
+    else if (is_single() && get_post_type() == 'post') {
+        // Single post page
+        wp_register_style('single-page', get_template_directory_uri() . '/assets/en/single.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('single-page');
+    }
+
 
    
 }
@@ -147,3 +159,176 @@ function theme_register_menus() {
 }
 
 add_action('init', 'theme_register_menus');
+
+// Keep Blog menu item active on category pages
+function keep_blog_menu_active($classes, $item) {
+    // Check if we're on a blog/category page
+    if (is_category() || is_archive() || (is_single() && get_post_type() == 'post')) {
+        // Get the Blog category
+        $blog_category = get_category_by_slug('blog');
+        if (!$blog_category) {
+            $blog_category = get_term_by('name', 'Blog', 'category');
+        }
+        
+        // Check if this menu item links to the blog category or posts page
+        if ($blog_category) {
+            $blog_url = get_category_link($blog_category->term_id);
+        } else {
+            $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url();
+        }
+        
+        // If this menu item URL matches blog URL, add active class
+        if (strpos($item->url, $blog_url) !== false || 
+            (is_category() && strpos($item->url, '/category/') !== false) ||
+            (is_archive() && strpos($item->url, '/blog') !== false)) {
+            $classes[] = 'current-menu-item';
+        }
+    }
+    
+    return $classes;
+}
+add_filter('nav_menu_css_class', 'keep_blog_menu_active', 10, 2);
+
+// Show Blog category posts on main archive/blog page and set posts per page
+function show_blog_category_posts($query) {
+    if (!is_admin() && $query->is_main_query()) {
+        // Set posts per page to 6 for all archive pages (categories, tags, blog)
+        if (is_archive() || is_category() || is_tag()) {
+            $query->set('posts_per_page', 6);
+        }
+        
+        // If on archive page (blog home) and not viewing a specific category
+        if (is_archive() && !is_category() && !is_tag() && !is_author()) {
+            $blog_category = get_category_by_slug('blog');
+            if (!$blog_category) {
+                $blog_category = get_term_by('name', 'Blog', 'category');
+            }
+            
+            // If Blog category exists, show only its posts
+            if ($blog_category) {
+                $query->set('cat', $blog_category->term_id);
+            }
+        }
+    }
+}
+add_action('pre_get_posts', 'show_blog_category_posts');
+
+
+
+
+
+function add_language_metabox() {
+    add_meta_box(
+        'post_language_box',
+        'Post Language',
+        'render_language_metabox',
+        'post',
+        'side',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'add_language_metabox');
+
+function render_language_metabox($post) {
+    $value = get_post_meta($post->ID, '_post_language', true);
+    ?>
+    <label for="post_language">Language:</label>
+    <select name="post_language" id="post_language" style="width:100%;">
+        <option value="en" <?php selected($value, 'en'); ?>>English</option>
+        <option value="ar" <?php selected($value, 'ar'); ?>>Arabic</option>
+    </select>
+    <?php
+}
+
+function save_language_metabox($post_id) {
+    if (isset($_POST['post_language'])) {
+        update_post_meta($post_id, '_post_language', sanitize_text_field($_POST['post_language']));
+    }
+}
+add_action('save_post', 'save_language_metabox');
+
+// Helper function to get previous post filtered by language
+function get_previous_post_by_language($in_same_term = false, $excluded_terms = '', $taxonomy = 'category', $language = 'en') {
+    global $post;
+    $current_post_date = $post->post_date;
+    
+    $query_args = array(
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'date_query' => array(
+            array(
+                'before' => $current_post_date,
+            ),
+        ),
+        'meta_query' => array(
+            array(
+                'key' => '_post_language',
+                'value' => $language,
+                'compare' => '='
+            )
+        ),
+        'post__not_in' => array($post->ID)
+    );
+    
+    if ($in_same_term && $taxonomy) {
+        $terms = wp_get_post_terms($post->ID, $taxonomy, array('fields' => 'ids'));
+        if (!empty($terms)) {
+            $query_args['tax_query'] = array(
+                array(
+                    'taxonomy' => $taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $terms
+                )
+            );
+        }
+    }
+    
+    $query = new WP_Query($query_args);
+    return $query->have_posts() ? $query->posts[0] : null;
+}
+
+// Helper function to get next post filtered by language
+function get_next_post_by_language($in_same_term = false, $excluded_terms = '', $taxonomy = 'category', $language = 'en') {
+    global $post;
+    $current_post_date = $post->post_date;
+    
+    $query_args = array(
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 1,
+        'orderby' => 'date',
+        'order' => 'ASC',
+        'date_query' => array(
+            array(
+                'after' => $current_post_date,
+            ),
+        ),
+        'meta_query' => array(
+            array(
+                'key' => '_post_language',
+                'value' => $language,
+                'compare' => '='
+            )
+        ),
+        'post__not_in' => array($post->ID)
+    );
+    
+    if ($in_same_term && $taxonomy) {
+        $terms = wp_get_post_terms($post->ID, $taxonomy, array('fields' => 'ids'));
+        if (!empty($terms)) {
+            $query_args['tax_query'] = array(
+                array(
+                    'taxonomy' => $taxonomy,
+                    'field' => 'term_id',
+                    'terms' => $terms
+                )
+            );
+        }
+    }
+    
+    $query = new WP_Query($query_args);
+    return $query->have_posts() ? $query->posts[0] : null;
+}

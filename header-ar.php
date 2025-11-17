@@ -41,25 +41,41 @@
                 <div class="col-1">
                     <div class="language-changer language-changer-desktop">
                         <?php
-                        // Get current page slug
-                        $current_slug = get_post_field('post_name', get_the_ID());
-                        // Add -ar to the slug
-                        $english = str_replace('-ar', '', $current_slug);
-                        // Get the Arabic page by slug
-                       
-                        $english_page = get_page_by_path($english);
-                        // Get permalink or fallback to home
-                        $arabic_url = $english_page ? get_permalink($english_page) : home_url('');
+                        $english_url = home_url('');
+                        
+                        // If on a blog post, switch to English blog archive
+                        if (is_single() && get_post_type() == 'post') {
+                            $blog_category = get_category_by_slug('blog');
+                            if ($blog_category) {
+                                $english_url = get_category_link($blog_category->term_id);
+                            }
+                        }
+                        // If on blog archive/category, switch to English blog archive
+                        elseif (is_archive() || is_category() || is_tag()) {
+                            $blog_category = get_category_by_slug('blog');
+                            if ($blog_category) {
+                                $english_url = get_category_link($blog_category->term_id);
+                            }
+                        }
+                        // If on a page, use slug-based approach
+                        elseif (is_page()) {
+                            $current_slug = get_post_field('post_name', get_the_ID());
+                            $english_slug = str_replace('-ar', '', $current_slug);
+                            $english_page = get_page_by_path($english_slug);
+                            if ($english_page) {
+                                $english_url = get_permalink($english_page);
+                            }
+                        }
                         ?>
-                        <a href="<?php echo $arabic_url; ?>">
+                        <a href="<?php echo esc_url($english_url); ?>">
                             <img src="<?php echo get_template_directory_uri(); ?>/assets/images/english-language-changer.svg" alt="Language Icon" class="language-icon">
                         </a>
                     </div>
                 </div>
 
                 <div class="col-3 nav-right">
-                    <button class="btn nav-btn btn-define">Define Presence <span class="fa-regular fa-flag mx-2"> </span></button>
-                    <button class="btn nav-btn sign-in ms-2">Sign In<span class="fas fa-sign-in-alt px-2"></span></button>
+                    <button class="btn nav-btn btn-define">حدد التواجد<span class="fa-regular fa-flag mx-2"> </span></button>
+                    <button class="btn nav-btn sign-in ms-2">تسجيل الدخول<span class="fas fa-sign-in-alt px-2"></span></button>
                 </div>
                 <div class="toggle-container col-1 ms-auto me-3">
                     <li onclick="toggleMobileNav()" class="mobile-toggle fs-1 fa solid fa-bars"></li>
@@ -84,18 +100,33 @@
                         </div>
                         <div class="language-changer mobile-language-changer">
                             <?php
-                            // Get current page slug
-                            $current_slug = get_post_field('post_name', get_the_ID());
-                            // Add -ar to the slug
-                            $english = str_replace('-ar', '', $current_slug);
-                           
-                            // Get the Arabic page by slug
-                            $english_page = get_page_by_path($english);
-                            // Get permalink or fallback to home
+                            $english_url = home_url('');
                             
-                            $english_url = $english_page ? get_permalink($english_page) : home_url('');
+                            // If on a blog post, switch to English blog archive
+                            if (is_single() && get_post_type() == 'post') {
+                                $blog_category = get_category_by_slug('blog');
+                                if ($blog_category) {
+                                    $english_url = get_category_link($blog_category->term_id);
+                                }
+                            }
+                            // If on blog archive/category, switch to English blog archive
+                            elseif (is_archive() || is_category() || is_tag()) {
+                                $blog_category = get_category_by_slug('blog');
+                                if ($blog_category) {
+                                    $english_url = get_category_link($blog_category->term_id);
+                                }
+                            }
+                            // If on a page, use slug-based approach
+                            elseif (is_page()) {
+                                $current_slug = get_post_field('post_name', get_the_ID());
+                                $english_slug = str_replace('-ar', '', $current_slug);
+                                $english_page = get_page_by_path($english_slug);
+                                if ($english_page) {
+                                    $english_url = get_permalink($english_page);
+                                }
+                            }
                             ?>
-                            <a href="<?php echo $english_url; ?>">
+                            <a href="<?php echo esc_url($english_url); ?>">
                                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/english-language-changer.svg" alt="Language Icon" class="language-icon">
                             </a>
                         </div>
