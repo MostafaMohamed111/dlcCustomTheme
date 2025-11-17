@@ -32,6 +32,22 @@ function enqueue_theme_css() {
         }
     }
     
+    // Check for Arabic single posts (individual post language metadata)
+    if (is_single() && get_post_type() == 'post') {
+        $post_language = get_post_meta(get_the_ID(), '_post_language', true);
+        if ($post_language === 'ar') {
+            $is_arabic_page = true;
+        }
+    }
+    
+    // Check for Arabic archive pages (category slug contains '-ar')
+    if (is_archive()) {
+        $queried_object = get_queried_object();
+        if (isset($queried_object->slug) && strpos($queried_object->slug, '-ar') !== false) {
+            $is_arabic_page = true;
+        }
+    }
+    
     // Backup check: if RTL is enabled in WordPress
     if (is_rtl()) {
         $is_arabic_page = true;

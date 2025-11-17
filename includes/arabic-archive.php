@@ -4,8 +4,37 @@
 
 <div class="main">
     <div class="container blog">
+         <div class="main-header row gx-5">
+            <div class="main-header-content col-lg-7 col-md-12">
+               <h1 class="main-header-title">مدونة داج للمحاماة والاستشارات القانونية
+                
+               </h1>
+                <p class="main-header-subtitle">مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى.</p>
+                <p class="main-header-subtitle">مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى.</p>
+
+                
+           </div>
+           <div class="main-header-image col-lg-5 col-md-12">
+                <div class="image-container">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/write-2.jpg" alt="Blog Header Image" class="blog-header-img">
+                </div>
+               
+
+            </div>
+        </div>
+         
         <div class="archive-header">
-            <h1 class="archive-title">مدونة شركة داغ للمحاماة</h1>
+            <h1 class="category-title">
+                <?php 
+                if (is_category()) {
+                    single_cat_title(); // Display current category name
+                } elseif (is_tag()) {
+                    single_tag_title(); // Display current tag name
+                } elseif (is_archive()) {
+                    post_type_archive_title(); // Display archive title
+                }
+                ?>
+            </h1>
             <?php if ( category_description() ) : ?>
                 <div class="archive-description">
                     <?php echo category_description(); ?>
