@@ -40,29 +40,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-// Function to open/toggle mobile nav (used in header.php)
+// Function to open/toggle mobile nav (used in header.php and header-ar.php)
 function toggleMobileNav() {
     const mobileNav = document.querySelector('.mobile-nav');
     const body = document.body;
+    const html = document.documentElement;
     
     if (mobileNav) {
-        // Add active class to trigger slide-in animation
-        mobileNav.classList.add('active');
-        // Disable body scroll
-        body.style.overflow = 'hidden';
+        const isActive = mobileNav.classList.contains('active');
+        
+        if (isActive) {
+            // Close nav
+            mobileNav.classList.remove('active');
+            // Restore scroll position
+            const scrollY = body.style.top;
+            body.style.position = '';
+            body.style.top = '';
+            body.style.overflow = '';
+            body.style.width = '';
+            html.style.overflow = '';
+            
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
+        } else {
+            // Open nav
+            mobileNav.classList.add('active');
+            // Store current scroll position
+            const scrollY = window.scrollY;
+            // Disable scrolling
+            body.style.position = 'fixed';
+            body.style.top = `-${scrollY}px`;
+            body.style.width = '100%';
+            body.style.overflow = 'hidden';
+            html.style.overflow = 'hidden';
+        }
     }
 }
 
-// Function to close mobile nav (used in header.php)
+// Function to close mobile nav (used in header.php and header-ar.php)
 function closeMobileNav() {
     const mobileNav = document.querySelector('.mobile-nav');
     const body = document.body;
+    const html = document.documentElement;
     
     if (mobileNav) {
         // Remove active class to trigger slide-out animation
         mobileNav.classList.remove('active');
-        // Re-enable body scroll
+        
+        // Restore scroll position
+        const scrollY = body.style.top;
+        body.style.position = '';
+        body.style.top = '';
         body.style.overflow = '';
+        body.style.width = '';
+        html.style.overflow = '';
+        
+        if (scrollY) {
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
     }
 }
 
@@ -70,12 +106,17 @@ function closeMobileNav() {
 window.addEventListener('DOMContentLoaded', function() {
     const mobileNav = document.querySelector('.mobile-nav');
     const body = document.body;
+    const html = document.documentElement;
     
     if (mobileNav) {
         // Remove any active state without animation
         mobileNav.style.transition = 'none';
         mobileNav.classList.remove('active');
+        body.style.position = '';
+        body.style.top = '';
         body.style.overflow = '';
+        body.style.width = '';
+        html.style.overflow = '';
         
         // Re-enable transition after a brief moment
         setTimeout(function() {
@@ -252,6 +293,36 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Sign In Dropdown Toggle
+    const signInDropdowns = document.querySelectorAll('.sign-in-dropdown');
+    
+    signInDropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.sign-in-toggle');
+        
+        if (toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // Close other dropdowns
+                signInDropdowns.forEach(other => {
+                    if (other !== dropdown) {
+                        other.classList.remove('active');
+                    }
+                });
+                // Toggle current dropdown
+                dropdown.classList.toggle('active');
+            });
+        }
+    });
+    
+    // Close sign-in dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.sign-in-dropdown')) {
+            signInDropdowns.forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+        }
+    });
 });
 
 // Comments AJAX and View All

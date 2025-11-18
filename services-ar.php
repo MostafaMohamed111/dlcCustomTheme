@@ -26,14 +26,22 @@ Template Name: Services Arabic
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies.png" alt="Corporate Law">
                 <h2 class="text-center">القانون التجاري</h2>
                 <p>تشمل خدماتنا في القانون التجاري تأسيس الشركات، الاندماجات والاستحواذات، الامتثال، وحوكمة الشركات. نساعد الشركات على التنقل في البيئات القانونية المعقدة لضمان سير العمليات بسلاسة.</p>
-                <a href="<?php echo get_permalink(get_page_by_path('companies-services')); ?>" class="btn service-btn">Get Started</a>
+                <?php
+                $companies_ar_category = get_category_by_slug('companies-services-ar');
+                $companies_ar_url = $companies_ar_category ? get_category_link($companies_ar_category->term_id) : '#';
+                ?>
+                <a href="<?php echo $companies_ar_url; ?>" class="btn service-btn">ابدأ الآن</a>
 
             </div>
             <div class="individuals col-lg-6 col-md-12">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individuals.webp" alt="Individual Law">
                 <h2 class="text-center">القانون الفردي</h2>
                 <p>تشمل خدماتنا في القانون الفردي قانون الأسرة، تخطيط العقارات، الإصابات الشخصية، والدفاع الجنائي. نحن نقدم دعمًا قانونيًا مخصصًا لمساعدة الأفراد على التنقل في تحدياتهم القانونية الفريدة.</p>
-                <a href="<?php echo get_permalink(get_page_by_path('individuals-services')); ?>" class="btn service-btn">Get Started</a>
+                <?php
+                $individual_ar_category = get_category_by_slug('individual-services-ar');
+                $individual_ar_url = $individual_ar_category ? get_category_link($individual_ar_category->term_id) : '#';
+                ?>
+                <a href="<?php echo $individual_ar_url; ?>" class="btn service-btn">ابدأ الآن</a>
 
             </div>
         </div>            

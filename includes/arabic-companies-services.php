@@ -1,13 +1,13 @@
-<?php get_header(); ?>
+<?php get_header('ar'); ?>
 
 <div class="hero">
     <div class="layout">
 
     </div>
     <div class="content">
-        <h4>Your best <span>Choice</span></h4>
-        <h1><span>Dag</span> Law Firm Companies Services</h1>
-        <p class="lead">Discover our comprehensive range of legal services tailored to meet your company needs.</p>
+        <h4>افضل <span>اختيار</span></h4>
+        <h1><span>شركة داغ</span> خدمات شركات مكتب المحاماة</h1>
+        <p class="lead">اكتشف مجموعتنا الشاملة من الخدمات القانونية المصممة لتلبية احتياجات شركتك.</p>
     </div>
 </div>
 
@@ -15,14 +15,14 @@
 
 <div class="services-landing companies-services-page">
     <div class="header">
-        <h2 class="services-title">Companies Services<li class="fa-solid fa-building ps-2"></li></h2>
-        <p class="services-subtitle lead">Explore our specialized legal services designed for companies and corporate clients.</p>
+        <h2 class="services-title">خدمات الشركات<li class="fa-solid fa-building ps-2"></li></h2>
+        <p class="services-subtitle lead">استكشف خدماتنا القانونية المتخصصة المصممة للشركات والعملاء المؤسسيين.</p>
     </div>
 
     <div class="container">
         <?php
-        // Get the companies-services category
-        $parent_category = get_category_by_slug('companies-services');
+        // Get the companies-services-ar category
+        $parent_category = get_category_by_slug('companies-services-ar');
         
         if ($parent_category) {
             // Get all child categories
@@ -36,7 +36,7 @@
             // Get current category filter from URL
             $current_category = isset($_GET['cat']) ? intval($_GET['cat']) : 0;
             
-            // Get all category IDs for companies-services and its children (for "All Services" count)
+            // Get all category IDs for companies-services-ar and its children (for "All Services" count)
             $all_category_ids = array($parent_category->term_id);
             $all_children = get_term_children($parent_category->term_id, 'category');
             if (!is_wp_error($all_children)) {
@@ -53,7 +53,14 @@
                 'posts_per_page' => $posts_per_page,
                 'paged' => $paged,
                 'orderby' => 'date',
-                'order' => 'DESC'
+                'order' => 'DESC',
+                'meta_query' => array(
+                    array(
+                        'key' => '_post_language',
+                        'value' => 'ar',
+                        'compare' => '='
+                    )
+                )
             );
             
             // Filter by category
@@ -69,7 +76,7 @@
                     $query_args['category__in'] = $category_ids;
                 }
             } else {
-                // Get all posts from companies-services and its children
+                // Get all posts from companies-services-ar and its children
                 $query_args['category__in'] = $all_category_ids;
             }
             
@@ -83,7 +90,7 @@
                     <div class="sidebar-widget categories-widget">
                         <?php
                         // Determine current category name for display
-                        $current_category_name = 'All Services';
+                        $current_category_name = 'جميع الخدمات';
                         if ($current_category > 0) {
                             $selected_category = get_category($current_category);
                             if ($selected_category) {
@@ -101,18 +108,25 @@
                         <ul class="categories-list">
                             <li>
                                 <?php
-                                // Get post count for "All Services" (all posts in companies-services and children)
+                                // Get post count for "All Services" (all Arabic posts in companies-services-ar and children)
                                 $all_services_query = new WP_Query(array(
                                     'category__in' => $all_category_ids,
                                     'posts_per_page' => -1,
-                                    'post_status' => 'publish'
+                                    'post_status' => 'publish',
+                                    'meta_query' => array(
+                                        array(
+                                            'key' => '_post_language',
+                                            'value' => 'ar',
+                                            'compare' => '='
+                                        )
+                                    )
                                 ));
                                 $all_services_count = $all_services_query->found_posts;
                                 wp_reset_postdata();
                                 ?>
                                 <a href="<?php echo get_category_link($parent_category->term_id); ?>" 
                                    class="category-link <?php echo $current_category == 0 ? 'active' : ''; ?>">
-                                    <span class="category-name">All Services</span>
+                                    <span class="category-name">جميع الخدمات</span>
                                     <span class="category-count"><?php echo $all_services_count; ?></span>
                                 </a>
                             </li>
@@ -180,7 +194,7 @@
                                 
                                 <div class="service-footer">
                                     <a href="<?php the_permalink(); ?>" class="get-started-service-btn">
-                                        Get Started
+                                        ابدأ الآن
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </a>
                                 </div>
@@ -239,8 +253,8 @@
                         ?>
                         <div class="no-services">
                             <i class="fa-solid fa-briefcase"></i>
-                            <h3>No services found</h3>
-                            <p>There are no services available in this category at the moment.</p>
+                            <h3>لا توجد خدمات</h3>
+                            <p>لا توجد خدمات متاحة في هذه الفئة في الوقت الحالي.</p>
                         </div>
                         <?php
                     endif;
@@ -252,8 +266,8 @@
             ?>
             <div class="no-services">
                 <i class="fa-solid fa-briefcase"></i>
-                <h3>Category not found</h3>
-                <p>The companies-services category does not exist. Please create a category with the slug "companies-services".</p>
+                <h3>الفئة غير موجودة</h3>
+                <p>فئة خدمات الشركات غير موجودة. يرجى إنشاء فئة بالاسم "companies-services-ar".</p>
             </div>
             <?php
         }
@@ -270,4 +284,4 @@
 
 
 
-<?php get_footer(); ?>
+<?php get_footer('ar'); ?>

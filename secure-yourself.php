@@ -18,7 +18,7 @@ get_header(); ?>
 
 
 
-<div class="container">
+<div class="container overflow-hidden">
     <section class="secure-yourself">
         <div class="secure-yourself-content">
             <h2 class="title lead ">Our Professional Lawyers Suggest</h2>

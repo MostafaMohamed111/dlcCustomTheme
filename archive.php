@@ -44,10 +44,18 @@ if ($is_news_category) {
     }
 } elseif ($is_companies_services) {
     // Companies services category
-    get_template_part('includes/companies-services');
+    if ($is_arabic_page) {
+        get_template_part('includes/arabic-companies-services');
+    } else {
+        get_template_part('includes/companies-services');
+    }
 } elseif ($is_individual_services) {
     // Individual services category
-    get_template_part('includes/individual-services');
+    if ($is_arabic_page) {
+        get_template_part('includes/arabic-individual-services');
+    } else {
+        get_template_part('includes/individual-services');
+    }
 } else {
     // Blog category (default)
     if ($is_arabic_page) {

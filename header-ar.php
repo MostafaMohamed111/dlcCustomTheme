@@ -65,11 +65,49 @@
                             }
                         }
                         
+                        // Check if we're on a services category
+                        $is_services_page = false;
+                        $service_type = null;
+                        if (is_category() || is_archive()) {
+                            $queried_object = get_queried_object();
+                            if (isset($queried_object->slug)) {
+                                $slug = $queried_object->slug;
+                                if (strpos($slug, 'companies-services-ar') !== false) {
+                                    $is_services_page = true;
+                                    $service_type = 'companies';
+                                } elseif (strpos($slug, 'individual-services-ar') !== false) {
+                                    $is_services_page = true;
+                                    $service_type = 'individual';
+                                }
+                            }
+                        } elseif (is_single() && get_post_type() == 'post') {
+                            $post_categories = get_the_category();
+                            foreach ($post_categories as $cat) {
+                                if (strpos($cat->slug, 'companies-services-ar') !== false) {
+                                    $is_services_page = true;
+                                    $service_type = 'companies';
+                                    break;
+                                } elseif (strpos($cat->slug, 'individual-services-ar') !== false) {
+                                    $is_services_page = true;
+                                    $service_type = 'individual';
+                                    break;
+                                }
+                            }
+                        }
+                        
                         if ($is_news_page) {
                             // Switch to English news category
                             $news_category = get_category_by_slug('news');
                             if ($news_category) {
                                 $english_url = get_category_link($news_category->term_id);
+                            }
+                        }
+                        elseif ($is_services_page && $service_type) {
+                            // Switch to English services category
+                            $slug = ($service_type === 'individual') ? 'individual-services' : 'companies-services';
+                            $service_category = get_category_by_slug($slug);
+                            if ($service_category) {
+                                $english_url = get_category_link($service_category->term_id);
                             }
                         }
                         // If on a blog post, switch to English blog archive
@@ -104,7 +142,22 @@
 
                 <div class="col-3 nav-right">
                     <button class="btn nav-btn btn-define">حدد التواجد<span class="fa-regular fa-flag mx-2"> </span></button>
-                    <button class="btn nav-btn sign-in ms-2">تسجيل الدخول<span class="fas fa-sign-in-alt px-2"></span></button>
+                    <div class="sign-in-dropdown ms-2">
+                        <button class="btn nav-btn sign-in sign-in-toggle" type="button">
+                            تسجيل الدخول
+                            <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
+                        </button>
+                        <div class="sign-in-menu">
+                            <a href="#" class="sign-in-option">
+                                <i class="fa-solid fa-user-tie"></i>
+                                موظف
+                            </a>
+                            <a href="#" class="sign-in-option">
+                                <i class="fa-solid fa-user"></i>
+                                عميل
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div class="toggle-container col-1 ms-auto me-3">
                     <li onclick="toggleMobileNav()" class="mobile-toggle fs-1 fa solid fa-bars"></li>
@@ -153,11 +206,49 @@
                                 }
                             }
                             
+                            // Check if we're on a services category
+                            $is_services_page = false;
+                            $service_type = null;
+                            if (is_category() || is_archive()) {
+                                $queried_object = get_queried_object();
+                                if (isset($queried_object->slug)) {
+                                    $slug = $queried_object->slug;
+                                    if (strpos($slug, 'companies-services-ar') !== false) {
+                                        $is_services_page = true;
+                                        $service_type = 'companies';
+                                    } elseif (strpos($slug, 'individual-services-ar') !== false) {
+                                        $is_services_page = true;
+                                        $service_type = 'individual';
+                                    }
+                                }
+                            } elseif (is_single() && get_post_type() == 'post') {
+                                $post_categories = get_the_category();
+                                foreach ($post_categories as $cat) {
+                                    if (strpos($cat->slug, 'companies-services-ar') !== false) {
+                                        $is_services_page = true;
+                                        $service_type = 'companies';
+                                        break;
+                                    } elseif (strpos($cat->slug, 'individual-services-ar') !== false) {
+                                        $is_services_page = true;
+                                        $service_type = 'individual';
+                                        break;
+                                    }
+                                }
+                            }
+                            
                             if ($is_news_page) {
                                 // Switch to English news category
                                 $news_category = get_category_by_slug('news');
                                 if ($news_category) {
                                     $english_url = get_category_link($news_category->term_id);
+                                }
+                            }
+                            elseif ($is_services_page && $service_type) {
+                                // Switch to English services category
+                                $slug = ($service_type === 'individual') ? 'individual-services' : 'companies-services';
+                                $service_category = get_category_by_slug($slug);
+                                if ($service_category) {
+                                    $english_url = get_category_link($service_category->term_id);
                                 }
                             }
                             // If on a blog post, switch to English blog archive
@@ -216,7 +307,22 @@
                     <div class="row align-items-center mobile-nav-bottom"  >
                         <div class="mobile-actions text-center">
                             <button class="btn nav-btn btn-define mx-4  ">تحديد التواجد<span class="fa-regular fa-flag mx-2"> </span></button>
-                            <button class="btn nav-btn sign-in mx-4 px-5 ">تسجيل الدخول<span class="fas fa-sign-in-alt px-2"></span></button>
+                            <div class="sign-in-dropdown mx-4">
+                                <button class="btn nav-btn sign-in sign-in-toggle px-5" type="button">
+                                    تسجيل الدخول
+                                    <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
+                                </button>
+                                <div class="sign-in-menu">
+                                    <a href="#" class="sign-in-option">
+                                        <i class="fa-solid fa-user-tie"></i>
+                                        موظف
+                                    </a>
+                                    <a href="#" class="sign-in-option">
+                                        <i class="fa-solid fa-user"></i>
+                                        عميل
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

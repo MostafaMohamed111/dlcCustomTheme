@@ -274,6 +274,35 @@
     gap: 20px;
 }
 
+.service-cta {
+    flex: 1;
+}
+
+.service-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(26, 58, 95, 0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-cta-btn i {
+    font-size: 16px;
+}
+
+.service-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(26, 58, 95, 0.35);
+}
+
 .post-share {
     display: flex;
     align-items: center;

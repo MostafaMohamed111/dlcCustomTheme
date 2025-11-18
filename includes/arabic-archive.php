@@ -45,10 +45,23 @@
         <div class="blog-content">
             <aside class="blog-sidebar">
                 <div class="sidebar-widget categories-widget">
-                    <h3 class="widget-title">
-                        <i class="fa-solid fa-folder-open"></i>
-                        التصنيفات
-                    </h3>
+                    <?php
+                    // Determine current category name for display
+                    $current_category_name = 'جميع المنشورات';
+                    if (is_category()) {
+                        $current_category = get_queried_object();
+                        if ($current_category) {
+                            $current_category_name = $current_category->name;
+                        }
+                    }
+                    ?>
+                    <button class="categories-toggle-btn" type="button">
+                        <span class="toggle-content">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <span class="toggle-text"><?php echo esc_html($current_category_name); ?></span>
+                        </span>
+                        <i class="fa-solid fa-chevron-down toggle-icon"></i>
+                    </button>
                     <ul class="categories-list">
                         <li>
                             <?php 
@@ -56,7 +69,7 @@
                             $blog_category = get_category_by_slug('blog-ar');
                             if (!$blog_category) {
                                 // Fallback to 'blog' if blog-ar doesn't exist
-                                $blog_category = get_category_by_slug('blog');
+                            $blog_category = get_category_by_slug('blog');
                             }
                             
                             if ($blog_category) {
@@ -93,11 +106,11 @@
                             ));
                         } else {
                             // Fallback: get only categories with '-ar' in slug
-                            $all_categories = get_categories(array(
-                                'orderby' => 'name',
-                                'order' => 'ASC',
-                                'hide_empty' => true
-                            ));
+                        $all_categories = get_categories(array(
+                            'orderby' => 'name',
+                            'order' => 'ASC',
+                            'hide_empty' => true
+                        ));
                         }
                         
                         foreach($all_categories as $category) {
