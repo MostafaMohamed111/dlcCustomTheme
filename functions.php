@@ -129,6 +129,7 @@ function enqueue_theme_css() {
         $term_id = isset($queried_object->term_id) ? $queried_object->term_id : 0;
         $companies_parent = get_category_by_slug('companies-services');
         $individual_parent = get_category_by_slug('individual-services');
+        $home_international_parent = get_category_by_slug('home-international');
         
         if (isset($queried_object->slug)) {
             $slug = $queried_object->slug;
@@ -155,6 +156,11 @@ function enqueue_theme_css() {
                 $is_individual_services = true;
             }
         }
+        if (!$is_home_international && $home_international_parent && $term_id) {
+            if ($term_id === $home_international_parent->term_id || cat_is_ancestor_of($home_international_parent->term_id, $term_id)) {
+                $is_home_international = true;
+            }
+        }
         
         if ($is_news_category) {
             // News archive page
@@ -164,6 +170,12 @@ function enqueue_theme_css() {
             // Services archives (companies, individual, or home international)
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
+            
+            // Load additional home-international.css for home-international category
+            if ($is_home_international) {
+                wp_register_style('home-international-page', get_template_directory_uri() . '/assets/en/home-international.css', array('services-page'), '1.0.0', 'all');
+                wp_enqueue_style('home-international-page');
+            }
         } else {
             // Blog archive page
             wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');

@@ -273,6 +273,99 @@
 
 
 
+<section class="achievements-section">
+    <div class="container">
+        <h2 class="achievements-title">Achievements</h2>
+        <p class="achievements-intro">
+            Since the inception of Dag Law Firm, providing legal advice, client satisfaction, and meeting their needs has been our compass and our constant goal. Through our work, we have been pleased to be successful partners for a group of prestigious institutions and organizations, and their expression of satisfaction with this distinguished partnership is what we have.
+        </p>
+        
+        <div class="achievements-grid">
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="567">0</div>
+                <div class="achievement-label">Cases</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="5437">0</div>
+                <div class="achievement-label">Contracts</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="633">0</div>
+                <div class="achievement-label">Clients</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="459">0</div>
+                <div class="achievement-label">Intellectual Properties</div>
+            </div>
+        </div>
+        
+        <p class="achievements-conclusion">
+            We are proud of what we have accomplished since the beginning of our journey.
+        </p>
+    </div>
+</section>
+
+
+
+
+<section class="why-choose-us">
+    <div class="container">
+        <h2 class="why-choose-us-title">Why Choose Us</h2>
+        <p class="why-choose-us-intro">
+            We combine deep legal expertise with a commitment to excellence, ensuring that your business receives the highest quality legal services tailored to your unique needs and goals.
+        </p>
+        
+        <div class="why-choose-us-grid">
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-gavel"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">Expert Legal Team</h3>
+                <p class="why-choose-us-card-description">
+                    Our experienced attorneys specialize in Saudi Arabian law and international business regulations, providing you with comprehensive legal guidance.
+                </p>
+            </div>
+            
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">Trusted Partnership</h3>
+                <p class="why-choose-us-card-description">
+                    We build long-term relationships with our clients, understanding their business needs and providing personalized legal solutions.
+                </p>
+            </div>
+            
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">International Expertise</h3>
+                <p class="why-choose-us-card-description">
+                    With deep knowledge of both local and international legal frameworks, we help businesses navigate complex cross-border regulations.
+                </p>
+            </div>
+            
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">Timely Solutions</h3>
+                <p class="why-choose-us-card-description">
+                    We understand the importance of time in business. Our team delivers efficient, responsive legal services when you need them most.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
 
 
 

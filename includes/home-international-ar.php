@@ -288,11 +288,103 @@
 
 
 
+<section class="achievements-section">
+    <div class="container">
+        <h2 class="achievements-title">الإنجازات</h2>
+        <p class="achievements-intro">
+            منذ تأسيس مكتب داغ للمحاماة، كان تقديم المشورة القانونية ورضا العملاء وتلبية احتياجاتهم بوصلة لنا وهدفنا الدائم. من خلال عملنا، سررنا بأن نكون شركاء ناجحين لمجموعة من المؤسسات والمنظمات المرموقة، وتعبيرهم عن رضاهم بهذه الشراكة المتميزة هو ما نملكه.
+        </p>
+        
+        <div class="achievements-grid">
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="567">0</div>
+                <div class="achievement-label">القضايا</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="5437">0</div>
+                <div class="achievement-label">العقود</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="633">0</div>
+                <div class="achievement-label">العملاء</div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-number" data-target="459">0</div>
+                <div class="achievement-label">الملكية الفكرية</div>
+            </div>
+        </div>
+        
+        <p class="achievements-conclusion">
+            نحن فخورون بما أنجزناه منذ بداية رحلتنا.
+        </p>
+    </div>
+</section>
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+<section class="why-choose-us">
+    <div class="container">
+        <h2 class="why-choose-us-title">لماذا تختارنا</h2>
+        <p class="why-choose-us-intro">
+            نجمع بين الخبرة القانونية العميقة والالتزام بالتميز، مما يضمن أن عملك يتلقى خدمات قانونية عالية الجودة مصممة خصيصاً لاحتياجاتك وأهدافك الفريدة.
+        </p>
+        
+        <div class="why-choose-us-grid">
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-gavel"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">فريق قانوني خبير</h3>
+                <p class="why-choose-us-card-description">
+                    محامونا ذوو الخبرة متخصصون في القانون السعودي واللوائح التجارية الدولية، مما يوفر لك إرشاداً قانونياً شاملاً.
+                </p>
+            </div>
+            
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">شراكة موثوقة</h3>
+                <p class="why-choose-us-card-description">
+                    نبني علاقات طويلة الأمد مع عملائنا، نفهم احتياجات أعمالهم ونقدم حلولاً قانونية مخصصة.
+                </p>
+            </div>
+            
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">خبرة دولية</h3>
+                <p class="why-choose-us-card-description">
+                    مع معرفة عميقة بالإطارات القانونية المحلية والدولية، نساعد الشركات على التنقل في اللوائح المعقدة عبر الحدود.
+                </p>
+            </div>
+            
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">حلول في الوقت المناسب</h3>
+                <p class="why-choose-us-card-description">
+                    نفهم أهمية الوقت في الأعمال. يقدم فريقنا خدمات قانونية فعالة وسريعة الاستجابة عندما تحتاجها أكثر.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
 
 <?php get_footer('ar'); ?>

@@ -238,6 +238,8 @@ get_header(); ?>
     </div>
 </section>
 
+
+
 <section class="vision-section">
     <div class="container">
         <div class="vision-content">
@@ -248,6 +250,7 @@ get_header(); ?>
         </div>
     </div>
 </section>
+
 
 <section class="achievements-section">
     <div class="container">
@@ -282,3 +285,4 @@ get_header(); ?>
 </section>
 
 <?php get_footer(); ?>
+
