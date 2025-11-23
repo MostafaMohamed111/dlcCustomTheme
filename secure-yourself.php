@@ -8,7 +8,7 @@ get_header(); ?>
 <div class="hero">
     <div class="hero-background">
         <div class="hero-content ">
-            <h1 class="hero-company">Dag Provides</h1>
+            <h1 class="hero-company">Dag <span>Provides</span></h1>
             <h2 class="hero-title">Variaty Of Legal Solutions And<br/> Security Consultation</h2>
             <p class="hero-subtitle lead">Learn how to safeguard your rights with our expert legal guidance.</p>
         </div>

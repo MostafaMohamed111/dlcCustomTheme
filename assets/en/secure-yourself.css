@@ -45,6 +45,10 @@
     padding: 50px;
 }
 
+.hero-content span {
+    color: yellow;
+}
+
 .hero-company {
     font-size: 48px;
     font-weight: bold;

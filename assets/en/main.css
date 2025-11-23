@@ -156,6 +156,184 @@ nav {
     color: var(--dark-blue);
 }
 
+/* Define Presence Modal */
+.define-presence-modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.define-presence-modal-content {
+    background-color: var(--white);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.define-presence-modal-header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+    color: var(--white);
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.define-presence-modal-header h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.define-presence-close {
+    font-size: 32px;
+    font-weight: 300;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.define-presence-close:hover {
+    transform: rotate(90deg);
+}
+
+.define-presence-modal-body {
+    padding: 30px 25px;
+}
+
+.define-presence-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.define-presence-option {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid var(--gray);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-dark);
+    transition: all 0.3s ease;
+    background-color: var(--white);
+}
+
+.define-presence-option:hover {
+    border-color: var(--primary-blue);
+    background-color: rgba(26, 58, 95, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.option-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.option-icon i {
+    font-size: 24px;
+    color: var(--white);
+}
+
+.option-content {
+    flex: 1;
+}
+
+.option-content h4 {
+    margin: 0 0 5px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--light-blue);
+}
+
+.option-content p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--dark-gray);
+    line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+    .define-presence-modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+
+    .define-presence-modal-header {
+        padding: 18px 20px;
+    }
+
+    .define-presence-modal-header h3 {
+        font-size: 20px;
+    }
+
+    .define-presence-modal-body {
+        padding: 25px 20px;
+    }
+
+    .define-presence-option {
+        padding: 16px;
+    }
+
+    .option-icon {
+        width: 45px;
+        height: 45px;
+        margin-right: 15px;
+    }
+
+    .option-icon i {
+        font-size: 20px;
+    }
+
+    .option-content h4 {
+        font-size: 18px;
+    }
+
+    .option-content p {
+        font-size: 13px;
+    }
+}
+
 
 .sign-in {
     background-color: var(--accent-color);

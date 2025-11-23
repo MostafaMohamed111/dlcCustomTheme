@@ -78,6 +78,9 @@
                                 } elseif (strpos($slug, 'individual-services-ar') !== false) {
                                     $is_services_page = true;
                                     $service_type = 'individual';
+                                } elseif (strpos($slug, 'home-international-ar') !== false) {
+                                    $is_services_page = true;
+                                    $service_type = 'home-international';
                                 }
                             }
                         } elseif (is_single() && get_post_type() == 'post') {
@@ -90,6 +93,10 @@
                                 } elseif (strpos($cat->slug, 'individual-services-ar') !== false) {
                                     $is_services_page = true;
                                     $service_type = 'individual';
+                                    break;
+                                } elseif (strpos($cat->slug, 'home-international-ar') !== false) {
+                                    $is_services_page = true;
+                                    $service_type = 'home-international';
                                     break;
                                 }
                             }
@@ -104,7 +111,13 @@
                         }
                         elseif ($is_services_page && $service_type) {
                             // Switch to English services category
-                            $slug = ($service_type === 'individual') ? 'individual-services' : 'companies-services';
+                            if ($service_type === 'individual') {
+                                $slug = 'individual-services';
+                            } elseif ($service_type === 'home-international') {
+                                $slug = 'home-international';
+                            } else {
+                                $slug = 'companies-services';
+                            }
                             $service_category = get_category_by_slug($slug);
                             if ($service_category) {
                                 $english_url = get_category_link($service_category->term_id);
@@ -141,7 +154,7 @@
                 </div>
 
                 <div class="col-3 nav-right">
-                    <button class="btn nav-btn btn-define">حدد التواجد<span class="fa-regular fa-flag mx-2"> </span></button>
+                    <button class="btn nav-btn btn-define" id="definePresenceBtn" type="button">حدد التواجد<span class="fa-regular fa-flag mx-2"> </span></button>
                     <div class="sign-in-dropdown ms-2">
                         <button class="btn nav-btn sign-in sign-in-toggle" type="button">
                             تسجيل الدخول
@@ -219,6 +232,9 @@
                                     } elseif (strpos($slug, 'individual-services-ar') !== false) {
                                         $is_services_page = true;
                                         $service_type = 'individual';
+                                    } elseif (strpos($slug, 'home-international-ar') !== false) {
+                                        $is_services_page = true;
+                                        $service_type = 'home-international';
                                     }
                                 }
                             } elseif (is_single() && get_post_type() == 'post') {
@@ -231,6 +247,10 @@
                                     } elseif (strpos($cat->slug, 'individual-services-ar') !== false) {
                                         $is_services_page = true;
                                         $service_type = 'individual';
+                                        break;
+                                    } elseif (strpos($cat->slug, 'home-international-ar') !== false) {
+                                        $is_services_page = true;
+                                        $service_type = 'home-international';
                                         break;
                                     }
                                 }
@@ -245,7 +265,13 @@
                             }
                             elseif ($is_services_page && $service_type) {
                                 // Switch to English services category
-                                $slug = ($service_type === 'individual') ? 'individual-services' : 'companies-services';
+                                if ($service_type === 'individual') {
+                                    $slug = 'individual-services';
+                                } elseif ($service_type === 'home-international') {
+                                    $slug = 'home-international';
+                                } else {
+                                    $slug = 'companies-services';
+                                }
                                 $service_category = get_category_by_slug($slug);
                                 if ($service_category) {
                                     $english_url = get_category_link($service_category->term_id);
@@ -306,7 +332,7 @@
 
                     <div class="row align-items-center mobile-nav-bottom"  >
                         <div class="mobile-actions text-center">
-                            <button class="btn nav-btn btn-define mx-4  ">تحديد التواجد<span class="fa-regular fa-flag mx-2"> </span></button>
+                            <button class="btn nav-btn btn-define mx-4" id="definePresenceBtnMobile" type="button">تحديد التواجد<span class="fa-regular fa-flag mx-2"> </span></button>
                             <div class="sign-in-dropdown mx-4">
                                 <button class="btn nav-btn sign-in sign-in-toggle px-5" type="button">
                                     تسجيل الدخول
@@ -337,3 +363,44 @@
       
 
     </nav>
+
+    <!-- Define Presence Modal -->
+    <div id="definePresenceModal" class="define-presence-modal">
+        <div class="define-presence-modal-content">
+            <div class="define-presence-modal-header">
+                <h3>حدد تواجدك</h3>
+                <span class="define-presence-close" id="definePresenceClose">&times;</span>
+            </div>
+            <div class="define-presence-modal-body">
+                <?php
+                // Get URLs
+                $home_international_category = get_category_by_slug('home-international-ar');
+                $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
+                
+                // Get Arabic front page URL
+                $arabic_front_page = get_page_by_path('front-page-ar');
+                $local_url = $arabic_front_page ? get_permalink($arabic_front_page) : home_url('/front-page-ar/');
+                ?>
+                <div class="define-presence-options">
+                    <a href="<?php echo esc_url($international_url); ?>" class="define-presence-option">
+                        <div class="option-icon">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div class="option-content">
+                            <h4>دولي</h4>
+                            <p>الوصول إلى خدماتنا الدولية</p>
+                        </div>
+                    </a>
+                    <a href="<?php echo esc_url($local_url); ?>" class="define-presence-option">
+                        <div class="option-icon">
+                            <i class="fa-solid fa-building"></i>
+                        </div>
+                        <div class="option-content">
+                            <h4>محلي</h4>
+                            <p>الوصول إلى خدماتنا المحلية</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>

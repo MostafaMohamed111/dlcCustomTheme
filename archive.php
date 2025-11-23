@@ -8,6 +8,7 @@ $is_arabic_page = false;
 $is_news_category = false;
 $is_companies_services = false;
 $is_individual_services = false;
+$is_home_international = false;
 
 // Check if it's a category
 if (isset($queried_object->slug)) {
@@ -32,6 +33,11 @@ if (isset($queried_object->slug)) {
     if (strpos($slug, 'individual-services') !== false) {
         $is_individual_services = true;
     }
+    
+    // Check if it's home international category
+    if (strpos($slug, 'home-international') !== false) {
+        $is_home_international = true;
+    }
 }
 
 // Load the appropriate template based on category type and language
@@ -55,6 +61,13 @@ if ($is_news_category) {
         get_template_part('includes/arabic-individual-services');
     } else {
         get_template_part('includes/individual-services');
+    }
+} elseif ($is_home_international) {
+    // Home international category
+    if ($is_arabic_page) {
+        get_template_part('includes/home-international-ar');
+    } else {
+        get_template_part('includes/home-international');
     }
 } else {
     // Blog category (default)

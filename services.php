@@ -10,7 +10,7 @@ Template Name: Services Page
     <div class="hero">
         <div class="hero-background"></div>
         <div class="hero-content">
-            <h1 class="hero-company">What We Offer</h1>
+            <h1 class="hero-company">What We <span>Offer</span></h1>
             <h2 class="hero-title">Comprehensive Legal Solutions</h2>
             <p class="hero-subtitle">Explore our range of legal services designed to meet your needs.</p>
         </div>

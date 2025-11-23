@@ -118,11 +118,13 @@ function enqueue_theme_css() {
         wp_enqueue_style('about-us-page');
     }
 
+
     else if (is_archive()) {
         // Check category type
         $is_news_category = false;
         $is_companies_services = false;
         $is_individual_services = false;
+        $is_home_international = false;
         $queried_object = get_queried_object();
         $term_id = isset($queried_object->term_id) ? $queried_object->term_id : 0;
         $companies_parent = get_category_by_slug('companies-services');
@@ -137,6 +139,8 @@ function enqueue_theme_css() {
                 $is_companies_services = true;
             } elseif (strpos($slug, 'individual-services') !== false) {
                 $is_individual_services = true;
+            } elseif (strpos($slug, 'home-international') !== false) {
+                $is_home_international = true;
             }
         }
         
@@ -156,8 +160,8 @@ function enqueue_theme_css() {
             // News archive page
             wp_register_style('news-page', get_template_directory_uri() . '/assets/en/news.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('news-page');
-        } elseif ($is_companies_services || $is_individual_services) {
-            // Services archives (companies or individual)
+        } elseif ($is_companies_services || $is_individual_services || $is_home_international) {
+            // Services archives (companies, individual, or home international)
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
         } else {
@@ -227,6 +231,7 @@ function keep_correct_menu_active($classes, $item) {
         $is_blog_category = false;
         $is_companies_services = false;
         $is_individual_services = false;
+        $is_home_international = false;
         $is_services_category = false;
         
         // Determine if we're viewing news or blog
@@ -235,6 +240,7 @@ function keep_correct_menu_active($classes, $item) {
             $term_id = isset($queried_object->term_id) ? $queried_object->term_id : 0;
             $companies_parent = get_category_by_slug('companies-services');
             $individual_parent = get_category_by_slug('individual-services');
+            $home_international_parent = get_category_by_slug('home-international');
             
             // First, check for special service categories (exclude from blog/news)
             if (strpos($slug, 'companies-services') !== false ||
@@ -243,6 +249,9 @@ function keep_correct_menu_active($classes, $item) {
             } elseif (strpos($slug, 'individual-services') !== false ||
                 ($individual_parent && $term_id && cat_is_ancestor_of($individual_parent->term_id, $term_id))) {
                 $is_individual_services = true;
+            } elseif (strpos($slug, 'home-international') !== false ||
+                ($home_international_parent && $term_id && cat_is_ancestor_of($home_international_parent->term_id, $term_id))) {
+                $is_home_international = true;
             }
             // Check if it's a news category (news or news-ar)
             elseif ($slug === 'news' || $slug === 'news-ar' || strpos($slug, 'news') !== false) {
@@ -261,12 +270,13 @@ function keep_correct_menu_active($classes, $item) {
             }
         } elseif (is_archive() && !is_category()) {
             // On main archive page - check if it's blog archive
-            // But exclude if it's companies-services or individual-services
+            // But exclude if it's companies-services, individual-services, or home-international
             $queried_object = get_queried_object();
             if (isset($queried_object->slug)) {
                 $slug = $queried_object->slug;
                 if (strpos($slug, 'companies-services') === false && 
-                    strpos($slug, 'individual-services') === false) {
+                    strpos($slug, 'individual-services') === false &&
+                    strpos($slug, 'home-international') === false) {
                     $is_blog_category = true;
                 }
             } else {
@@ -277,6 +287,7 @@ function keep_correct_menu_active($classes, $item) {
             $post_categories = get_the_category();
             $companies_parent = get_category_by_slug('companies-services');
             $individual_parent = get_category_by_slug('individual-services');
+            $home_international_parent = get_category_by_slug('home-international');
             foreach ($post_categories as $cat) {
                 // Check for special service categories first
                 if (strpos($cat->slug, 'companies-services') !== false ||
@@ -286,6 +297,10 @@ function keep_correct_menu_active($classes, $item) {
                 } elseif (strpos($cat->slug, 'individual-services') !== false ||
                     ($individual_parent && cat_is_ancestor_of($individual_parent->term_id, $cat->term_id))) {
                     $is_individual_services = true;
+                    break;
+                } elseif (strpos($cat->slug, 'home-international') !== false ||
+                    ($home_international_parent && cat_is_ancestor_of($home_international_parent->term_id, $cat->term_id))) {
+                    $is_home_international = true;
                     break;
                 } elseif ($cat->slug === 'news' || $cat->slug === 'news-ar' || strpos($cat->slug, 'news') !== false) {
                     $is_news_category = true;
@@ -306,8 +321,8 @@ function keep_correct_menu_active($classes, $item) {
             }
         }
         
-        // Determine if current context is services (companies or individual)
-        if ($is_companies_services || $is_individual_services) {
+        // Determine if current context is services (companies, individual, or home-international)
+        if ($is_companies_services || $is_individual_services || $is_home_international) {
             $is_services_category = true;
         }
         
@@ -326,9 +341,10 @@ function keep_correct_menu_active($classes, $item) {
             // More specific check - must match exact blog category URL or /category/blog (not just /blog)
             if (strpos($menu_url, $blog_url) !== false || 
                 strpos($menu_url, '/category/blog') !== false) {
-                // Exclude companies-services and individual-services from blog menu
+                // Exclude companies-services, individual-services, and home-international from blog menu
                 if (strpos($menu_url, 'companies-services') === false && 
-                    strpos($menu_url, 'individual-services') === false) {
+                    strpos($menu_url, 'individual-services') === false &&
+                    strpos($menu_url, 'home-international') === false) {
                     $is_blog_menu_item = true;
                 }
             }
@@ -338,9 +354,10 @@ function keep_correct_menu_active($classes, $item) {
             $blog_ar_url = get_category_link($blog_ar_category->term_id);
             if (strpos($menu_url, $blog_ar_url) !== false || 
                 strpos($menu_url, '/category/blog-ar') !== false) {
-                // Exclude companies-services and individual-services from blog menu
+                // Exclude companies-services, individual-services, and home-international from blog menu
                 if (strpos($menu_url, 'companies-services') === false && 
-                    strpos($menu_url, 'individual-services') === false) {
+                    strpos($menu_url, 'individual-services') === false &&
+                    strpos($menu_url, 'home-international') === false) {
                     $is_blog_menu_item = true;
                 }
             }
@@ -366,12 +383,14 @@ function keep_correct_menu_active($classes, $item) {
             }
         }
         
-        // Check if this menu item is for Services (companies or individual)
+        // Check if this menu item is for Services (companies, individual, or home-international)
         $service_categories = array(
             get_category_by_slug('companies-services'),
             get_category_by_slug('companies-services-ar'),
             get_category_by_slug('individual-services'),
-            get_category_by_slug('individual-services-ar')
+            get_category_by_slug('individual-services-ar'),
+            get_category_by_slug('home-international'),
+            get_category_by_slug('home-international-ar')
         );
         
         foreach ($service_categories as $service_cat) {
@@ -524,7 +543,7 @@ function dlc_get_category_ids_by_type($category_type = 'blog', $include_children
     return array_unique($category_ids);
 }
 
-// Helper to determine service type (companies or individual) for a given post
+// Helper to determine service type (companies, individual, or home-international) for a given post
 function dlc_get_service_type($post_id = null) {
     if (!$post_id) {
         $post_id = get_the_ID();
@@ -542,6 +561,8 @@ function dlc_get_service_type($post_id = null) {
     $companies_ar_parent = get_category_by_slug('companies-services-ar');
     $individual_parent = get_category_by_slug('individual-services');
     $individual_ar_parent = get_category_by_slug('individual-services-ar');
+    $home_international_parent = get_category_by_slug('home-international');
+    $home_international_ar_parent = get_category_by_slug('home-international-ar');
 
     foreach ($categories as $cat) {
         if (strpos($cat->slug, 'companies-services') !== false ||
@@ -555,6 +576,12 @@ function dlc_get_service_type($post_id = null) {
             ($individual_ar_parent && cat_is_ancestor_of($individual_ar_parent->term_id, $cat->term_id))) {
             return 'individual';
         }
+
+        if (strpos($cat->slug, 'home-international') !== false ||
+            ($home_international_parent && cat_is_ancestor_of($home_international_parent->term_id, $cat->term_id)) ||
+            ($home_international_ar_parent && cat_is_ancestor_of($home_international_ar_parent->term_id, $cat->term_id))) {
+            return 'home-international';
+        }
     }
 
     return null;
@@ -563,7 +590,15 @@ function dlc_get_service_type($post_id = null) {
 // Helper to get all category IDs for a given service type and language
 function dlc_get_service_category_ids($service_type = 'companies', $language = 'en') {
     $category_ids = array();
-    $base_slug = ($service_type === 'individual') ? 'individual-services' : 'companies-services';
+    
+    if ($service_type === 'individual') {
+        $base_slug = 'individual-services';
+    } elseif ($service_type === 'home-international') {
+        $base_slug = 'home-international';
+    } else {
+        $base_slug = 'companies-services';
+    }
+    
     $slug = ($language === 'ar') ? $base_slug . '-ar' : $base_slug;
     
     $parent_category = get_category_by_slug($slug);
@@ -579,7 +614,7 @@ function dlc_get_service_category_ids($service_type = 'companies', $language = '
     return array_unique(array_filter($category_ids));
 }
 
-// Helper to get the archive URL for services (companies or individual) based on post language
+// Helper to get the archive URL for services (companies, individual, or home-international) based on post language
 function dlc_get_service_archive_url($post_id = null) {
     if (!$post_id) {
         global $post;
@@ -594,7 +629,14 @@ function dlc_get_service_archive_url($post_id = null) {
     // Get post language
     $language = get_post_meta($post_id, '_post_language', true) ?: 'en';
     
-    $base_slug = ($service_type === 'individual') ? 'individual-services' : 'companies-services';
+    if ($service_type === 'individual') {
+        $base_slug = 'individual-services';
+    } elseif ($service_type === 'home-international') {
+        $base_slug = 'home-international';
+    } else {
+        $base_slug = 'companies-services';
+    }
+    
     $slug = ($language === 'ar') ? $base_slug . '-ar' : $base_slug;
     $category = get_category_by_slug($slug);
 

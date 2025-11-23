@@ -45,6 +45,10 @@
     animation: fadeInUp 1s ease;
 }
 
+.hero-content span {
+    color: yellow;
+}
+
 
 
 .hero-company {
@@ -69,6 +73,7 @@
     opacity: 0.95;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
+
 
 /* Keyframe Animations */
 @keyframes fadeInUp {

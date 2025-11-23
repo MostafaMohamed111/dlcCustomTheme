@@ -453,3 +453,62 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Define Presence Modal
+document.addEventListener('DOMContentLoaded', function() {
+    const definePresenceBtn = document.getElementById('definePresenceBtn');
+    const definePresenceBtnMobile = document.getElementById('definePresenceBtnMobile');
+    const definePresenceModal = document.getElementById('definePresenceModal');
+    const definePresenceClose = document.getElementById('definePresenceClose');
+    const body = document.body;
+
+    function openDefinePresenceModal() {
+        if (definePresenceModal) {
+            definePresenceModal.style.display = 'flex';
+            body.style.overflow = 'hidden';
+        }
+    }
+
+    if (definePresenceModal) {
+        // Open modal from desktop button
+        if (definePresenceBtn) {
+            definePresenceBtn.addEventListener('click', openDefinePresenceModal);
+        }
+
+        // Open modal from mobile button
+        if (definePresenceBtnMobile) {
+            definePresenceBtnMobile.addEventListener('click', function() {
+                openDefinePresenceModal();
+                // Close mobile nav if open
+                const mobileNav = document.querySelector('.mobile-nav');
+                if (mobileNav && mobileNav.classList.contains('active')) {
+                    closeMobileNav();
+                }
+            });
+        }
+
+        // Close modal
+        if (definePresenceClose) {
+            definePresenceClose.addEventListener('click', function() {
+                definePresenceModal.style.display = 'none';
+                body.style.overflow = '';
+            });
+        }
+
+        // Close modal when clicking outside
+        definePresenceModal.addEventListener('click', function(e) {
+            if (e.target === definePresenceModal) {
+                definePresenceModal.style.display = 'none';
+                body.style.overflow = '';
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && definePresenceModal.style.display === 'flex') {
+                definePresenceModal.style.display = 'none';
+                body.style.overflow = '';
+            }
+        });
+    }
+});
