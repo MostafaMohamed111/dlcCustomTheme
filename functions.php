@@ -117,6 +117,24 @@ function enqueue_theme_css() {
         wp_register_style('about-us-page', get_template_directory_uri() . '/assets/en/about-us.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('about-us-page');
     }
+    else if(is_page_template('privacy-policy.php') || is_page_template('privacy-policy-ar.php')) {
+        // Privacy Policy page
+        wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('privacy-policy-page');
+    }
+    // Fallback: Check by page slug or template slug
+    else if(is_page()) {
+        $template_slug = get_page_template_slug();
+        $page_slug = get_post_field('post_name', get_the_ID());
+        $template_file = get_page_template();
+        
+        if(($template_slug && (strpos($template_slug, 'privacy-policy') !== false)) ||
+           ($template_file && (strpos(basename($template_file), 'privacy-policy') !== false)) ||
+           ($page_slug && (strpos($page_slug, 'privacy') !== false || strpos($page_slug, 'privacy-policy') !== false))) {
+            wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('privacy-policy-page');
+        }
+    }
 
 
     else if (is_archive()) {

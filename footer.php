@@ -14,7 +14,7 @@
                     if ( has_nav_menu( 'primary-menu' ) ) {
                         wp_nav_menu(
                             array(
-                                'theme_location' => 'primary-menu',
+                                'theme_location' => 'footer-menu',
                                 'container'      => 'nav',
                                 'container_class'=> 'footer-menu',
                                 'menu_class'     => 'list-unstyled d-flex flex-wrap justify-content-center gap-3 mb-0',
