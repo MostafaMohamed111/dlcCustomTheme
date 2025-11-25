@@ -252,6 +252,12 @@ get_header(); ?>
 </section>
 
 
+<?php
+$cases_count = (int) get_field('cases');
+$contracts_count = (int) get_field('contracts');
+$clients_count = (int) get_field('clients');
+$intellectual_properties_count = (int) get_field('intellectual_properties');
+?>
 <section class="achievements-section">
     <div class="container">
         <h2 class="achievements-title">Achievements</h2>
@@ -261,19 +267,19 @@ get_header(); ?>
         
         <div class="achievements-grid">
             <div class="achievement-card">
-                <div class="achievement-number" data-target="567">0</div>
+                <div class="achievement-number" data-target="<?php echo esc_attr($cases_count); ?>"><?php echo esc_html($cases_count); ?></div>
                 <div class="achievement-label">Cases</div>
             </div>
             <div class="achievement-card">
-                <div class="achievement-number" data-target="5437">0</div>
+                <div class="achievement-number" data-target="<?php echo esc_attr($contracts_count); ?>"><?php echo esc_html($contracts_count); ?></div>
                 <div class="achievement-label">Contracts</div>
             </div>
             <div class="achievement-card">
-                <div class="achievement-number" data-target="633">0</div>
+                <div class="achievement-number" data-target="<?php echo esc_attr($clients_count); ?>"><?php echo esc_html($clients_count); ?></div>
                 <div class="achievement-label">Clients</div>
             </div>
             <div class="achievement-card">
-                <div class="achievement-number" data-target="459">0</div>
+                <div class="achievement-number" data-target="<?php echo esc_attr($intellectual_properties_count); ?>"><?php echo esc_html($intellectual_properties_count); ?></div>
                 <div class="achievement-label">Intellectual Properties</div>
             </div>
         </div>
