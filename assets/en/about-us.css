@@ -339,9 +339,7 @@
 }
 
 @media (max-width: 600px) {
-    .hero-image {
-        display: block ;
-    }
+   
     .hero-body::after {
         background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 1) 100%);
     }
@@ -350,6 +348,9 @@
 
         margin-top: 30px;
 
+    }
+    .hero-row{
+        margin: auto;
     }
 
     .hero-title {
@@ -363,6 +364,7 @@
     .mission-title {
         font-size: 28px;
     }
+
 }
 
 /* Values Section */

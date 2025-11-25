@@ -15,7 +15,7 @@
 
 <div class="services-landing companies-services-page">
     <div class="header">
-        <h2 class="services-title">خدمات الشركات<li class="fa-solid fa-building ps-2"></li></h2>
+        <h2 id="services-title" class="services-title">خدمات الشركات<li class="fa-solid fa-building ps-2"></li></h2>
         <p class="services-subtitle lead">استكشف خدماتنا القانونية المتخصصة المصممة للشركات والعملاء المؤسسيين.</p>
     </div>
 
@@ -124,7 +124,7 @@
                                 $all_services_count = $all_services_query->found_posts;
                                 wp_reset_postdata();
                                 ?>
-                                <a href="<?php echo get_category_link($parent_category->term_id); ?>" 
+                                <a href="<?php echo esc_url(get_category_link($parent_category->term_id) . '#services-title'); ?>" 
                                    class="category-link <?php echo $current_category == 0 ? 'active' : ''; ?>">
                                     <span class="category-name">جميع الخدمات</span>
                                     <span class="category-count"><?php echo $all_services_count; ?></span>
@@ -134,7 +134,7 @@
                                 $is_active = ($current_category == $child_cat->term_id);
                                 ?>
                                 <li>
-                                    <a href="<?php echo add_query_arg('cat', $child_cat->term_id, get_category_link($parent_category->term_id)); ?>" 
+                                    <a href="<?php echo esc_url(add_query_arg('cat', $child_cat->term_id, get_category_link($parent_category->term_id)) . '#services-title'); ?>" 
                                        class="category-link <?php echo $is_active ? 'active' : ''; ?>">
                                         <span class="category-name"><?php echo esc_html($child_cat->name); ?></span>
                                         <span class="category-count"><?php echo $child_cat->count; ?></span>

@@ -48,6 +48,7 @@
 .category-title {
     font-size: 42px;
     font-weight: 500;
+    scroll-margin-top: 100px;
     color: var(--light-blue);
     margin-bottom: 15px;
 }

@@ -75,6 +75,7 @@
 }
 
 
+
 /* Keyframe Animations */
 @keyframes fadeInUp {
     from {
@@ -220,5 +221,58 @@
     
     .companies, .individuals {
         padding: 40px 0px;
+    }
+}
+
+
+
+@media (max-width: 991.98px) {
+    .hero {
+        height: 75vh;
+        padding: 120px 20px 60px;
+    }
+
+    .hero-company {
+        font-size: 52px;
+    }
+
+    .hero-title {
+        font-size: 40px;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    .services-head {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero {
+        height: auto;
+        min-height: 60vh;
+        padding: 140px 16px 80px;
+    }
+
+    .hero-content {
+        padding: 0 10px;
+    }
+
+    .hero-company {
+        font-size: 36px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+    }
+     .services-head {
+        font-size: 22px;
     }
 }

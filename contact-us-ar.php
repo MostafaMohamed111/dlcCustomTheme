@@ -47,14 +47,25 @@
 
         <!-- Contact Cards -->
         <div class="contact-cards row gx-4 gy-4">
+            <?php
+            $phone = get_field('phone');
+            $mail = get_field('mail');
+            $working_hours = get_field('working_hours');
+            $closed = get_field('closed');
+            ?>
             <div class=" col-lg-3 col-md-6 col-sm-12">
                 <div class="contact-card">
                     <div class="contact-icon">
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
                     <h3>موقع المكتب</h3>
-                    <p>123 شارع القانون، الرياض، المملكة العربية السعودية</p>
-                    <a class="contact-action" href="https://maps.google.com/?q=Riyadh" target="_blank" rel="noopener">فتح في خرائط جوجل</a>
+                    <?php
+                    $location_url = get_field('location');
+                    if (!$location_url) {
+                        $location_url = 'https://maps.google.com/?q=Riyadh';
+                    }
+                    ?>
+                    <a class="contact-action" href="<?php echo esc_url($location_url); ?>" target="_blank" rel="noopener">فتح في خرائط جوجل</a>
                 </div>
             </div>
 
@@ -64,8 +75,12 @@
                         <i class="fas fa-phone-alt"></i>
                     </div>
                     <h3>الهاتف</h3>
-                    <p>+966 12 345 6789</p>
-                    <a class="contact-action" href="tel:+966123456789">Call Now</a>
+                    <p><?php echo $phone ? esc_html($phone) : '+966 12 345 6789'; ?></p>
+                    <?php if ($phone) : ?>
+                        <a class="contact-action" href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $phone)); ?>">اتصل الآن</a>
+                    <?php else : ?>
+                        <a class="contact-action" href="tel:+966123456789">اتصل الآن</a>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -75,8 +90,12 @@
                         <i class="fas fa-envelope"></i>
                     </div>
                     <h3>البريد الإلكتروني  </h3>
-                    <p>info@legalconsulting.com</p>
-                    <a class="contact-action" href="mailto:info@legalconsulting.com">إرسال بريد إلكتروني</a>
+                    <p><?php echo $mail ? esc_html($mail) : 'info@legalconsulting.com'; ?></p>
+                    <?php if ($mail) : ?>
+                        <a class="contact-action" href="mailto:<?php echo esc_attr($mail); ?>">إرسال بريد إلكتروني</a>
+                    <?php else : ?>
+                        <a class="contact-action" href="mailto:info@legalconsulting.com">إرسال بريد إلكتروني</a>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -86,27 +105,25 @@
                         <i class="fas fa-clock"></i>
                     </div>
                     <h3>ساعات العمل</h3>
-                    <p>الأحد–الخميس: 9:00 – 18:00</p>
-                    <span class="contact-action muted">الجمعة–السبت: مغلق</span>
+                    <p><?php echo $working_hours ? esc_html($working_hours) : 'الأحد–الخميس: 9:00 – 18:00'; ?></p>
+                    <?php if ($closed) : ?>
+                        <span class="contact-action muted"><?php echo esc_html($closed); ?></span>
+                    <?php else : ?>
+                        <span class="contact-action muted">الجمعة–السبت: مغلق</span>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
 
         <!-- Quick Actions -->
         <div class="contact-quick row gx-3 gy-3 my-5 align-items-stretch">
-            <div class="col-md-4 col-sm-12">
+            <div class="col-md-6 col-sm-12">
                 <a class="quick-link whatsapp" href="https://wa.me/966123456789" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i>
                     <span>الدردشة على واتساب</span>
                 </a>
             </div>
-            <div class="col-md-4 col-sm-12">
-                <a class="quick-link directions" href="https://maps.google.com/?q=Riyadh" target="_blank" rel="noopener">
-                    <i class="fas fa-route"></i>
-                    <span>الحصول على الاتجاهات</span>
-                </a>
-            </div>
-            <div class="col-md-4 col-sm-12">
+            <div class="col-md-6 col-sm-12">
                 <a class="quick-link calendar" href="#contact-form">
                     <i class="fas fa-calendar-check"></i>
                     <span>حجز استشارة</span>

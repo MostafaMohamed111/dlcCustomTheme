@@ -4,7 +4,7 @@
 
 .hero {
     position: relative;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,6 +73,10 @@
     gap: 20px;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+.hero-buttons a {
+    text-decoration: none;
 }
 
 .btn-primary {
@@ -147,8 +151,8 @@ section {
 
 /* About Section */
 .about-section {
-    background-color: var(--white);
-}
+    background-color: var(--white);}
+
 
 .about-content {
     margin-top: 40px;
@@ -194,6 +198,13 @@ section {
     height: 100%;
 }
 
+.stat-item h4 {
+    font-size: 36px;
+    color: var(--accent-color);
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
 .static-item-inner {
         background-color: var(--light-gray);
         border-radius: 10px;
@@ -205,27 +216,8 @@ section {
     transform: scale(1);
 }
 
-.stat-item.animate:nth-child(1) {
-    transition-delay: 0.2s;
-}
-
-.stat-item.animate:nth-child(2) {
-    transition-delay: 0.4s;
-}
-
-.stat-item.animate:nth-child(3) {
-    transition-delay: 0.6s;
-}
-
 .stat-item:hover {
     transform: translateY(-5px);
-}
-
-.stat-item h4 {
-    font-size: 36px;
-    color: var(--accent-color);
-    margin-bottom: 5px;
-    font-weight: bold;
 }
 
 .stat-item p {
@@ -262,6 +254,19 @@ section {
 
 /* Responsive adjustments for md to small screens */
 @media (max-width: 991.98px) {
+    .hero {
+        min-height: 75vh;
+        padding-top: 40px;
+    }
+
+    .hero-company {
+        font-size: 56px;
+    }
+
+    .hero-title {
+        font-size: 42px;
+    }
+
     .about-text {
         margin-bottom: 40px;
     }
@@ -290,6 +295,60 @@ section {
     
     .about-img {
         min-height: 250px;
+    }
+
+    .hero-company {
+        font-size: 48px;
+    }
+
+    .hero-title {
+        font-size: 34px;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-buttons a {
+        width: auto;
+        min-width: 220px;
+        text-align: center;
+    }
+
+    .about-stats .stat-item {
+        padding: 10px 0;
+    }
+
+    .stat-item h4 {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .hero {
+        min-height: auto;
+        padding: 100px 0 60px;
+    }
+
+    .hero-content {
+        padding: 0 10px;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .section-subtitle {
+        font-size: 16px;
+    }
+
+    .stat-item p {
+        font-size: 13px;
     }
 }
 
@@ -325,14 +384,28 @@ section {
 
 /* Services Section */
 .services-section {
-    background: linear-gradient(135deg, var(--light-gray) 0%, var(--white) 100%);
+    position: relative;
+    background-image: url("../images/geometricPattern.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
+
+.services-section .container .section-header .section-title {
+   background-color: var(--light-gray);
+   margin: auto;
+   width: fit-content;
+   border-radius: 8px;
+}
+
 
 .services-grid {
     margin-top: 40px;
 }
 
 .service-card {
+    
     padding: 40px 30px;
     border-radius: 15px;
     text-align: center;
@@ -373,16 +446,18 @@ section {
     transition-delay: 0.2s;
 }
 
-.service-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 30px var(--shadow-lg);
-    border-color: var(--accent-color);
+.card-content {
+    transition: transform 0.6s ease, box-shadow 0.3s ease;
+    padding: 30px 15px;
+    border-radius: 15px;
+    background-color: var(--white);
+    border: 2px solid transparent;
 }
 
-.card-content {
-    padding: 30px 15px ;
-    border-radius: 15px;
-    background-color: var(--light-gray);    
+.card-content:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px var(--shadow-lg);
+    border: 2px solid var(--accent-color);
 }
 
 .service-icon {
@@ -426,6 +501,10 @@ section {
     transition: all 0.3s ease;
     flex-grow: 0;
     margin-top: auto;
+}
+
+.card-content a{
+    text-decoration: none;
 }
 
 .service-btn:hover {

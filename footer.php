@@ -27,8 +27,23 @@
             <div class="col-md-3 footer-actions text-center ">
                 <h6 class="footer-action-title mb-2">Join Our Community</h6>
                 <div class="footer-buttons ">
-                    <button class="btn nav-btn get-in-touch me-2">Get in Touch</button>
-                    <button class="btn nav-btn sign-in footer-sign-in" type="button">Sign In</button>
+                    <a href="<?php echo home_url('/contact-us'); ?>" class="btn nav-btn get-in-touch me-2">Get in Touch</a>
+                    <div class="sign-in-dropdown">
+                        <button class="btn nav-btn sign-in sign-in-toggle footer-sign-in" type="button">
+                            Sign In
+                            <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
+                        </button>
+                        <div class="sign-in-menu">
+                            <a href="https://portals.dlc.com.sa/admin/authentication" class="sign-in-option">
+                                <i class="fa-solid fa-user-tie"></i>
+                                Employee
+                            </a>
+                            <a href="https://portals.dlc.com.sa/authentication/login" class="sign-in-option">
+                                <i class="fa-solid fa-user"></i>
+                                Customer
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

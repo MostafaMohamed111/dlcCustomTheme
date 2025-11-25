@@ -27,8 +27,23 @@
             <div class="col-md-3 footer-actions text-center ">
                 <h6 class="footer-action-title mb-2">انضم إلى مجتمعنا</h6>
                 <div class="footer-buttons ">
-                    <button class="btn nav-btn get-in-touch me-2">تواصل معنا</button>
-                    <button class="btn nav-btn sign-in footer-sign-in" type="button">تسجيل الدخول</button>
+                    <a href="<?php echo home_url('/contact-us-ar'); ?>" class="btn nav-btn get-in-touch me-2">تواصل معنا</a>
+                    <div class="sign-in-dropdown">
+                        <button class="btn nav-btn sign-in sign-in-toggle footer-sign-in" type="button">
+                            تسجيل الدخول
+                            <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
+                        </button>
+                        <div class="sign-in-menu">
+                            <a href="https://portals.dlc.com.sa/admin/authentication" class="sign-in-option">
+                                <i class="fa-solid fa-user-tie"></i>
+                                موظف
+                            </a>
+                            <a href="https://portals.dlc.com.sa/authentication/login" class="sign-in-option">
+                                <i class="fa-solid fa-user"></i>
+                                عميل
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

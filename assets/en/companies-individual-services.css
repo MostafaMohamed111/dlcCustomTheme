@@ -208,6 +208,7 @@
     color:  var(--light-blue);
     font-size: 36px;
     margin-bottom: 20px;
+    scroll-margin-top: 100px;
 }
 .services-landing .header p {
     font-size: 20px;

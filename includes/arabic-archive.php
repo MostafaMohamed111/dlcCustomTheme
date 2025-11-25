@@ -24,7 +24,7 @@
         </div>
          
         <div class="archive-header">
-            <h1 class="category-title">
+            <h2 id="category-title" class="category-title">
                 <?php 
                 if (is_category()) {
                     single_cat_title(); // Display current category name
@@ -34,7 +34,7 @@
                     post_type_archive_title(); // Display archive title
                 }
                 ?>
-            </h1>
+            </h2>
             <?php if ( category_description() ) : ?>
                 <div class="archive-description">
                     <?php echo category_description(); ?>
@@ -90,7 +90,7 @@
                                 $blog_count = wp_count_posts()->publish;
                             }
                             ?>
-                            <a href="<?php echo $blog_url; ?>" class="category-link <?php echo $is_blog_active ? 'active' : ''; ?>">
+                            <a href="<?php echo esc_url($blog_url . '#category-title'); ?>" class="category-link <?php echo $is_blog_active ? 'active' : ''; ?>">
                                 <span class="category-name">جميع المنشورات</span>
                                 <span class="category-count"><?php echo $blog_count; ?></span>
                             </a>
@@ -127,7 +127,7 @@
                             $is_active = is_category($category->term_id);
                             ?>
                             <li>
-                                <a href="<?php echo get_category_link($category->term_id); ?>" class="category-link <?php echo $is_active ? 'active' : ''; ?>">
+                                <a href="<?php echo esc_url(get_category_link($category->term_id) . '#category-title'); ?>" class="category-link <?php echo $is_active ? 'active' : ''; ?>">
                                     <span class="category-name"><?php echo $category->name; ?></span>
                                     <span class="category-count"><?php echo $category->count; ?></span>
                                 </a>

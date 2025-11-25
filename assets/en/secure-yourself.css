@@ -185,3 +185,32 @@
     border: 1px solid var(--primary-blue);
 
 }
+
+
+
+@media screen and (max-width: 768px) {
+    .hero {
+    }
+
+    .hero-company {
+        font-size: 36px;
+    }
+
+    .hero-title {
+        font-size: 24px;
+    }
+
+    .secure-yourself-cards {
+        padding: 20px 0;
+    }
+
+    .secure-yourself-content .title {
+        font-size: 28px;
+        
+    }
+
+    .secure-yourself-content .subtitle {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+}

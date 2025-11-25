@@ -6,6 +6,9 @@ Template Name: Front Page Arabic
 */
 get_header('ar');
 
+$cases_count = (int) get_field('cases');
+$contracts_count = (int) get_field('contracts');
+$clients_count = (int) get_field('clients');
 ?>
 <main>
 
@@ -17,52 +20,57 @@ get_header('ar');
             <h2 class="hero-title">للمحاماة و الاستشارات القانونية</h2>
             <p class="hero-subtitle">منصة قانونية رقمية للحلول الدقيقة</p>
             <div class="hero-buttons">
-                <button class="btn-primary">ابدأ الآن</button>
-                <button class="btn-secondary">تعرف أكثر</button>
+                <a href="#" class="btn-primary">ابدأ الآن</a>
+                <a href="<?php echo home_url('/about-us-ar'); ?>" class="btn-secondary">تعرف أكثر</a>
             </div>
         </div>
     </section>
     
 
+  
     <!-- About Section -->
     <section id="about" class="about-section">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">من نحن</h2>
-                <p class="section-subtitle"></p>
+                <p class="section-subtitle">مجموعة قانونية مقرها الرياض تقدم تأثيرًا ملموسًا في جميع أنحاء المملكة.</p>
             </div>
-            <div class="row about-content align-items-center  overflow-hidden">
-                <div class="col-lg-6 col-md-12 about-text">
+            <div class="row about-content align-items-center overflow-hidden ">
+                <div class="col-lg-6 col-md-12  about-text">
                     <h3>التميز في الخدمات القانونية</h3>
-                    <p>شركة داغ للمحاماة و الاستشارات القانونية هي مؤسسة قانونية رائدة مقرها الرياض، المملكة العربية السعودية. نحن نقدم خدمات قانونية شاملة واستشارات للأفراد والشركات في جميع أنحاء المملكة.</p>
-                    <p>فريقنا من المحامين والاستشاريين القانونيين ذوي الخبرة ملتزم بتقديم حلول قانونية دقيقة وفي الوقت المناسب وفعالة تلبي احتياجاتك الخاصة.</p>
-                    <div class="row about-stats">
-                        <div class="col-md-4 col-sm-4 col-12 stat-item">
+                    <p>شركة داغ للمحاماة و الاستشارات القانونية هي مؤسسة قانونية رائدة مقرها الرياض، المملكة العربية السعودية. نحن نقدم خدمات قانونية شاملة واستشارات للأفراد والشركات في جميع أنحاء المملكة</p>
+                    <p>فريقنا من المحامين والاستشاريين القانونيين ذوي الخبرة ملتزم بتقديم حلول قانونية دقيقة وفي الوقت المناسب وفعالة مصممة خصيصًا لتلبية احتياجاتك الخاصة.</p>
+                  <div class="row about-stats">
+                        <div class="col-md-3 col-sm-6 col-12 stat-item">
                         <div class="static-item-inner">
-                            <h4>500+</h4>
-                            <p>القضايا المحلولة</p>
+                            <h4 data-target="<?php echo esc_attr($cases_count); ?>"><?php echo esc_html($cases_count); ?></h4>
+                            <p>القضايا </p>    
+
+                        </div>    
+                        
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-12 stat-item">
+                        <div class="static-item-inner">    
+                            <h4 data-target="<?php echo esc_attr($contracts_count); ?>"><?php echo esc_html($contracts_count); ?></h4>
+                            <p>العقود</p>
                         </div>
                         </div>
-                        <div class="col-md-4 col-sm-4 col-12 stat-item">
-                            <div class="static-item-inner">
-                                <h4>15+</h4>
-                                <p>سنوات الخبرة</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-4 col-12 stat-item">
-                            <div class="static-item-inner">
-                                <h4>50+</h4>
-                                <p>محامون خبراء</p>
-                            </div>
+                        <div class="col-md-3 col-sm-6 col-12 stat-item">
+                        <div class="static-item-inner">
+                            <h4 data-target="<?php echo esc_attr($clients_count); ?>"><?php echo esc_html($clients_count); ?></h4>
+                            <p>العملاء</p>
+                        </div>    
+                       
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12 about-image">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/Justice.webp" alt="Justice" class="about-img">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/Justice.webp" alt="Blindfolded statue of justice holding scales" class="about-img" loading="lazy">
                 </div>
             </div>
         </div>
     </section>
+
 
     <!-- Parallax Divider -->
     <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Services.jpg');">
@@ -85,7 +93,7 @@ get_header('ar');
                         </div>
                         <h3>طلب استشارة</h3>
                         <p>احصل على نصائح قانونية من فريقنا المتمرس من المحامين. حدد موعدًا للاستشارة لمناقشة مسائل قانونية.</p>
-                        <button class="service-btn">تعرف أكثر</button>
+                        <a href="<?php echo home_url('/services-ar'); ?>" class="service-btn">اعرف أكثر</a>
            
                     </div>
                          </div>
@@ -97,7 +105,7 @@ get_header('ar');
                     </div>
                     <h3>حاسبة نهاية الخدمة</h3>
                     <p>استخدم حاسبتنا المتقدمة لتحديد مكافأة نهاية الخدمة الخاصة بك وفقًا لقانون العمل السعودي.</p>
-                    <button class="service-btn">احسب الآن</button>
+                    <a href="<?php echo home_url('/services-ar'); ?>" class="service-btn">اعرف أكثر</a>
         
                     </div>    
                 </div>
@@ -111,7 +119,7 @@ get_header('ar');
                     </div>
                     <h3>حاسبة الميراث</h3>
                     <p>احسب حصص الميراث وفقًا للشريعة الإسلامية واللوائح السعودية باستخدام أداتنا المتخصصة.</p>
-                    <button class="service-btn">احسب الآن</button>
+                    <a href="<?php echo home_url('/services-ar'); ?>" class="service-btn">اعرف أكثر</a>
                 </div>
             </div>
         </div>

@@ -196,8 +196,8 @@ function enqueue_theme_css() {
             }
         } else {
             // Blog archive page
-            wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('archive-page');
+        wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('archive-page');
         }
     }
 

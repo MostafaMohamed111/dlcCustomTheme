@@ -161,11 +161,11 @@
                             <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
                         </button>
                         <div class="sign-in-menu">
-                            <a href="#" class="sign-in-option">
+                            <a href="https://portals.dlc.com.sa/admin/authentication" class="sign-in-option">
                                 <i class="fa-solid fa-user-tie"></i>
                                 موظف
                             </a>
-                            <a href="#" class="sign-in-option">
+                            <a href="https://portals.dlc.com.sa/authentication/login" class="sign-in-option">
                                 <i class="fa-solid fa-user"></i>
                                 عميل
                             </a>
@@ -339,11 +339,11 @@
                                     <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
                                 </button>
                                 <div class="sign-in-menu">
-                                    <a href="#" class="sign-in-option">
+                                    <a href="https://portals.dlc.com.sa/admin/authentication" class="sign-in-option">
                                         <i class="fa-solid fa-user-tie"></i>
                                         موظف
                                     </a>
-                                    <a href="#" class="sign-in-option">
+                                    <a href="https://portals.dlc.com.sa/authentication/login" class="sign-in-option">
                                         <i class="fa-solid fa-user"></i>
                                         عميل
                                     </a>
