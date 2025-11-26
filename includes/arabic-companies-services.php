@@ -125,7 +125,9 @@
                                 wp_reset_postdata();
                                 ?>
                                 <a href="<?php echo esc_url(get_category_link($parent_category->term_id) . '#services-title'); ?>" 
-                                   class="category-link <?php echo $current_category == 0 ? 'active' : ''; ?>">
+                                   class="category-link <?php echo $current_category == 0 ? 'active' : ''; ?>"
+                                   data-category-id="0"
+                                   data-parent-category-id="<?php echo $parent_category->term_id; ?>">
                                     <span class="category-name">جميع الخدمات</span>
                                     <span class="category-count"><?php echo $all_services_count; ?></span>
                                 </a>
@@ -135,7 +137,9 @@
                                 ?>
                                 <li>
                                     <a href="<?php echo esc_url(add_query_arg('cat', $child_cat->term_id, get_category_link($parent_category->term_id)) . '#services-title'); ?>" 
-                                       class="category-link <?php echo $is_active ? 'active' : ''; ?>">
+                                       class="category-link <?php echo $is_active ? 'active' : ''; ?>"
+                                       data-category-id="<?php echo $child_cat->term_id; ?>"
+                                       data-parent-category-id="<?php echo $parent_category->term_id; ?>">
                                         <span class="category-name"><?php echo esc_html($child_cat->name); ?></span>
                                         <span class="category-count"><?php echo $child_cat->count; ?></span>
                                     </a>
@@ -146,9 +150,9 @@
                 </aside>
                 
                 <!-- Services Grid -->
-                <main class="services-main">
+                <main class="services-main" id="services-main">
                     <?php if ($services_query->have_posts()) : ?>
-                        <div class="services-grid">
+                        <div class="services-grid" id="services-grid">
                     <?php
                     while ($services_query->have_posts()) : $services_query->the_post();
                         ?>

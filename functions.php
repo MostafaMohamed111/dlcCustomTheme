@@ -239,6 +239,18 @@ function enqueue_theme_scripts() {
             'ajaxurl' => admin_url('admin-ajax.php')
         ));
     }
+
+    // Archive AJAX script - load for archive pages
+    if ( is_archive() || is_category() || is_tag() ) {
+        wp_register_script( 'archive-ajax', get_template_directory_uri() . '/assets/js/archive.js', array('jquery'), '1.0.0', true );
+        wp_enqueue_script( 'archive-ajax' );
+        
+        // Localize script to provide ajaxurl and nonce
+        wp_localize_script( 'archive-ajax', 'ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('archive_ajax_nonce')
+        ));
+    }
     
 }
 
@@ -1127,4 +1139,404 @@ function handle_booking_form_submission() {
     } else {
         wp_send_json_error('Failed to submit booking. Please try again later.');
     }
+}
+
+// Archive AJAX handler
+add_action('wp_ajax_load_archive_posts', 'load_archive_posts_ajax');
+add_action('wp_ajax_nopriv_load_archive_posts', 'load_archive_posts_ajax');
+
+function load_archive_posts_ajax() {
+    // Verify nonce
+    if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'archive_ajax_nonce')) {
+        wp_send_json_error('Security check failed.');
+    }
+
+    $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
+    $parent_category_id = isset($_POST['parent_category_id']) ? intval($_POST['parent_category_id']) : 0;
+    $paged = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+    $posts_per_page = 6; // Match the default posts per page
+    $is_services_page = $parent_category_id > 0; // Services pages have parent_category_id
+
+    // Setup query arguments
+    $query_args = array(
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => $posts_per_page,
+        'paged' => $paged,
+        'orderby' => 'date',
+        'order' => 'DESC'
+    );
+
+    if ($is_services_page) {
+        // Services page logic
+        $parent_category = get_category($parent_category_id);
+        if (!$parent_category) {
+            wp_send_json_error('Parent category not found.');
+            return;
+        }
+
+        // Check if this is an Arabic category (slug ends with '-ar')
+        $is_arabic_category = (strpos($parent_category->slug, '-ar') !== false);
+        
+        // Add language filter for Arabic categories
+        if ($is_arabic_category) {
+            $query_args['meta_query'] = array(
+                array(
+                    'key' => '_post_language',
+                    'value' => 'ar',
+                    'compare' => '='
+                )
+            );
+        }
+
+        // Get all category IDs (parent + children)
+        $all_category_ids = array($parent_category->term_id);
+        $all_children = get_term_children($parent_category->term_id, 'category');
+        if (!is_wp_error($all_children)) {
+            $all_category_ids = array_merge($all_category_ids, $all_children);
+        }
+
+        if ($category_id > 0) {
+            // Get specific child category and its children
+            $selected_category = get_category($category_id);
+            if ($selected_category) {
+                $category_ids = array($selected_category->term_id);
+                $children = get_term_children($selected_category->term_id, 'category');
+                if (!is_wp_error($children)) {
+                    $category_ids = array_merge($category_ids, $children);
+                }
+                $query_args['category__in'] = $category_ids;
+                $category_title = $selected_category->name;
+            } else {
+                wp_send_json_error('Category not found.');
+                return;
+            }
+        } else {
+            // All services - get all posts from parent category and children
+            $query_args['category__in'] = $all_category_ids;
+            $category_title = $is_arabic_category ? 'جميع الخدمات' : 'All Services';
+        }
+    } else {
+        // Blog archive page logic
+        // Get the Blog parent category
+        $blog_category = get_category_by_slug('blog');
+        if (!$blog_category) {
+            $blog_category = get_term_by('name', 'Blog', 'category');
+        }
+
+        if ($category_id > 0) {
+            // Get specific category
+            $category = get_category($category_id);
+            if ($category) {
+                $query_args['cat'] = $category_id;
+                $category_title = $category->name;
+            } else {
+                wp_send_json_error('Category not found.');
+                return;
+            }
+        } else {
+            // All posts - get all posts from blog category and children
+            if ($blog_category) {
+                $category_ids = array($blog_category->term_id);
+                $children = get_term_children($blog_category->term_id, 'category');
+                if (!is_wp_error($children)) {
+                    $category_ids = array_merge($category_ids, $children);
+                }
+                $query_args['category__in'] = $category_ids;
+            }
+            $category_title = 'All Posts';
+        }
+    }
+
+    // Create custom query
+    $archive_query = new WP_Query($query_args);
+
+    // Buffer output for posts/services HTML
+    ob_start();
+    
+    if ($archive_query->have_posts()) :
+        // Determine if this is a services page or blog page
+        if ($is_services_page) :
+            ?>
+            <div class="services-grid">
+            <?php
+            while ($archive_query->have_posts()) : $archive_query->the_post();
+                ?>
+                <article class="service-card">
+                    <?php if (has_post_thumbnail()) : ?>
+                        <div class="service-thumbnail">
+                            <a href="<?php the_permalink(); ?>">
+                                <?php the_post_thumbnail(
+                                    'large',
+                                    array(
+                                        'class' => 'service-image',
+                                        'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px'
+                                    )
+                                ); ?>
+                            </a>
+                            <div class="service-category-badge">
+                                <?php
+                                $categories = get_the_category();
+                                if (!empty($categories)) {
+                                    echo esc_html($categories[0]->name);
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <div class="service-content">
+                        <h3 class="service-title">
+                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                        </h3>
+                        
+                        <div class="service-excerpt">
+                            <?php
+                            $excerpt = get_the_excerpt();
+                            $excerpt_length = 120;
+                            if (strlen($excerpt) > $excerpt_length) {
+                                $excerpt = substr($excerpt, 0, $excerpt_length);
+                                $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
+                            }
+                            echo esc_html($excerpt);
+                            ?>
+                        </div>
+                        
+                        <div class="service-footer">
+                            <a href="<?php the_permalink(); ?>" class="get-started-service-btn">
+                                Get Started
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <?php
+            endwhile;
+            ?>
+        </div>
+        
+        <?php
+        // Pagination
+        $total_pages = $archive_query->max_num_pages;
+        if ($total_pages > 1) :
+            ?>
+            <div class="pagination-wrapper">
+                <?php
+                $prev_link = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>', $archive_query->max_num_pages);
+                $next_link = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>', $archive_query->max_num_pages);
+                
+                if ($prev_link || $next_link) :
+                    ?>
+                    <div class="pagination-simple">
+                        <?php if ($prev_link) : ?>
+                            <div class="pagination-arrow pagination-prev">
+                                <?php echo $prev_link; ?>
+                            </div>
+                        <?php else : ?>
+                            <div class="pagination-arrow pagination-prev disabled">
+                                <span><i class="fa-solid fa-chevron-left"></i></span>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <?php if ($next_link) : ?>
+                            <div class="pagination-arrow pagination-next">
+                                <?php echo $next_link; ?>
+                            </div>
+                        <?php else : ?>
+                            <div class="pagination-arrow pagination-next disabled">
+                                <span><i class="fa-solid fa-chevron-right"></i></span>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php
+                endif;
+                ?>
+            </div>
+            <?php
+        endif;
+        
+        wp_reset_postdata();
+        else :
+            // Blog posts structure
+            ?>
+            <div class="posts-grid">
+                <?php
+                while ($archive_query->have_posts()) : $archive_query->the_post();
+                    ?>
+                    <article class="post-card">
+                        <?php if (has_post_thumbnail()) : ?>
+                            <div class="post-thumbnail">
+                                <a href="<?php the_permalink(); ?>">
+                                    <?php the_post_thumbnail(
+                                        'large',
+                                        array(
+                                            'class' => 'post-image',
+                                            'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px'
+                                        )
+                                    ); ?>
+                                </a>
+                                <div class="post-category-badge">
+                                    <?php
+                                    $categories = get_the_category();
+                                    if (!empty($categories)) {
+                                        echo esc_html($categories[0]->name);
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="post-date">
+                                    <i class="fa-solid fa-calendar"></i>
+                                    <?php echo get_the_date(); ?>
+                                </span>
+                                <span class="post-author">
+                                    <i class="fa-solid fa-user"></i>
+                                    <?php the_author(); ?>
+                                </span>
+                            </div>
+                            
+                            <h3 class="post-title">
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </h3>
+                            
+                            <div class="post-excerpt">
+                                <?php 
+                                $excerpt = get_the_excerpt();
+                                $excerpt_length = 150;
+                                if (strlen($excerpt) > $excerpt_length) {
+                                    $excerpt = substr($excerpt, 0, $excerpt_length);
+                                    $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
+                                }
+                                echo $excerpt;
+                                ?>
+                            </div>
+                            
+                            <div class="post-footer">
+                                <a href="<?php the_permalink(); ?>" class="read-more-btn">
+                                    Read More
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                                <div class="post-meta-footer">
+                                    <?php
+                                    $categories = get_the_category();
+                                    if (!empty($categories)) {
+                                        $category_count = count($categories);
+                                        ?>
+                                        <div class="post-categories">
+                                            <?php if ($category_count == 1) : ?>
+                                                <a href="<?php echo get_category_link($categories[0]->term_id); ?>" class="post-category-link">
+                                                    <i class="fa-solid fa-folder"></i>
+                                                    <?php echo esc_html($categories[0]->name); ?>
+                                                </a>
+                                            <?php else : ?>
+                                                <div class="categories-dropdown">
+                                                    <button class="categories-dropdown-toggle" type="button">
+                                                        <i class="fa-solid fa-folder"></i>
+                                                        <span class="dropdown-text">Categories</span>
+                                                        <i class="fa-solid fa-chevron-down"></i>
+                                                    </button>
+                                                    <div class="categories-dropdown-menu">
+                                                        <?php foreach($categories as $category) : ?>
+                                                            <a href="<?php echo get_category_link($category->term_id); ?>" class="dropdown-category-link">
+                                                                <i class="fa-solid fa-folder"></i>
+                                                                <?php echo esc_html($category->name); ?>
+                                                            </a>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    
+                                    $tags = get_the_tags();
+                                    if (!empty($tags)) {
+                                        ?>
+                                        <div class="post-tags">
+                                            <?php foreach($tags as $tag) : ?>
+                                                <a href="<?php echo get_tag_link($tag->term_id); ?>" class="post-tag-link">
+                                                    <i class="fa-solid fa-hashtag"></i>
+                                                    <?php echo esc_html($tag->name); ?>
+                                                </a>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <?php
+                endwhile;
+                ?>
+            </div>
+            
+            <?php
+            // Pagination
+            $total_pages = $archive_query->max_num_pages;
+            if ($total_pages > 1) :
+                ?>
+                <div class="pagination-wrapper">
+                    <?php
+                    $prev_link = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>', $archive_query->max_num_pages);
+                    $next_link = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>', $archive_query->max_num_pages);
+                    
+                    if ($prev_link || $next_link) :
+                        ?>
+                        <div class="pagination-simple">
+                            <?php if ($prev_link) : ?>
+                                <div class="pagination-arrow pagination-prev">
+                                    <?php echo $prev_link; ?>
+                                </div>
+                            <?php else : ?>
+                                <div class="pagination-arrow pagination-prev disabled">
+                                    <span><i class="fa-solid fa-chevron-left"></i></span>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <?php if ($next_link) : ?>
+                                <div class="pagination-arrow pagination-next">
+                                    <?php echo $next_link; ?>
+                                </div>
+                            <?php else : ?>
+                                <div class="pagination-arrow pagination-next disabled">
+                                    <span><i class="fa-solid fa-chevron-right"></i></span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php
+                    endif;
+                    ?>
+                </div>
+                <?php
+            endif;
+            
+            wp_reset_postdata();
+        endif;
+    else :
+        ?>
+        <div class="no-posts">
+            <i class="fa-solid fa-file-circle-question"></i>
+            <h3><?php echo $is_services_page ? 'No services found' : 'No posts found'; ?></h3>
+            <p><?php echo $is_services_page ? 'There are no services available in this category at the moment.' : 'There are no posts in this category yet.'; ?></p>
+        </div>
+        <?php
+    endif;
+    
+    $posts_html = ob_get_clean();
+    
+    // Get pagination HTML separately if needed
+    ob_start();
+    // Pagination is already included in posts_html above
+    $pagination_html = ob_get_clean();
+    
+    wp_send_json_success(array(
+        'posts_html' => $posts_html,
+        'pagination_html' => $pagination_html,
+        'category_title' => $category_title
+    ));
 }

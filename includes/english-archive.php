@@ -93,7 +93,9 @@
                                 $blog_count = wp_count_posts()->publish;
                             }
                             ?>
-                            <a href="<?php echo esc_url($blog_url . '#category-title'); ?>" class="category-link <?php echo $is_blog_active ? 'active' : ''; ?>">
+                            <a href="<?php echo esc_url($blog_url . '#category-title'); ?>" 
+                               class="category-link <?php echo $is_blog_active ? 'active' : ''; ?>"
+                               data-category-id="<?php echo $blog_category ? $blog_category->term_id : 0; ?>">
                                 <span class="category-name">All Posts</span>
                                 <span class="category-count"><?php echo $blog_count; ?></span>
                             </a>
@@ -130,7 +132,9 @@
                             $is_active = is_category($category->term_id);
                             ?>
                             <li>
-                                <a href="<?php echo esc_url(get_category_link($category->term_id) . '#category-title'); ?>" class="category-link <?php echo $is_active ? 'active' : ''; ?>">
+                                <a href="<?php echo esc_url(get_category_link($category->term_id) . '#category-title'); ?>" 
+                                   class="category-link <?php echo $is_active ? 'active' : ''; ?>"
+                                   data-category-id="<?php echo $category->term_id; ?>">
                                     <span class="category-name"><?php echo $category->name; ?></span>
                                     <span class="category-count"><?php echo $category->count; ?></span>
                                 </a>
@@ -142,9 +146,9 @@
                 </div>
             </aside>
 
-            <main class="posts-container">
+            <main class="posts-container" id="posts-container">
                 <?php if ( have_posts() ) : ?>
-                    <div class="posts-grid">
+                    <div class="posts-grid" id="posts-grid">
                         <?php
                         while ( have_posts() ) : the_post();
                             ?>

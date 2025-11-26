@@ -368,6 +368,8 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
     margin-bottom: 50px;
+    width: 100%;
+    min-width: 0;
 }
 
 /* Service Card */
@@ -380,6 +382,8 @@
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    min-width: 0;
 }
 
 .service-card:hover {
