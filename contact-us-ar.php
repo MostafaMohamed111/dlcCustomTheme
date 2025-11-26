@@ -13,26 +13,28 @@
         </div>
 
         <div class="contact-us-body row d-flex gx-5 justify-content-space-between">
-            <form id="contact-form" class="contact-us-form col-lg-6 col-md-12" action="#" method="get">
+            <form id="contact-form" class="contact-us-form col-lg-6 col-md-12">
+                <div id="form-status-message"></div>
+
                 <div class=" name mb-3">
                     <label for="name" class="form-label">الاسم</label>
-                    <input type="text" class="form-control" id="name" placeholder="اسمك">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="اسمك" required>
                 </div>
                 <div class=" email mb-3">
                     <label for="email" class="form-label">البريد الإلكتروني</label>
-                    <input type="email" class="form-control" id="email" placeholder="بريدك الإلكتروني">
+                    <input type="email" class="form-control arabic-email" id="email" name="email" placeholder="بريدك الإلكتروني  " required>
                 </div> 
                 <div class=" message mb-3">
                     <label for="message" class="form-label">الرسالة</label>
-                    <textarea class="form-control" id="message" rows="5" placeholder="رسالتك"></textarea>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="رسالتك" required></textarea>
                 </div>
-            
-                <button type="submit" class="btn">إرسال</button>
+                <?php wp_nonce_field( 'contact_form_nonce', 'contact_form_nonce_field' ); ?>
 
+                <button type="submit" class="btn">إرسال</button>
             </form>
 
             <div class="form-image col-lg-6 col-md-12 ">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services.jpg" alt="اتصل بنا">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services.jpg" alt="Contact Us">
             </div>
         </div>
             

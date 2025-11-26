@@ -76,49 +76,58 @@ function enqueue_theme_css() {
         wp_enqueue_style('main-ar');
     }
 
-    // Enqueue front-page specific CSS
-   if ( is_front_page() || is_page_template('front-page-ar.php') ) {
-        // front page
-        wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('front-page');
+    // Enqueue page-specific CSS
+    switch (true) {
+        case is_front_page():
+        case is_page_template('front-page-ar.php'):
+            wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('front-page');
+            break;
+            
+        case is_page_template('services.php'):
+        case is_page_template('services-ar.php'):
+            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('services-page');
+            break;
+            
+        case is_page_template('secure-yourself.php'):
+        case is_page_template('secure-yourself-ar.php'):
+            wp_register_style('secure-yourself-page', get_template_directory_uri() . '/assets/en/secure-yourself.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('secure-yourself-page');
+            break;
+            
+        case is_page_template('contact-us.php'):
+        case is_page_template('contact-us-ar.php'):
+            wp_register_style('contact-us-page', get_template_directory_uri() . '/assets/en/contact-us.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('contact-us-page');
+            break;
+            
+        case is_page_template('about-us.php'):
+        case is_page_template('about-us-ar.php'):
+            wp_register_style('about-us-page', get_template_directory_uri() . '/assets/en/about-us.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('about-us-page');
+            break;
+            
+        case is_page_template('privacy-policy.php'):
+        case is_page_template('privacy-policy-ar.php'):
+        case is_page(get_option('wp_page_for_privacy_policy')):
+            wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('privacy-policy-page');
+            break;
+
+        case is_page_template('booking.php'):
+        case is_page_template('booking-ar.php'):
+            wp_register_style('booking-page', get_template_directory_uri() . '/assets/en/booking.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('booking-page');
+            break;
+            
+        case is_404():
+            wp_register_style('error-page', get_template_directory_uri() . '/assets/en/error.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('error-page');
+            break;
     }
 
-    else if( is_page_template('services.php' ) || is_page_template('services-ar.php' )  ) {
-        // Services page
-        wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('services-page');
-    }
-
-
-
-    else if( is_page_template('secure-yourself.php' ) || is_page_template('secure-yourself-ar.php' )  ) {
-        // Secure Yourself page
-        wp_register_style('secure-yourself-page', get_template_directory_uri() . '/assets/en/secure-yourself.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('secure-yourself-page');
-    }
-    
-
-
-    else if(is_page_template('contact-us.php') || is_page_template('contact-us-ar.php') ) {
-        // Contact Us page
-        wp_register_style('contact-us-page', get_template_directory_uri() . '/assets/en/contact-us.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('contact-us-page');
-    }
-
-    else if(is_page_template('about-us.php') || is_page_template('about-us-ar.php') ) {
-        // About Us page
-        wp_register_style('about-us-page', get_template_directory_uri() . '/assets/en/about-us.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('about-us-page');
-    }
-    else if(is_page_template('privacy-policy.php') || is_page_template('privacy-policy-ar.php') || is_page(get_option('wp_page_for_privacy_policy'))) {
-        // Privacy Policy page
-        wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('privacy-policy-page');
-    }
-   
-
-
-    else if (is_archive()) {
+    if (is_archive()) {
         // Check category type
         $is_news_category = false;
         $is_companies_services = false;
@@ -216,6 +225,17 @@ function enqueue_theme_scripts() {
         
         // Localize script to provide ajaxurl
         wp_localize_script( 'contact-us', 'ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
+    }
+
+    // Booking form script - load for booking, booking ar pages
+    if ( is_page_template('booking.php') || is_page_template('booking-ar.php') ) {
+        wp_register_script( 'booking', get_template_directory_uri() . '/assets/js/booking.js', array('jquery'), '1.0.0', true );
+        wp_enqueue_script( 'booking' );
+        
+        // Localize script to provide ajaxurl
+        wp_localize_script( 'booking', 'ajax_object', array(
             'ajaxurl' => admin_url('admin-ajax.php')
         ));
     }
@@ -958,5 +978,153 @@ function handle_contact_form_submission() {
         wp_send_json_success('Thank you! Your message has been sent.');
     } else {
         wp_send_json_error('Email sending failed. Please try again later.');
+    }
+}
+
+// Booking form AJAX handlers
+add_action('wp_ajax_get_booking_services', 'get_booking_services');
+add_action('wp_ajax_nopriv_get_booking_services', 'get_booking_services');
+
+function get_booking_services() {
+    // Verify nonce
+    if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'booking_form_nonce')) {
+        wp_send_json_error('Security check failed.');
+    }
+
+    $service_type = sanitize_text_field($_POST['service_type']);
+    
+    // Map service type to category slug
+    $category_slug = '';
+    switch ($service_type) {
+        case 'companies':
+            $category_slug = 'companies-services';
+            break;
+        case 'individual':
+            $category_slug = 'individual-services';
+            break;
+        case 'international':
+            $category_slug = 'home-international';
+            break;
+        default:
+            wp_send_json_error('Invalid service type.');
+            return;
+    }
+
+    // Get parent category
+    $parent_category = get_category_by_slug($category_slug);
+    
+    if (!$parent_category) {
+        wp_send_json_error('Category not found.');
+        return;
+    }
+
+    // Get all category IDs (parent + children)
+    $category_ids = array($parent_category->term_id);
+    $children = get_term_children($parent_category->term_id, 'category');
+    if (!is_wp_error($children)) {
+        $category_ids = array_merge($category_ids, $children);
+    }
+
+    // Get all posts from these categories
+    $query_args = array(
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'orderby' => 'title',
+        'order' => 'ASC',
+        'category__in' => $category_ids
+    );
+
+    $services_query = new WP_Query($query_args);
+    $services = array();
+
+    if ($services_query->have_posts()) {
+        while ($services_query->have_posts()) {
+            $services_query->the_post();
+            $services[] = array(
+                'id' => get_the_ID(),
+                'title' => get_the_title()
+            );
+        }
+        wp_reset_postdata();
+    }
+
+    wp_send_json_success($services);
+}
+
+add_action('wp_ajax_submit_booking_form', 'handle_booking_form_submission');
+add_action('wp_ajax_nopriv_submit_booking_form', 'handle_booking_form_submission');
+
+function handle_booking_form_submission() {
+    // Verify nonce
+    if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'booking_form_nonce')) {
+        wp_send_json_error('Security check failed.');
+    }
+
+    // Sanitize and validate all fields
+    $service_type = sanitize_text_field($_POST['service_type']);
+    $name = sanitize_text_field($_POST['name']);
+    $phone = sanitize_text_field($_POST['phone']);
+    $email = sanitize_email($_POST['email']);
+    $city = sanitize_text_field($_POST['city']);
+    $service_id = intval($_POST['service']);
+    $case_brief = sanitize_textarea_field($_POST['case_brief']);
+    $has_documents = sanitize_text_field($_POST['has_documents']);
+    $previous_lawyer = sanitize_text_field($_POST['previous_lawyer']);
+    $meeting_type = sanitize_text_field($_POST['meeting_type']);
+
+    // Validate required fields
+    if (empty($name) || empty($phone) || empty($email) || empty($service_id) || empty($case_brief) || 
+        empty($has_documents) || empty($previous_lawyer) || empty($meeting_type)) {
+        wp_send_json_error('Please fill all required fields.');
+    }
+
+    if (!is_email($email)) {
+        wp_send_json_error('Invalid email address.');
+    }
+
+    // Get service title
+    $service_title = get_the_title($service_id);
+    if (empty($service_title)) {
+        $service_title = 'Unknown Service';
+    }
+
+    // Prepare email
+    $to = get_option('admin_email');
+    $subject = "New Consultation Booking Request from $name";
+    $headers = array(
+        'Content-Type: text/html; charset=UTF-8',
+        "Reply-To: $name <$email>"
+    );
+
+    $body = "
+        <h2>New Consultation Booking Request</h2>
+        <h3>Service Type: " . ucfirst($service_type) . " Services</h3>
+        <h3>Personal Information</h3>
+        <p><strong>Name:</strong> $name</p>
+        <p><strong>Phone:</strong> $phone</p>
+        <p><strong>Email:</strong> $email</p>
+        <p><strong>City:</strong> $city</p>
+        
+        <h3>Consultation Information</h3>
+        <p><strong>Service:</strong> $service_title</p>
+        <p><strong>Case Brief:</strong><br>" . nl2br($case_brief) . "</p>
+        <p><strong>Has Documents:</strong> " . ucfirst($has_documents) . "</p>
+        <p><strong>Previous Lawyer:</strong> " . ucfirst($previous_lawyer) . "</p>
+        
+        <h3>Meeting Details</h3>
+        <p><strong>Meeting Type:</strong> " . ucfirst($meeting_type) . "</p>
+        
+        <hr>
+        <p><em>This booking was submitted through the website booking form.</em></p>
+    ";
+
+    // Send email
+    $sent = wp_mail($to, $subject, $body, $headers);
+
+    if ($sent) {
+        wp_send_json_success('Booking submitted successfully.');
+    } else {
+        wp_send_json_error('Failed to submit booking. Please try again later.');
     }
 }
