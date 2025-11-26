@@ -189,9 +189,7 @@
 
 
 @media screen and (max-width: 768px) {
-    .hero {
-    }
-
+  
     .hero-company {
         font-size: 36px;
     }

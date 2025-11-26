@@ -3,6 +3,15 @@
  * Template Name: About Us
  */
 
+$company_pdf      = get_field('company_pdf');
+$company_pdf_url  = '';
+
+if (is_array($company_pdf) && isset($company_pdf['url'])) {
+    $company_pdf_url = $company_pdf['url'];
+} elseif (is_string($company_pdf)) {
+    $company_pdf_url = $company_pdf;
+}
+
 get_header(); ?>
 
 <div class="hero">
@@ -15,8 +24,12 @@ get_header(); ?>
                     <h1 class="hero-title">Dag <br><span> Law Firm & Consultation </span> </h1>
                     <p class="lead hero-subtitle">owned by Attorney Mohammed Dagestani and headquartered in Riyadh, Saudi Arabia.</p>
                     <div class="hero-actions">
-                        <a href="#" class="btn hero-btn learn-more-btn">Learn More</a>
-                        <a href="#" class="btn hero-btn download-btn">Download PDF<span class=" fa-solid fa-download ps-2 "></span> </a>
+                        <a href="#about-dag" class="btn hero-btn learn-more-btn">Learn More</a>
+                        <?php if (!empty($company_pdf_url)) : ?>
+                            <a href="<?php echo esc_url($company_pdf_url); ?>" class="btn hero-btn download-btn" target="_blank" rel="noopener">
+                                Download PDF<span class=" fa-solid fa-download ps-2 "></span>
+                            </a>
+                        <?php endif; ?>
                     </div>
 
                 </div>
@@ -34,7 +47,7 @@ get_header(); ?>
 
 <section class="about-section">
     <div class="container">
-        <div class="about-dag">
+        <div class="about-dag" id="about-dag">
             <h2>About Dag</h2>
             <p class="lead">
                 Dag Law Firm for Legal Consultancy, owned by Attorney Mohammed Dagestani and headquartered in Riyadh, Saudi Arabia, specializes in providing over 80 specialized legal services to individuals and businesses across various legal fields.

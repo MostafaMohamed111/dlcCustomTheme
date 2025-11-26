@@ -77,15 +77,8 @@ function enqueue_theme_css() {
     }
 
     // Enqueue front-page specific CSS
-    // Check Arabic first to avoid loading English CSS on Arabic front page
-    if ( is_page_template('fornt-page-ar.php') ) {
-        // Arabic front page
-        wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('front-page');
-        wp_register_style('front-page-rtl', get_template_directory_uri() . '/assets/ar/front-page-rtl.css', array('front-page'), '1.0.1', 'all');
-        wp_enqueue_style('front-page-rtl');
-    } elseif ( is_front_page() ) {
-        // English front page (only if not Arabic)
+   if ( is_front_page() || is_page_template('front-page-ar.php') ) {
+        // front page
         wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('front-page');
     }
@@ -117,24 +110,12 @@ function enqueue_theme_css() {
         wp_register_style('about-us-page', get_template_directory_uri() . '/assets/en/about-us.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('about-us-page');
     }
-    else if(is_page_template('privacy-policy.php') || is_page_template('privacy-policy-ar.php')) {
+    else if(is_page_template('privacy-policy.php') || is_page_template('privacy-policy-ar.php') || is_page(get_option('wp_page_for_privacy_policy'))) {
         // Privacy Policy page
         wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('privacy-policy-page');
     }
-    // Fallback: Check by page slug or template slug
-    else if(is_page()) {
-        $template_slug = get_page_template_slug();
-        $page_slug = get_post_field('post_name', get_the_ID());
-        $template_file = get_page_template();
-        
-        if(($template_slug && (strpos($template_slug, 'privacy-policy') !== false)) ||
-           ($template_file && (strpos(basename($template_file), 'privacy-policy') !== false)) ||
-           ($page_slug && (strpos($page_slug, 'privacy') !== false || strpos($page_slug, 'privacy-policy') !== false))) {
-            wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('privacy-policy-page');
-        }
-    }
+   
 
 
     else if (is_archive()) {
@@ -227,6 +208,17 @@ function enqueue_theme_scripts() {
     // Scroll animations script - load for front pages and services pages
         wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
         wp_enqueue_script( 'scroll-animations' );
+
+    // Contact form script - load for contact us, contact us ar pages
+    if ( is_page_template('contact-us.php') || is_page_template('contact-us-ar.php') ) {
+        wp_register_script( 'contact-us', get_template_directory_uri() . '/assets/js/contact-us.js', array(), '1.0.0', true );
+        wp_enqueue_script( 'contact-us' );
+        
+        // Localize script to provide ajaxurl
+        wp_localize_script( 'contact-us', 'ajax_object', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
+    }
     
 }
 
@@ -919,4 +911,52 @@ function dlc_custom_comment_callback($comment, $args, $depth) {
             <?php endif; ?>
         </div>
     <?php
+}
+
+add_action('wp_ajax_submit_contact_form', 'handle_contact_form_submission');
+add_action('wp_ajax_nopriv_submit_contact_form', 'handle_contact_form_submission');
+
+function handle_contact_form_submission() {
+
+    // Verify nonce
+    if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'contact_form_nonce')) {
+        wp_send_json_error('Security check failed.');
+    }
+
+    // Sanitize
+    $name = sanitize_text_field($_POST['name']);
+    $email = sanitize_email($_POST['email']);
+    $message = sanitize_textarea_field($_POST['message']);
+
+    if (empty($name) || empty($email) || empty($message)) {
+        wp_send_json_error('Please fill all fields.');
+    }
+
+    if (!is_email($email)) {
+        wp_send_json_error('Invalid email address.');
+    }
+
+    // Prepare email
+    $to = get_option('admin_email');
+    $subject = "New Contact Form Submission from $name";
+    $headers = [
+        'Content-Type: text/html; charset=UTF-8',
+        "Reply-To: $name <$email>"
+    ];
+
+    $body = "
+        <h2>Contact Form Submission</h2>
+        <p><strong>Name:</strong> $name</p>
+        <p><strong>Email:</strong> $email</p>
+        <p><strong>Message:</strong><br>" . nl2br($message) . "</p>
+    ";
+
+    // Send
+    $sent = wp_mail($to, $subject, $body, $headers);
+
+    if ($sent) {
+        wp_send_json_success('Thank you! Your message has been sent.');
+    } else {
+        wp_send_json_error('Email sending failed. Please try again later.');
+    }
 }

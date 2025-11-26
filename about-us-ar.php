@@ -4,6 +4,15 @@
 * Template Name: About Us Page - Arabic
 */
 
+$company_pdf      = get_field('company_pdf');
+$company_pdf_url  = '';
+
+if (is_array($company_pdf) && isset($company_pdf['url'])) {
+    $company_pdf_url = $company_pdf['url'];
+} elseif (is_string($company_pdf)) {
+    $company_pdf_url = $company_pdf;
+}
+
 get_header('ar'); ?>
 
 
@@ -17,8 +26,12 @@ get_header('ar'); ?>
                     <h1 class="hero-title">شركة داغ <br><span>للمحاماة والاستشارات القانونية</span> </h1>
                     <p class="lead hero-subtitle">مملوكة للمحامي محمد داغستاني ويقع مقرها الرئيسي في الرياض، المملكة العربية السعودية.</p>
                     <div class="hero-actions">
-                        <a href="#" class="btn hero-btn learn-more-btn">اتعرف أكثر</a>
-                        <a href="#" class="btn hero-btn download-btn">تحميل PDF<span class=" fa-solid fa-download ps-2 "></span> </a>
+                        <a href="#about-dag" class="btn hero-btn learn-more-btn">اتعرف أكثر</a>
+                        <?php if (!empty($company_pdf_url)) : ?>
+                            <a href="<?php echo esc_url($company_pdf_url); ?>" class="btn hero-btn download-btn" target="_blank" rel="noopener">
+                                تحميل PDF<span class=" fa-solid fa-download ps-2 "></span>
+                            </a>
+                        <?php endif; ?>
                     </div>
 
                 </div>
@@ -36,7 +49,7 @@ get_header('ar'); ?>
 
 <section class="about-section">
     <div class="container">
-        <div class="about-dag">
+        <div class="about-dag" id="about-dag">
             <h2>عن داغ</h2>
             <p class="lead">
                 شركة داغ للمحاماة والاستشارات القانونية، مملوكة للمحامي محمد داغستاني ويقع مقرها الرئيسي في الرياض، المملكة العربية السعودية، وتختص في تقديم أكثر من 80 خدمة قانونية متخصصة للأفراد والشركات في مختلف المجالات القانونية.

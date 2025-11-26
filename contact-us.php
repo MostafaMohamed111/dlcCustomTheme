@@ -15,20 +15,23 @@ Template Name: Contact Us
         </div>
 
         <div class="contact-us-body row d-flex gx-5 justify-content-space-between">
-            <form id="contact-form" class="contact-us-form col-lg-6 col-md-12" action="#" method="get">
+            <form id="contact-form" class="contact-us-form col-lg-6 col-md-12">
+                <div id="form-status-message"></div>
+
                 <div class=" name mb-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Your Name">
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
                 </div>
                 <div class=" email mb-3">
                     <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Your Email">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
                 </div> 
                 <div class=" message mb-3">
                     <label for="message" class="form-label">Message</label>
-                    <textarea class="form-control" id="message" rows="5" placeholder="Your Message"></textarea>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
                 </div>
-            
+                <?php wp_nonce_field( 'contact_form_nonce', 'contact_form_nonce_field' ); ?>
+
                 <button type="submit" class="btn">Submit</button>
 
             </form>
