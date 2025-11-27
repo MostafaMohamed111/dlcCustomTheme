@@ -1,56 +1,97 @@
 <?php
 
-
-function enqueue_theme_css() {
-    // Detect if current page is Arabic (do this first to determine which Bootstrap to load)
+// Helper: Detect if current page is Arabic
+function dlc_is_arabic_page() {
+    static $is_arabic_page = null;
+    
+    if ($is_arabic_page !== null) {
+        return $is_arabic_page;
+    }
+    
     $is_arabic_page = false;
     
-    // Check if it's an Arabic template (most reliable for separate pages)
-    // This works for pages using templates like 'fornt-page-ar.php'
+    // Check template slug pattern
     if (function_exists('get_page_template_slug')) {
         $template = get_page_template_slug();
-        if ($template) {
-            // Check for '-ar.php' or '-ar' pattern (more specific than just 'ar')
-            if (strpos($template, '-ar.php') !== false || 
-                strpos($template, '-ar') !== false || 
-                preg_match('/-ar\.php$/', $template)) {
-                $is_arabic_page = true;
-            }
+        if ($template && preg_match('/-ar(\.php)?$/', $template)) {
+            $is_arabic_page = true;
+            return $is_arabic_page;
         }
     }
     
-    // Check if current template file is an Arabic version
-    // This catches cases where template file name contains '-ar' pattern
+    // Check template file basename
     $template_file = get_page_template();
     if ($template_file && is_string($template_file)) {
-        $template_basename = basename($template_file);
-        // More specific check: look for '-ar' pattern in filename
-        if (strpos($template_basename, '-ar') !== false || 
-            preg_match('/-ar\.php$/', $template_basename)) {
+        if (preg_match('/-ar\.php$/', basename($template_file))) {
             $is_arabic_page = true;
+            return $is_arabic_page;
         }
     }
     
-    // Check for Arabic single posts (individual post language metadata)
+    // Check post language meta
     if (is_single() && get_post_type() == 'post') {
         $post_language = get_post_meta(get_the_ID(), '_post_language', true);
         if ($post_language === 'ar') {
             $is_arabic_page = true;
+            return $is_arabic_page;
         }
     }
     
-    // Check for Arabic archive pages (category slug contains '-ar')
+    // Check archive category slug
     if (is_archive()) {
         $queried_object = get_queried_object();
         if (isset($queried_object->slug) && strpos($queried_object->slug, '-ar') !== false) {
             $is_arabic_page = true;
+            return $is_arabic_page;
         }
     }
     
-    // Backup check: if RTL is enabled in WordPress
+    // Check RTL setting
     if (is_rtl()) {
         $is_arabic_page = true;
     }
+    
+    return $is_arabic_page;
+}
+
+// Helper: Detect service category type
+function dlc_get_archive_service_type() {
+    if (!is_archive()) {
+        return null;
+    }
+    
+    $queried_object = get_queried_object();
+    if (!isset($queried_object->slug)) {
+        return null;
+    }
+    
+    $slug = $queried_object->slug;
+    $term_id = isset($queried_object->term_id) ? $queried_object->term_id : 0;
+    
+    $service_types = array(
+        'companies-services' => array('slug' => 'companies-services', 'type' => 'companies'),
+        'individual-services' => array('slug' => 'individual-services', 'type' => 'individual'),
+        'home-international' => array('slug' => 'home-international', 'type' => 'international')
+    );
+    
+    foreach ($service_types as $config) {
+        if (strpos($slug, $config['slug']) !== false) {
+            return $config['type'];
+        }
+        
+        if ($term_id) {
+            $parent = get_category_by_slug($config['slug']);
+            if ($parent && ($term_id === $parent->term_id || cat_is_ancestor_of($parent->term_id, $term_id))) {
+                return $config['type'];
+            }
+        }
+    }
+    
+    return null;
+}
+
+function enqueue_theme_css() {
+    $is_arabic_page = dlc_is_arabic_page();
 
     // Conditionally load Bootstrap CSS - RTL for Arabic, regular for English
     if ($is_arabic_page) {
@@ -128,66 +169,24 @@ function enqueue_theme_css() {
     }
 
     if (is_archive()) {
-        // Check category type
-        $is_news_category = false;
-        $is_companies_services = false;
-        $is_individual_services = false;
-        $is_home_international = false;
+        $service_type = dlc_get_archive_service_type();
         $queried_object = get_queried_object();
-        $term_id = isset($queried_object->term_id) ? $queried_object->term_id : 0;
-        $companies_parent = get_category_by_slug('companies-services');
-        $individual_parent = get_category_by_slug('individual-services');
-        $home_international_parent = get_category_by_slug('home-international');
+        $is_news = isset($queried_object->slug) && strpos($queried_object->slug, 'news') !== false;
         
-        if (isset($queried_object->slug)) {
-            $slug = $queried_object->slug;
-            
-            if (strpos($slug, 'news') !== false) {
-                $is_news_category = true;
-            } elseif (strpos($slug, 'companies-services') !== false) {
-                $is_companies_services = true;
-            } elseif (strpos($slug, 'individual-services') !== false) {
-                $is_individual_services = true;
-            } elseif (strpos($slug, 'home-international') !== false) {
-                $is_home_international = true;
-            }
-        }
-        
-        // Include child categories
-        if (!$is_companies_services && $companies_parent && $term_id) {
-            if ($term_id === $companies_parent->term_id || cat_is_ancestor_of($companies_parent->term_id, $term_id)) {
-                $is_companies_services = true;
-            }
-        }
-        if (!$is_individual_services && $individual_parent && $term_id) {
-            if ($term_id === $individual_parent->term_id || cat_is_ancestor_of($individual_parent->term_id, $term_id)) {
-                $is_individual_services = true;
-            }
-        }
-        if (!$is_home_international && $home_international_parent && $term_id) {
-            if ($term_id === $home_international_parent->term_id || cat_is_ancestor_of($home_international_parent->term_id, $term_id)) {
-                $is_home_international = true;
-            }
-        }
-        
-        if ($is_news_category) {
-            // News archive page
+        if ($is_news) {
             wp_register_style('news-page', get_template_directory_uri() . '/assets/en/news.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('news-page');
-        } elseif ($is_companies_services || $is_individual_services || $is_home_international) {
-            // Services archives (companies, individual, or home international)
+        } elseif ($service_type) {
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
             
-            // Load additional home-international.css for home-international category
-            if ($is_home_international) {
+            if ($service_type === 'international') {
                 wp_register_style('home-international-page', get_template_directory_uri() . '/assets/en/home-international.css', array('services-page'), '1.0.0', 'all');
                 wp_enqueue_style('home-international-page');
             }
         } else {
-            // Blog archive page
-        wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('archive-page');
+            wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('archive-page');
         }
     }
 
@@ -204,287 +203,66 @@ add_action( 'wp_enqueue_scripts', 'enqueue_theme_css' );
 
 
 
+// Helper: Localize AJAX script
+function dlc_localize_ajax_script($handle, $nonce_action = null) {
+    $data = array('ajaxurl' => admin_url('admin-ajax.php'));
+    if ($nonce_action) {
+        $data['nonce'] = wp_create_nonce($nonce_action);
+    }
+    wp_localize_script($handle, 'ajax_object', $data);
+}
+
 function enqueue_theme_scripts() {
     wp_enqueue_script( 'jquery' );
 
     wp_register_script( 'bootstrap-js', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array( 'jquery' ), '4.5.2', true );
     wp_enqueue_script( 'bootstrap-js' );
 
-    // Main theme script - mobile menu and general functionality (load on all pages)
     wp_register_script( 'main-js', get_template_directory_uri() . '/assets/js/main.js', array(), '1.0.0', true );
     wp_enqueue_script( 'main-js' );
 
-    // Scroll animations script - load for front pages and services pages
-        wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
-        wp_enqueue_script( 'scroll-animations' );
+    wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
+    wp_enqueue_script( 'scroll-animations' );
 
-    // Contact form script - load for contact us, contact us ar pages
     if ( is_page_template('contact-us.php') || is_page_template('contact-us-ar.php') ) {
         wp_register_script( 'contact-us', get_template_directory_uri() . '/assets/js/contact-us.js', array(), '1.0.0', true );
         wp_enqueue_script( 'contact-us' );
-        
-        // Localize script to provide ajaxurl
-        wp_localize_script( 'contact-us', 'ajax_object', array(
-            'ajaxurl' => admin_url('admin-ajax.php')
-        ));
+        dlc_localize_ajax_script('contact-us');
     }
 
-    // Booking form script - load for booking, booking ar pages
     if ( is_page_template('booking.php') || is_page_template('booking-ar.php') ) {
         wp_register_script( 'booking', get_template_directory_uri() . '/assets/js/booking.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'booking' );
-        
-        // Localize script to provide ajaxurl
-        wp_localize_script( 'booking', 'ajax_object', array(
-            'ajaxurl' => admin_url('admin-ajax.php')
-        ));
+        dlc_localize_ajax_script('booking');
     }
 
-    // Archive AJAX script - load for archive pages
     if ( is_archive() || is_category() || is_tag() ) {
         wp_register_script( 'archive-ajax', get_template_directory_uri() . '/assets/js/archive.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'archive-ajax' );
-        
-        // Localize script to provide ajaxurl and nonce
-        wp_localize_script( 'archive-ajax', 'ajax_object', array(
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('archive_ajax_nonce')
-        ));
+        dlc_localize_ajax_script('archive-ajax', 'archive_ajax_nonce');
     }
-    
 }
 
 add_action( 'wp_enqueue_scripts', 'enqueue_theme_scripts' );
 
 
 
-// Enable Menu Support
-add_theme_support( 'menus' );
-
-
-// Register Menus
-function theme_register_menus() {
-    register_nav_menus(
-        array(
-            'primary-menu' => __('Primary Menu'),
-            'primary-ar-menu' => __('Primary Arabic Menu'),
-            'footer-menu' => __('Footer Menu'),
-            'footer-ar-menu' => __('Footer Arabic Menu'),
-        )
-    );
-}
-
-add_action('init', 'theme_register_menus');
-
-// Keep correct menu item active based on category (Blog or News)
-function keep_correct_menu_active($classes, $item) {
-    // Check if we're on a category/archive/post page
-    if (is_category() || is_archive() || (is_single() && get_post_type() == 'post')) {
-        $queried_object = get_queried_object();
-        $is_news_category = false;
-        $is_blog_category = false;
-        $is_companies_services = false;
-        $is_individual_services = false;
-        $is_home_international = false;
-        $is_services_category = false;
-        
-        // Determine if we're viewing news or blog
-        if (is_category() && isset($queried_object->slug)) {
-            $slug = $queried_object->slug;
-            $term_id = isset($queried_object->term_id) ? $queried_object->term_id : 0;
-            $companies_parent = get_category_by_slug('companies-services');
-            $individual_parent = get_category_by_slug('individual-services');
-            $home_international_parent = get_category_by_slug('home-international');
-            
-            // First, check for special service categories (exclude from blog/news)
-            if (strpos($slug, 'companies-services') !== false ||
-                ($companies_parent && $term_id && cat_is_ancestor_of($companies_parent->term_id, $term_id))) {
-                $is_companies_services = true;
-            } elseif (strpos($slug, 'individual-services') !== false ||
-                ($individual_parent && $term_id && cat_is_ancestor_of($individual_parent->term_id, $term_id))) {
-                $is_individual_services = true;
-            } elseif (strpos($slug, 'home-international') !== false ||
-                ($home_international_parent && $term_id && cat_is_ancestor_of($home_international_parent->term_id, $term_id))) {
-                $is_home_international = true;
-            }
-            // Check if it's a news category (news or news-ar)
-            elseif ($slug === 'news' || $slug === 'news-ar' || strpos($slug, 'news') !== false) {
-                $is_news_category = true;
-            } else {
-                // Check if it's a blog category or child of blog
-                $blog_category = get_category_by_slug('blog');
-                $blog_ar_category = get_category_by_slug('blog-ar');
-                
-                // Check if current category is blog, blog-ar, or a child of blog
-                if ($slug === 'blog' || $slug === 'blog-ar' || 
-                    ($blog_category && cat_is_ancestor_of($blog_category->term_id, $queried_object->term_id)) ||
-                    ($blog_ar_category && cat_is_ancestor_of($blog_ar_category->term_id, $queried_object->term_id))) {
-                    $is_blog_category = true;
-                }
-            }
-        } elseif (is_archive() && !is_category()) {
-            // On main archive page - check if it's blog archive
-            // But exclude if it's companies-services, individual-services, or home-international
-            $queried_object = get_queried_object();
-            if (isset($queried_object->slug)) {
-                $slug = $queried_object->slug;
-                if (strpos($slug, 'companies-services') === false && 
-                    strpos($slug, 'individual-services') === false &&
-                    strpos($slug, 'home-international') === false) {
-                    $is_blog_category = true;
-                }
-            } else {
-                $is_blog_category = true;
-            }
-        } elseif (is_single() && get_post_type() == 'post') {
-            // On single post - check post categories
-            $post_categories = get_the_category();
-            $companies_parent = get_category_by_slug('companies-services');
-            $individual_parent = get_category_by_slug('individual-services');
-            $home_international_parent = get_category_by_slug('home-international');
-            foreach ($post_categories as $cat) {
-                // Check for special service categories first
-                if (strpos($cat->slug, 'companies-services') !== false ||
-                    ($companies_parent && cat_is_ancestor_of($companies_parent->term_id, $cat->term_id))) {
-                    $is_companies_services = true;
-                    break;
-                } elseif (strpos($cat->slug, 'individual-services') !== false ||
-                    ($individual_parent && cat_is_ancestor_of($individual_parent->term_id, $cat->term_id))) {
-                    $is_individual_services = true;
-                    break;
-                } elseif (strpos($cat->slug, 'home-international') !== false ||
-                    ($home_international_parent && cat_is_ancestor_of($home_international_parent->term_id, $cat->term_id))) {
-                    $is_home_international = true;
-                    break;
-                } elseif ($cat->slug === 'news' || $cat->slug === 'news-ar' || strpos($cat->slug, 'news') !== false) {
-                    $is_news_category = true;
-                    break;
-                } elseif ($cat->slug === 'blog' || $cat->slug === 'blog-ar') {
-                    $is_blog_category = true;
-                    break;
-                } else {
-                    // Check if it's a child of blog category
-                    $blog_category = get_category_by_slug('blog');
-                    $blog_ar_category = get_category_by_slug('blog-ar');
-                    if (($blog_category && cat_is_ancestor_of($blog_category->term_id, $cat->term_id)) ||
-                        ($blog_ar_category && cat_is_ancestor_of($blog_ar_category->term_id, $cat->term_id))) {
-                        $is_blog_category = true;
-                        break;
-                    }
-                }
-            }
-        }
-        
-        // Determine if current context is services (companies, individual, or home-international)
-        if ($is_companies_services || $is_individual_services || $is_home_international) {
-            $is_services_category = true;
-        }
-        
-        // Get menu item URL
-        $menu_url = $item->url;
-        
-        // Check if this menu item is for Blog
-        $blog_category = get_category_by_slug('blog');
-        $blog_ar_category = get_category_by_slug('blog-ar');
-        $is_blog_menu_item = false;
-        $is_news_menu_item = false;
-        $is_services_menu_item = false;
-        
-        if ($blog_category) {
-            $blog_url = get_category_link($blog_category->term_id);
-            // More specific check - must match exact blog category URL or /category/blog (not just /blog)
-            if (strpos($menu_url, $blog_url) !== false || 
-                strpos($menu_url, '/category/blog') !== false) {
-                // Exclude companies-services, individual-services, and home-international from blog menu
-                if (strpos($menu_url, 'companies-services') === false && 
-                    strpos($menu_url, 'individual-services') === false &&
-                    strpos($menu_url, 'home-international') === false) {
-                    $is_blog_menu_item = true;
-                }
-            }
-        }
-        
-        if ($blog_ar_category) {
-            $blog_ar_url = get_category_link($blog_ar_category->term_id);
-            if (strpos($menu_url, $blog_ar_url) !== false || 
-                strpos($menu_url, '/category/blog-ar') !== false) {
-                // Exclude companies-services, individual-services, and home-international from blog menu
-                if (strpos($menu_url, 'companies-services') === false && 
-                    strpos($menu_url, 'individual-services') === false &&
-                    strpos($menu_url, 'home-international') === false) {
-                    $is_blog_menu_item = true;
-                }
-            }
-        }
-        
-        // Check if this menu item is for News
-        $news_category = get_category_by_slug('news');
-        $news_ar_category = get_category_by_slug('news-ar');
-        
-        if ($news_category) {
-            $news_url = get_category_link($news_category->term_id);
-            if (strpos($menu_url, $news_url) !== false || 
-                strpos($menu_url, '/category/news') !== false) {
-                $is_news_menu_item = true;
-            }
-        }
-        
-        if ($news_ar_category) {
-            $news_ar_url = get_category_link($news_ar_category->term_id);
-            if (strpos($menu_url, $news_ar_url) !== false || 
-                strpos($menu_url, '/category/news-ar') !== false) {
-                $is_news_menu_item = true;
-            }
-        }
-        
-        // Check if this menu item is for Services (companies, individual, or home-international)
-        $service_categories = array(
-            get_category_by_slug('companies-services'),
-            get_category_by_slug('companies-services-ar'),
-            get_category_by_slug('individual-services'),
-            get_category_by_slug('individual-services-ar'),
-            get_category_by_slug('home-international'),
-            get_category_by_slug('home-international-ar')
-        );
-        
-        foreach ($service_categories as $service_cat) {
-            if ($service_cat) {
-                $service_url = get_category_link($service_cat->term_id);
-                if (strpos($menu_url, $service_url) !== false ||
-                    strpos($menu_url, '/category/' . $service_cat->slug) !== false) {
-                    $is_services_menu_item = true;
-                    break;
-                }
-            }
-        }
-        
-        // Also check for services page URLs
-        if (!$is_services_menu_item) {
-            if (strpos($menu_url, '/services') !== false || strpos($menu_url, '-services') !== false) {
-                $is_services_menu_item = true;
-            }
-        }
-        
-        // Remove existing active classes first
-        $classes = array_diff($classes, array('current-menu-item', 'current_page_item', 'current_page_parent', 'current_page_ancestor'));
-        
-        // Only add active class if the menu item type matches the current page type
-        // Services should highlight their own menu item
-        if ($is_services_category && $is_services_menu_item) {
-            $classes[] = 'current-menu-item';
-        } elseif ($is_news_category && $is_news_menu_item) {
-            $classes[] = 'current-menu-item';
-        } elseif ($is_blog_category && $is_blog_menu_item) {
-            $classes[] = 'current-menu-item';
-        } elseif (!$is_news_category && !$is_blog_category && !$is_services_category && $is_blog_menu_item) {
-            // Default to blog if we can't determine (for archive pages)
-            $classes[] = 'current-menu-item';
-        }
-    }
+// Theme setup
+function dlc_theme_setup() {
+    // Enable features
+    add_theme_support('menus');
+    add_theme_support('post-thumbnails');
+    add_theme_support('html5', array('comment-form', 'comment-list', 'gallery', 'caption'));
     
-    return $classes;
+    // Register menus
+    register_nav_menus(array(
+        'primary-menu' => __('Primary Menu'),
+        'primary-ar-menu' => __('Primary Arabic Menu'),
+        'footer-menu' => __('Footer Menu'),
+        'footer-ar-menu' => __('Footer Arabic Menu'),
+    ));
 }
-add_filter('nav_menu_css_class', 'keep_correct_menu_active', 10, 2);
+add_action('after_setup_theme', 'dlc_theme_setup');
 
 // Show Blog category posts on main archive/blog page and set posts per page
 function show_blog_category_posts($query) {

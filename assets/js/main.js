@@ -1,46 +1,8 @@
 /**
  * Main Theme Script - Mobile Menu Toggle and Scroll Lock
  */
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // Mobile Menu Toggle
-    const mobileToggle = document.querySelector('.mobile-toggle');
-    const navRight = document.querySelector('.nav-right');
-    const body = document.body;
-    
-    if (mobileToggle && navRight) {
-        // Close menu on page load (in case it was open from previous page)
-        mobileToggle.classList.remove('active');
-        navRight.classList.remove('active');
-        body.style.overflow = '';
-        
-        mobileToggle.addEventListener('click', function() {
-            const isActive = mobileToggle.classList.toggle('active');
-            navRight.classList.toggle('active');
-            
-            // Disable/enable scroll when menu is open/closed
-            if (isActive) {
-                body.style.overflow = 'hidden';
-            } else {
-                body.style.overflow = '';
-            }
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!navRight.contains(event.target) && !mobileToggle.contains(event.target)) {
-                if (navRight.classList.contains('active')) {
-                    mobileToggle.classList.remove('active');
-                    navRight.classList.remove('active');
-                    body.style.overflow = '';
-                }
-            }
-        });
-    }
 
-});
-
-// Function to open/toggle mobile nav (used in header.php and header-ar.php)
+// Mobile Nav Toggle (used in header.php and header-ar.php)
 function toggleMobileNav() {
     const mobileNav = document.querySelector('.mobile-nav');
     const body = document.body;
@@ -101,29 +63,6 @@ function closeMobileNav() {
         }
     }
 }
-
-// Ensure mobile nav is closed on page load (no animation on page changes)
-window.addEventListener('DOMContentLoaded', function() {
-    const mobileNav = document.querySelector('.mobile-nav');
-    const body = document.body;
-    const html = document.documentElement;
-    
-    if (mobileNav) {
-        // Remove any active state without animation
-        mobileNav.style.transition = 'none';
-        mobileNav.classList.remove('active');
-        body.style.position = '';
-        body.style.top = '';
-        body.style.overflow = '';
-        body.style.width = '';
-        html.style.overflow = '';
-        
-        // Re-enable transition after a brief moment
-        setTimeout(function() {
-            mobileNav.style.transition = '';
-        }, 50);
-    }
-});
 
 // Values Carousel
 document.addEventListener('DOMContentLoaded', function() {
@@ -255,73 +194,50 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Categories Dropdown Toggle
+// Dropdown Management - Unified handler for all dropdowns
 document.addEventListener('DOMContentLoaded', function() {
-    const dropdownToggles = document.querySelectorAll('.categories-dropdown-toggle');
+    // Helper: Close all dropdowns of a specific type
+    const closeDropdowns = (selector) => {
+        document.querySelectorAll(selector).forEach(el => el.classList.remove('active'));
+    };
     
-    dropdownToggles.forEach(toggle => {
-        toggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const dropdown = this.closest('.categories-dropdown');
-            dropdown.classList.toggle('active');
-        });
-    });
-    
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.categories-dropdown')) {
-            document.querySelectorAll('.categories-dropdown').forEach(dropdown => {
-                dropdown.classList.remove('active');
+    // Helper: Setup dropdown toggle
+    const setupDropdown = (parentSelector, toggleSelector, closeOthers = false) => {
+        document.querySelectorAll(parentSelector).forEach(parent => {
+            const toggle = toggleSelector ? parent.querySelector(toggleSelector) : parent.querySelector('[class*="toggle"]');
+            if (!toggle) return;
+            
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (closeOthers) {
+                    document.querySelectorAll(parentSelector).forEach(other => {
+                        if (other !== parent) other.classList.remove('active');
+                    });
+                }
+                parent.classList.toggle('active');
             });
-        }
-    });
+        });
+    };
     
-    // Categories Toggle Menu for Companies Services
+    // Setup all dropdown types
+    setupDropdown('.categories-dropdown', '.categories-dropdown-toggle');
+    setupDropdown('.sign-in-dropdown', '.sign-in-toggle', true);
+    
+    // Categories widget (legacy)
     const categoriesToggle = document.querySelector('.categories-toggle-btn');
     const categoriesWidget = document.querySelector('.categories-widget');
-    
     if (categoriesToggle && categoriesWidget) {
-        categoriesToggle.addEventListener('click', function(e) {
+        categoriesToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             categoriesWidget.classList.toggle('active');
         });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!categoriesWidget.contains(e.target)) {
-                categoriesWidget.classList.remove('active');
-            }
-        });
     }
     
-    // Sign In Dropdown Toggle
-    const signInDropdowns = document.querySelectorAll('.sign-in-dropdown');
-    
-    signInDropdowns.forEach(dropdown => {
-        const toggle = dropdown.querySelector('.sign-in-toggle');
-        
-        if (toggle) {
-            toggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                // Close other dropdowns
-                signInDropdowns.forEach(other => {
-                    if (other !== dropdown) {
-                        other.classList.remove('active');
-                    }
-                });
-                // Toggle current dropdown
-                dropdown.classList.toggle('active');
-            });
-        }
-    });
-    
-    // Close sign-in dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('.sign-in-dropdown')) {
-            signInDropdowns.forEach(dropdown => {
-                dropdown.classList.remove('active');
-            });
-        }
+    // Global click handler to close all dropdowns
+    document.addEventListener('click', () => {
+        closeDropdowns('.categories-dropdown');
+        closeDropdowns('.sign-in-dropdown');
+        if (categoriesWidget) categoriesWidget.classList.remove('active');
     });
 });
 
@@ -456,59 +372,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Define Presence Modal
 document.addEventListener('DOMContentLoaded', function() {
-    const definePresenceBtn = document.getElementById('definePresenceBtn');
-    const definePresenceBtnMobile = document.getElementById('definePresenceBtnMobile');
-    const definePresenceModal = document.getElementById('definePresenceModal');
-    const definePresenceClose = document.getElementById('definePresenceClose');
+    const modal = document.getElementById('definePresenceModal');
+    if (!modal) return;
+    
     const body = document.body;
-
-    function openDefinePresenceModal() {
-        if (definePresenceModal) {
-            definePresenceModal.style.display = 'flex';
-            body.style.overflow = 'hidden';
-        }
-    }
-
-    if (definePresenceModal) {
-        // Open modal from desktop button
-        if (definePresenceBtn) {
-            definePresenceBtn.addEventListener('click', openDefinePresenceModal);
-        }
-
-        // Open modal from mobile button
-        if (definePresenceBtnMobile) {
-            definePresenceBtnMobile.addEventListener('click', function() {
-                openDefinePresenceModal();
-                // Close mobile nav if open
-                const mobileNav = document.querySelector('.mobile-nav');
-                if (mobileNav && mobileNav.classList.contains('active')) {
-                    closeMobileNav();
-                }
-            });
-        }
-
-        // Close modal
-        if (definePresenceClose) {
-            definePresenceClose.addEventListener('click', function() {
-                definePresenceModal.style.display = 'none';
-                body.style.overflow = '';
-            });
-        }
-
-        // Close modal when clicking outside
-        definePresenceModal.addEventListener('click', function(e) {
-            if (e.target === definePresenceModal) {
-                definePresenceModal.style.display = 'none';
-                body.style.overflow = '';
-            }
-        });
-
-        // Close modal on ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && definePresenceModal.style.display === 'flex') {
-                definePresenceModal.style.display = 'none';
-                body.style.overflow = '';
-            }
-        });
-    }
+    const closeModal = () => {
+        modal.style.display = 'none';
+        body.style.overflow = '';
+    };
+    
+    const openModal = () => {
+        modal.style.display = 'flex';
+        body.style.overflow = 'hidden';
+        const mobileNav = document.querySelector('.mobile-nav');
+        if (mobileNav?.classList.contains('active')) closeMobileNav();
+    };
+    
+    // Open buttons
+    ['definePresenceBtn', 'definePresenceBtnMobile'].forEach(id => {
+        document.getElementById(id)?.addEventListener('click', openModal);
+    });
+    
+    // Close handlers
+    document.getElementById('definePresenceClose')?.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+    });
 });
