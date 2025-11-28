@@ -26,7 +26,7 @@ get_header('ar'); ?>
                     <h1 class="hero-title">شركة داغ <br><span>للمحاماة والاستشارات القانونية</span> </h1>
                     <p class="lead hero-subtitle">مملوكة للمحامي محمد داغستاني ويقع مقرها الرئيسي في الرياض، المملكة العربية السعودية.</p>
                     <div class="hero-actions">
-                        <a href="#about-dag" class="btn hero-btn learn-more-btn">اتعرف أكثر</a>
+                        <a href="#about-dag" class="btn hero-btn learn-more-btn">اعرف أكثر</a>
                         <?php if (!empty($company_pdf_url)) : ?>
                             <a href="<?php echo esc_url($company_pdf_url); ?>" class="btn hero-btn download-btn" target="_blank" rel="noopener">
                                 تحميل PDF<span class=" fa-solid fa-download ps-2 "></span>

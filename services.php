@@ -31,7 +31,7 @@ Template Name: Services Page
                 $companies_category = get_category_by_slug('companies-services');
                 $companies_url = $companies_category ? get_category_link($companies_category->term_id) : '#';
                 ?>
-                <a class="service-btn btn" href="<?php echo $companies_url; ?>">Get Started</a>
+                <a class="service-btn btn" href="<?php echo $companies_url; ?>">Read More</a>
 
             </div>
             <div class="individuals col-lg-6 col-md-12">
@@ -42,7 +42,7 @@ Template Name: Services Page
                 $individual_category = get_category_by_slug('individual-services');
                 $individual_url = $individual_category ? get_category_link($individual_category->term_id) : '#';
                 ?>
-                <a class="service-btn btn" href="<?php echo $individual_url; ?>" >Get Started</a>
+                <a class="service-btn btn" href="<?php echo $individual_url; ?>" >Read More</a>
 
             </div>
         </div>            

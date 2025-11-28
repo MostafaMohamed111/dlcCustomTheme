@@ -85,7 +85,18 @@
                         <?php endif; ?>
                     </div>
 
-                    <?php if ( comments_open() || get_comments_number() ) : ?>
+                    <?php 
+                    // Disable comments for news-ar category posts
+                    $post_categories = get_the_category();
+                    $is_news = false;
+                    foreach ($post_categories as $category) {
+                        if ($category->slug === 'news-ar') {
+                            $is_news = true;
+                            break;
+                        }
+                    }
+                    
+                    if ( !$is_news && (comments_open() || get_comments_number()) ) : ?>
                         <section class="post-comments" id="comments">
                             <h3 class="comments-title">
                                 <i class="fa-solid fa-comment"></i>

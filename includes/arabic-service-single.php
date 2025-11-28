@@ -88,10 +88,9 @@
                     
                     <!-- Post Footer -->
                     <footer class="post-footer-single">
-                        <?php $service_contact_url = dlc_get_service_contact_url('ar'); ?>
                         <div class="service-cta">
-                            <a href="<?php echo esc_url($service_contact_url); ?>" class="service-cta-btn get-started-service-btn">
-                                احصل علي الخدمة
+                            <a href="<?php echo home_url('/booking/'); ?>" class="service-cta-btn get-started-service-btn">
+                                احجز  الخدمة
                                 <i class="fa-solid fa-briefcase"></i>
                             </a>
                         </div>

@@ -10,8 +10,8 @@
         </p>
 
         <div class="actions-international">
-            <button class="btn hero-btn-international get-appointment-international">Get Appointment</button>
-            <button class="btn hero-btn-international contact-us-international" >Contact Us</button>
+            <a href="<?php echo home_url('/booking/'); ?>" class="btn hero-btn-international get-appointment-international">Get Appointment</a>
+            <a href="<?php echo home_url('/contact/'); ?>" class="btn hero-btn-international contact-us-international" >Contact Us</a>
         </div>
 
     </div>

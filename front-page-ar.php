@@ -20,7 +20,7 @@ $clients_count = (int) get_field('clients');
             <h2 class="hero-title">للمحاماة و الاستشارات القانونية</h2>
             <p class="hero-subtitle">منصة قانونية رقمية للحلول الدقيقة</p>
             <div class="hero-buttons">
-                <a href="#" class="btn-primary">ابدأ الآن</a>
+                <a href="<?php echo esc_url(home_url('/booking')); ?>" class="btn-primary">احجز الآن</a>
                 <a href="<?php echo home_url('/about-us-ar'); ?>" class="btn-secondary">تعرف أكثر</a>
             </div>
         </div>

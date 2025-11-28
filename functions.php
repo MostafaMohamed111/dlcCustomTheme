@@ -870,29 +870,6 @@ function dlc_get_next_service_post($language = 'en') {
     return dlc_get_adjacent_service_post('next', $language);
 }
 
-// Helper to get contact URL for services CTA based on language
-function dlc_get_service_contact_url($language = 'en') {
-    $language = ($language === 'ar') ? 'ar' : 'en';
-    $primary_slug = ($language === 'ar') ? 'contact-ar' : 'contact';
-    $fallback_slug = ($language === 'ar') ? 'contact' : 'contact-ar';
-    
-    // Try to find the page by slug
-    $contact_page = get_page_by_path($primary_slug);
-    if ($contact_page) {
-        return get_permalink($contact_page);
-    }
-    
-    // Fallback to alternate slug
-    $contact_page = get_page_by_path($fallback_slug);
-    if ($contact_page) {
-        return get_permalink($contact_page);
-    }
-    
-    // Final fallback to manual URL
-    $fallback_path = ($language === 'ar') ? '/contact-ar/' : '/contact/';
-    return home_url($fallback_path);
-}
-
 // Generic helper function to get the archive URL for a post based on its category type and language
 function dlc_get_post_archive_url($post_id = null, $language = null) {
     if (!$post_id) {

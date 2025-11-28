@@ -198,7 +198,7 @@
                                 
                                 <div class="service-footer">
                                     <a href="<?php the_permalink(); ?>" class="get-started-service-btn">
-                                        ابدأ الآن
+                                        اقرأ المزيد
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </a>
                                 </div>

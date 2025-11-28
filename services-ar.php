@@ -30,7 +30,7 @@ Template Name: Services Arabic
                 $companies_ar_category = get_category_by_slug('companies-services-ar');
                 $companies_ar_url = $companies_ar_category ? get_category_link($companies_ar_category->term_id) : '#';
                 ?>
-                <a href="<?php echo $companies_ar_url; ?>" class="btn service-btn">ابدأ الآن</a>
+                <a href="<?php echo $companies_ar_url; ?>" class="btn service-btn">اقرأ المزيد</a>
 
             </div>
             <div class="individuals col-lg-6 col-md-12">
@@ -41,7 +41,7 @@ Template Name: Services Arabic
                 $individual_ar_category = get_category_by_slug('individual-services-ar');
                 $individual_ar_url = $individual_ar_category ? get_category_link($individual_ar_category->term_id) : '#';
                 ?>
-                <a href="<?php echo $individual_ar_url; ?>" class="btn service-btn">ابدأ الآن</a>
+                <a href="<?php echo $individual_ar_url; ?>" class="btn service-btn">اقرأ المزيد</a>
 
             </div>
         </div>            

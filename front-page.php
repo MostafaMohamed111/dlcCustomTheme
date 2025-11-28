@@ -16,7 +16,7 @@ $clients_count = (int) get_field('clients');
             <h2 class="hero-title">Law Firm & Legal Consultations</h2>
             <p class="hero-subtitle">A Digital Legal Platform For Accurate Solutions</p>
             <div class="hero-buttons" aria-label="Primary actions">
-                <a href="<?php echo esc_url(home_url('/contact')); ?>" class="btn-primary">Get Started</a>
+                <a href="<?php echo esc_url(home_url('/booking')); ?>" class="btn-primary">Book Now <i class="fas fa-calendar-check"></i> </a>
                 <a href="<?php echo home_url('/about-us'); ?>" class="btn-secondary">Learn More</a>
             </div>
         </div>

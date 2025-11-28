@@ -255,15 +255,14 @@
                                             }
                                             ?>
                                         </div>
-                                    </div>
-                                </div>
+                           <div class="pagination-wrapper">
                             </article>
                             <?php
                         endwhile;
                         ?>
                     </div>
                     
-                    <div class="pagination-wrapper">
+                    <div class="pagination-wrapper" id="pagination-wrapper">
                         <?php
                         $prev_link = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>');
                         $next_link = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>');
@@ -298,6 +297,21 @@
                 <?php else : ?>
                     <div class="no-posts">
                         <i class="fa-solid fa-file-circle-question"></i>
+                        <h3>لا توجد منشورات</h3>
+                        <p>لا توجد منشورات في هذه الفئة حتى الآن.</p>
+                    </div>
+                <?php endif; ?>
+            </main>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<?php get_footer('ar'); ?>                      <i class="fa-solid fa-file-circle-question"></i>
                         <h3>لا توجد منشورات</h3>
                         <p>لا توجد منشورات في هذه الفئة حتى الآن.</p>
                     </div>

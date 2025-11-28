@@ -126,7 +126,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-sm-12">
-                <a class="quick-link calendar" href="#contact-form">
+                <a class="quick-link calendar" href="<?php echo home_url('/booking/'); ?>">
                     <i class="fas fa-calendar-check"></i>
                     <span>حجز استشارة</span>
                 </a>

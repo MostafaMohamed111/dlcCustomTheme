@@ -33,7 +33,7 @@ get_header(); ?>
                         <i class="icon fas fa-gavel"> </i>
                     </span>
                     <p>Understanding your legal rights is the first step in protecting yourself. Our experts provide clear and concise information on various legal topics to help you stay informed.</p>
-                    <button class="btn-learn-more btn">Learn More</button>
+                    <a href="<?php echo home_url('/category/blog/'); ?>" class="btn-learn-more btn">Read More</a>
                 </div>
             </div>
             <div class="col-lg-4 col-sm-12 card-item">
@@ -43,7 +43,7 @@ get_header(); ?>
                         <i class="icon fas fa-file-alt"> </i>
                     </span>
                     <p>Proper documentation is crucial in legal matters. We guide you through the process of preparing and maintaining essential legal documents to ensure your interests are safeguarded.</p>
-                    <button class="btn-learn-more btn">Learn More</button>
+                    <a href="<?php echo home_url('/category/blog/'); ?>" class="btn-learn-more btn">Read More</a>
                 </div>
             </div>
             <div class="col-lg-4 col-sm-12 card-item">
@@ -53,7 +53,7 @@ get_header(); ?>
                         <i class="icon fas fa-comments"> </i>
                     </span>
                     <p>Our consultation services offer personalized legal advice tailored to your specific situation. Whether you're facing a legal challenge or planning for the future, we're here to help.</p>
-                    <button class="btn-learn-more btn">Learn More</button>
+                    <a href="<?php echo home_url('/category/blog/'); ?>" class="btn-learn-more btn">Read More</a>
                 </div>
             </div>
         </div>

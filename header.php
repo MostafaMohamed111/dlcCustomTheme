@@ -331,7 +331,7 @@
 
 
                     <div class="row align-items-center mobile-nav-bottom"  >
-                        <div class="mobile-actions text-center">
+                        <div class="mobile-actions text-center d-flex align-items-center justify-content-center">
                             <button class="btn nav-btn btn-define mx-4" id="definePresenceBtnMobile" type="button">Define Presence <span class="fa-regular fa-flag mx-2"> </span></button>
                             <div class="sign-in-dropdown mx-4">
                                 <button class="btn nav-btn sign-in sign-in-toggle px-5" type="button">

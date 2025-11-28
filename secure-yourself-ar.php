@@ -36,7 +36,7 @@ get_header('ar'); ?>
                         <i class="icon fas fa-gavel"> </i>
                     </span>
                     <p>فهم حقوقك القانونية هو الخطوة الأولى في حماية نفسك. يقدم خبراؤنا معلومات واضحة وموجزة حول مواضيع قانونية مختلفة لمساعدتك على البقاء على اطلاع.</p>
-                    <button class="btn-learn-more btn">تعلم المزيد</button>
+                    <a href="<?php echo home_url('/category/blog-ar/'); ?>" class="btn-learn-more btn">اقرأ المزيد</a>
                 </div>
             </div>
             <div class="col-lg-4 col-sm-12 card-item">
@@ -46,7 +46,7 @@ get_header('ar'); ?>
                         <i class="icon fas fa-file-alt"> </i>
                     </span>
                     <p>التوثيق الصحيح أمر بالغ الأهمية في المسائل القانونية. نرشدك خلال عملية إعداد وصيانة الوثائق القانونية الأساسية لضمان حماية مصالحك.</p>
-                    <button class="btn-learn-more btn">تعلم المزيد</button>
+                    <a href="<?php echo home_url('/category/blog-ar/'); ?>" class="btn-learn-more btn">اقرأ المزيد</a>
                 </div>
             </div>
             <div class="col-lg-4 col-sm-12 card-item">
@@ -56,7 +56,7 @@ get_header('ar'); ?>
                         <i class="icon fas fa-comments"> </i>
                     </span>
                     <p>تقدم خدمات الاستشارة لدينا نصائح قانونية مخصصة تتناسب مع وضعك الخاص. سواء كنت تواجه تحديًا قانونيًا أو تخطط للمستقبل، نحن هنا لمساعدتك.</p>
-                    <button class="btn-learn-more btn">تعلم المزيد</button>
+                    <a href="<?php echo home_url('/category/blog-ar/'); ?>" class="btn-learn-more btn">اقرأ المزيد</a>
                 </div>
             </div>
         </div>
