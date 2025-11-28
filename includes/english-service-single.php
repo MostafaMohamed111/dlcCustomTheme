@@ -38,55 +38,19 @@
                             </div>
                             
                             <h1 class="post-title-single"><?php the_title(); ?></h1>
-                            
-                            <?php
-                            $categories = get_the_category();
-                            if ( ! empty( $categories ) ) :
-                                ?>
-                                    <div class="post-categories-single">
-                                        <span class="taxonomy-label">
-                                            <i class="fa-solid fa-folder"></i>
-                                            Categories:
-                                        </span>
-                                        <?php foreach($categories as $category) : ?>
-                                            <a href="<?php echo get_category_link($category->term_id); ?>" class="category-badge-single">
-                                                <?php echo esc_html( $category->name ); ?>
-                                            </a>
-                                        <?php endforeach; ?>
-                                    </div>
-                            <?php endif; ?>
                         </div>
                     </header>
                     
                     <!-- Post Content -->
                     <div class="post-content-single">
                         <?php the_content(); ?>
-                        
-                        <?php
-                        $tags = get_the_tags();
-                        if ( ! empty( $tags ) ) :
-                            ?>
-                            <div class="post-tags-inline">
-                                <span class="tags-label">
-                                    <i class="fa-solid fa-hashtag"></i>
-                                    Tags:
-                                </span>
-                                <div class="tags-list-inline">
-                                    <?php foreach($tags as $tag) : ?>
-                                        <a href="<?php echo get_tag_link($tag->term_id); ?>" class="tag-link-inline">
-                                            <?php echo esc_html( $tag->name ); ?>
-                                        </a>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
                     </div>
 
 
                     <!-- Post Footer -->
                     <footer class="post-footer-single">
                         <div class="service-cta">
-                            <a href="<?php echo home_url('/booking/'); ?>" class="service-cta-btn get-started-service-btn">
+                            <a href="<?php echo add_query_arg('service', get_the_ID(), home_url('/booking/')); ?>" class="service-cta-btn get-started-service-btn">
                                 Book this Service
                                 <i class="fa-solid fa-briefcase"></i>
                             </a>

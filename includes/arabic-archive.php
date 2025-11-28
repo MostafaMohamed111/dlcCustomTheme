@@ -9,8 +9,8 @@
                <h1 class="main-header-title">مدونة داج للمحاماة والاستشارات القانونية
                 
                </h1>
-                <p class="main-header-subtitle">مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى.</p>
-                <p class="main-header-subtitle">مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى مرحبًا بكم في مدونتنا حيث نشارك أحدث الأخبار والرؤى.</p>
+                <p class="main-header-subtitle">مرحبًا بكم في مدوّنتنا، حيث نسلّط الضوء على أهم المستجدات القانونية في المملكة العربية السعودية، ونقدّم تحليلات معمّقة ومعلومات موثوقة تساعد الأفراد والشركات على فهم الأنظمة واللوائح بوضوح. يحرص فريقنا من المستشارين والمحامين على تبسيط المفاهيم القانونية وتقديم محتوى يثري معرفتكم ويدعم قراراتكم.</p>
+                <p class="main-header-subtitle">هنا، ستجدون مقالات تغطي أحدث التطورات القانونية، والتغييرات التنظيمية، والنصائح الاستراتيجية عبر مختلف مجالات الممارسة - من القانون التجاري والشركات إلى التقاضي والعقود وتسوية النزاعات. سواء كنتم عملاء، أو محترفين، أو مهتمين بالقانون السعودي، فإن مدونتنا هي مصدر موثوق للمعلومات القانونية المحدثة والموثوقة.</p>
 
                 
            </div>
@@ -148,121 +148,12 @@
                     <div class="posts-grid" id="posts-grid">
                         <?php
                         while ( have_posts() ) : the_post();
-                            ?>
-                            <article class="post-card">
-                                <?php if ( has_post_thumbnail() ) : ?>
-                                    <div class="post-thumbnail">
-                                        <a href="<?php the_permalink(); ?>">
-                                            <?php the_post_thumbnail(
-                                                'large',
-                                                array(
-                                                    'class' => 'post-image',
-                                                    'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px'
-                                                )
-                                            ); ?>
-                                        </a>
-                                        <div class="post-category-badge">
-                                            <?php
-                                            $categories = get_the_category();
-                                            if ( ! empty( $categories ) ) {
-                                                echo esc_html( $categories[0]->name );
-                                            }
-                                            ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <span class="post-date">
-                                            <i class="fa-solid fa-calendar"></i>
-                                            <?php echo get_the_date(); ?>
-                                        </span>
-                                        <span class="post-author">
-                                            <i class="fa-solid fa-user"></i>
-                                            <?php the_author(); ?>
-                                        </span>
-                                    </div>
-                                    
-                                    <h3 class="post-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </h3>
-                                    
-                                    <div class="post-excerpt">
-                                        <?php 
-                                        $excerpt = get_the_excerpt();
-                                        $excerpt_length = 150;
-                                        if (strlen($excerpt) > $excerpt_length) {
-                                            $excerpt = substr($excerpt, 0, $excerpt_length);
-                                            $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
-                                        }
-                                        echo $excerpt;
-                                        ?>
-                                    </div>
-                                    
-                                    <div class="post-footer">
-                                        <a href="<?php the_permalink(); ?>" class="read-more-btn">
-                                            اقرأ المزيد
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                        </a>
-                                        <div class="post-meta-footer">
-                                            <?php
-                                            $categories = get_the_category();
-                                            if ( ! empty( $categories ) ) {
-                                                $category_count = count($categories);
-                                                ?>
-                                                <div class="post-categories">
-                                                    <?php if ( $category_count == 1 ) : ?>
-                                                        <!-- Single category - show as badge -->
-                                                        <a href="<?php echo get_category_link($categories[0]->term_id); ?>" class="post-category-link">
-                                                            <i class="fa-solid fa-folder"></i>
-                                                            <?php echo esc_html( $categories[0]->name ); ?>
-                                                        </a>
-                                                    <?php else : ?>
-                                                        <!-- Multiple categories - show dropdown only -->
-                                                        <div class="categories-dropdown">
-                                                            <button class="categories-dropdown-toggle" type="button">
-                                                                <i class="fa-solid fa-folder"></i>
-                                                                <span class="dropdown-text">التصنيفات</span>
-                                                                <i class="fa-solid fa-chevron-down"></i>
-                                                            </button>
-                                                            <div class="categories-dropdown-menu">
-                                                                <?php foreach($categories as $category) : ?>
-                                                                    <a href="<?php echo get_category_link($category->term_id); ?>" class="dropdown-category-link">
-                                                                        <i class="fa-solid fa-folder"></i>
-                                                                        <?php echo esc_html( $category->name ); ?>
-                                                                    </a>
-                                                                <?php endforeach; ?>
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <?php
-                                            }
-                                            
-                                            $tags = get_the_tags();
-                                            if ( ! empty( $tags ) ) {
-                                                ?>
-                                                <div class="post-tags">
-                                                    <?php foreach($tags as $tag) : ?>
-                                                        <a href="<?php echo get_tag_link($tag->term_id); ?>" class="post-tag-link">
-                                                            <i class="fa-solid fa-hashtag"></i>
-                                                            <?php echo esc_html( $tag->name ); ?>
-                                                        </a>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                                <?php
-                                            }
-                                            ?>
-                                        </div>
-                           <div class="pagination-wrapper">
-                            </article>
-                            <?php
+                            get_template_part('includes/post-card', null, array('read_more_text' => 'اقرأ المزيد'));
                         endwhile;
                         ?>
                     </div>
                     
-                    <div class="pagination-wrapper" id="pagination-wrapper">
+                    <div class="pagination-wrapper">
                         <?php
                         $prev_link = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>');
                         $next_link = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>');
@@ -305,25 +196,5 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-<?php get_footer('ar'); ?>                      <i class="fa-solid fa-file-circle-question"></i>
-                        <h3>لا توجد منشورات</h3>
-                        <p>لا توجد منشورات في هذه الفئة حتى الآن.</p>
-                    </div>
-                <?php endif; ?>
-            </main>
-        </div>
-    </div>
-</div>
-
-
-
-
-
 
 <?php get_footer('ar'); ?>

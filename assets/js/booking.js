@@ -8,9 +8,22 @@
     let currentPhase = 1;
     let serviceType = '';
     let services = [];
+    let preselectedServiceId = null;
 
     // Initialize
     $(document).ready(function() {
+        // Check if service ID is in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        preselectedServiceId = urlParams.get('service');
+        
+        // If service is preselected, auto-load
+        if (preselectedServiceId) {
+            // Hide service selection
+            $('#service-type-selection').removeClass('active');
+            $('#booking-form-container').addClass('active');
+            detectAndLoadServiceType(preselectedServiceId);
+        }
+        
         // Service type selection
         $('.service-type-btn').on('click', function() {
             serviceType = $(this).data('type');
@@ -49,11 +62,49 @@
     });
 
     /**
+     * Detect service type from preselected service and auto-load form
+     */
+    function detectAndLoadServiceType(serviceId) {
+        $.ajax({
+            url: ajax_object.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'get_service_type',
+                service_id: serviceId
+            },
+            success: function(response) {
+                if (response.success && response.data.service_type) {
+                    serviceType = response.data.service_type;
+                    $('#service_type').val(serviceType);
+                    
+                    // Load services for the detected type
+                    loadServices(serviceType);
+                } else {
+                    // If detection fails, show service selection
+                    $('#booking-form-container').removeClass('active');
+                    $('#service-type-selection').addClass('active');
+                }
+            },
+            error: function() {
+                // On error, show service selection
+                $('#booking-form-container').removeClass('active');
+                $('#service-type-selection').addClass('active');
+            }
+        });
+    }
+
+    /**
      * Load services based on service type
      */
     function loadServices(type) {
         const serviceSelect = $('#service');
-        serviceSelect.html('<option value="">Loading services...</option>');
+        const language = typeof bookingLanguage !== 'undefined' ? bookingLanguage : 'en';
+        const loadingText = language === 'ar' ? 'جاري تحميل الخدمات...' : 'Loading services...';
+        const selectText = language === 'ar' ? 'اختر خدمة' : 'Select a service';
+        const noServicesText = language === 'ar' ? 'لا توجد خدمات متاحة' : 'No services available';
+        const errorText = language === 'ar' ? 'خطأ في تحميل الخدمات. يرجى تحديث الصفحة.' : 'Error loading services. Please refresh the page.';
+        
+        serviceSelect.html(`<option value="">${loadingText}</option>`);
         serviceSelect.prop('disabled', true);
 
         $.ajax({
@@ -62,28 +113,36 @@
             data: {
                 action: 'get_booking_services',
                 service_type: type,
+                language: language,
                 security: $('#booking-form input[name="security"]').val()
             },
             success: function(response) {
                 serviceSelect.prop('disabled', false);
                 
                 if (response.success && response.data && response.data.length > 0) {
-                    serviceSelect.html('<option value="">Select a service</option>');
+                    serviceSelect.html(`<option value=\"\">${selectText}</option>`);
                     $.each(response.data, function(index, service) {
                         serviceSelect.append(
                             $('<option></option>')
                                 .attr('value', service.id)
+                                .attr('data-slug', service.slug)
                                 .text(service.title)
                         );
                     });
                     services = response.data;
+                    
+                    // Auto-select preselected service if exists
+                    if (preselectedServiceId) {
+                        serviceSelect.val(preselectedServiceId);
+                        preselectedServiceId = null; // Clear after use
+                    }
                 } else {
-                    serviceSelect.html('<option value="">No services available</option>');
+                    serviceSelect.html(`<option value=\"\">${noServicesText}</option>`);
                 }
             },
             error: function() {
                 serviceSelect.prop('disabled', false);
-                serviceSelect.html('<option value="">Error loading services. Please refresh the page.</option>');
+                serviceSelect.html(`<option value="">${errorText}</option>`);
             }
         });
     }
@@ -274,6 +333,10 @@
         $('#booking-form-container').addClass('loading');
 
         // Get form data
+        const serviceSelect = $('#service');
+        const selectedOption = serviceSelect.find('option:selected');
+        const serviceSlug = selectedOption.attr('data-slug') || '';
+        
         const formData = {
             action: 'submit_booking_form',
             security: $('#booking-form input[name="security"]').val(),
@@ -282,7 +345,8 @@
             phone: $('#phone').val(),
             email: $('#email').val(),
             city: $('#city').val(),
-            service: $('#service').val(),
+            service: serviceSelect.val(),
+            service_slug: serviceSlug,
             case_brief: $('#case_brief').val(),
             has_documents: $('input[name="has_documents"]:checked').val(),
             previous_lawyer: $('input[name="previous_lawyer"]:checked').val(),

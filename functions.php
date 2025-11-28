@@ -614,9 +614,21 @@ function show_blog_category_posts($query) {
 }
 add_action('pre_get_posts', 'show_blog_category_posts');
 
-
-
-
+// Block access to child category URLs
+add_action('template_redirect', function() {
+    if (is_category()) {
+        $category = get_queried_object();
+        
+        // Check if this category has a parent
+        if ($category && $category->parent != 0) {
+            // This is a child category - redirect to 404
+            global $wp_query;
+            $wp_query->set_404();
+            status_header(404);
+            nocache_headers();
+        }
+    }
+});
 
 function add_language_metabox() {
     add_meta_box(
@@ -747,14 +759,14 @@ function dlc_get_service_type($post_id = null) {
 
 // Helper to get all category IDs for a given service type and language
 function dlc_get_service_category_ids($service_type = 'companies', $language = 'en') {
-    if ($service_type === 'individual') {
-        $base_slug = 'individual-services';
-    } elseif ($service_type === 'home-international') {
-        $base_slug = 'home-international';
-    } else {
-        $base_slug = 'companies-services';
-    }
+    $base_slug_map = array(
+        'individual' => 'individual-services',
+        'home-international' => 'home-international',
+        'international' => 'home-international',
+        'companies' => 'companies-services'
+    );
     
+    $base_slug = $base_slug_map[$service_type] ?? 'companies-services';
     $slug = ($language === 'ar') ? $base_slug . '-ar' : $base_slug;
     return dlc_get_category_tree_ids($slug);
 }
@@ -862,12 +874,22 @@ function dlc_get_adjacent_service_post($direction = 'next', $language = 'en') {
     return null;
 }
 
+// Shorthand wrappers for service post navigation
 function dlc_get_previous_service_post($language = 'en') {
     return dlc_get_adjacent_service_post('previous', $language);
 }
 
 function dlc_get_next_service_post($language = 'en') {
     return dlc_get_adjacent_service_post('next', $language);
+}
+
+// Shorthand wrappers for blog/news post navigation
+function get_previous_post_by_language_and_category($language = 'en') {
+    return dlc_get_adjacent_post_by_language_and_category('previous', $language);
+}
+
+function get_next_post_by_language_and_category($language = 'en') {
+    return dlc_get_adjacent_post_by_language_and_category('next', $language);
 }
 
 // Generic helper function to get the archive URL for a post based on its category type and language
@@ -962,15 +984,7 @@ function dlc_get_adjacent_post_by_language_and_category($direction = 'next', $la
     return $query->have_posts() ? $query->posts[0] : null;
 }
 
-// Helper function to get previous post filtered by language and category type (news/blog)
-function get_previous_post_by_language_and_category($language = 'en') {
-    return dlc_get_adjacent_post_by_language_and_category('previous', $language);
-}
 
-// Helper function to get next post filtered by language and category type (news/blog)
-function get_next_post_by_language_and_category($language = 'en') {
-    return dlc_get_adjacent_post_by_language_and_category('next', $language);
-}
 
 // Custom comment callback to remove "says" text
 function dlc_custom_comment_callback($comment, $args, $depth) {
@@ -1058,6 +1072,55 @@ function handle_contact_form_submission() {
 }
 
 // Booking form AJAX handlers
+add_action('wp_ajax_get_service_type', 'get_service_type');
+add_action('wp_ajax_nopriv_get_service_type', 'get_service_type');
+
+function get_service_type() {
+    $service_id = intval($_POST['service_id']);
+    
+    if (!$service_id) {
+        wp_send_json_error('Invalid service ID.');
+    }
+    
+    // Get post categories including parents
+    $categories = get_the_category($service_id);
+    $service_type = '';
+    
+    foreach ($categories as $category) {
+        // Check current category and all parent categories
+        $cat_to_check = $category;
+        
+        while ($cat_to_check) {
+            $slug = $cat_to_check->slug;
+            
+            // Check which service type this belongs to
+            if (strpos($slug, 'companies-services') !== false) {
+                $service_type = 'companies';
+                break 2; // Break both loops
+            } elseif (strpos($slug, 'individual-services') !== false) {
+                $service_type = 'individual';
+                break 2;
+            } elseif (strpos($slug, 'home-international') !== false) {
+                $service_type = 'international';
+                break 2;
+            }
+            
+            // Check parent category
+            if ($cat_to_check->parent) {
+                $cat_to_check = get_category($cat_to_check->parent);
+            } else {
+                break;
+            }
+        }
+    }
+    
+    if ($service_type) {
+        wp_send_json_success(array('service_type' => $service_type));
+    } else {
+        wp_send_json_error('Could not determine service type.');
+    }
+}
+
 add_action('wp_ajax_get_booking_services', 'get_booking_services');
 add_action('wp_ajax_nopriv_get_booking_services', 'get_booking_services');
 
@@ -1068,18 +1131,21 @@ function get_booking_services() {
     }
 
     $service_type = sanitize_text_field($_POST['service_type']);
+    $language = isset($_POST['language']) ? sanitize_text_field($_POST['language']) : 'en';
     
-    // Map service type to category slug
+    // Map service type to category slug based on language
     $category_slug = '';
+    $suffix = ($language === 'ar') ? '-ar' : '';
+    
     switch ($service_type) {
         case 'companies':
-            $category_slug = 'companies-services';
+            $category_slug = 'companies-services' . $suffix;
             break;
         case 'individual':
-            $category_slug = 'individual-services';
+            $category_slug = 'individual-services' . $suffix;
             break;
         case 'international':
-            $category_slug = 'home-international';
+            $category_slug = 'home-international' . $suffix;
             break;
         default:
             wp_send_json_error('Invalid service type.');
@@ -1094,14 +1160,21 @@ function get_booking_services() {
         return;
     }
 
-    // Get all posts from these categories
+    // Get all posts from these categories with language filter
     $query_args = array(
         'post_type' => 'post',
         'post_status' => 'publish',
         'posts_per_page' => -1,
         'orderby' => 'title',
         'order' => 'ASC',
-        'category__in' => $category_ids
+        'category__in' => $category_ids,
+        'meta_query' => array(
+            array(
+                'key' => '_post_language',
+                'value' => $language,
+                'compare' => '='
+            )
+        )
     );
 
     $services_query = new WP_Query($query_args);
@@ -1112,7 +1185,8 @@ function get_booking_services() {
             $services_query->the_post();
             $services[] = array(
                 'id' => get_the_ID(),
-                'title' => get_the_title()
+                'title' => get_the_title(),
+                'slug' => get_post_field('post_name', get_the_ID())
             );
         }
         wp_reset_postdata();
@@ -1137,6 +1211,7 @@ function handle_booking_form_submission() {
     $email = sanitize_email($_POST['email']);
     $city = sanitize_text_field($_POST['city']);
     $service_id = intval($_POST['service']);
+    $service_slug = isset($_POST['service_slug']) ? sanitize_text_field($_POST['service_slug']) : '';
     $case_brief = sanitize_textarea_field($_POST['case_brief']);
     $has_documents = sanitize_text_field($_POST['has_documents']);
     $previous_lawyer = sanitize_text_field($_POST['previous_lawyer']);
@@ -1152,16 +1227,27 @@ function handle_booking_form_submission() {
         wp_send_json_error('Invalid email address.');
     }
 
-    // Get service title
-    $service_title = get_the_title($service_id);
-    if (empty($service_title)) {
-        $service_title = 'Unknown Service';
+    // Get service slug if not provided
+    if (empty($service_slug)) {
+        $service_slug = get_post_field('post_name', $service_id);
+    }
+    
+    // Remove -ar suffix from slug if present for consistent naming
+    $base_slug = str_replace('-ar', '', $service_slug);
+    
+    // Create service name from slug (capitalize and replace hyphens with spaces)
+    $service_name = ucwords(str_replace('-', ' ', $base_slug));
+    
+    // Get actual service title for email
+    $service_display_title = get_the_title($service_id);
+    if (empty($service_display_title)) {
+        $service_display_title = $service_name;
     }
 
-    // Create booking post in admin dashboard
+    // Create booking post in admin dashboard with slug-based service name
     $booking_post_id = wp_insert_post(array(
         'post_type'   => 'booking_request',
-        'post_title'  => sprintf('%s - %s', $name, $service_title),
+        'post_title'  => sprintf('%s – %s', $name, $service_name),
         'post_status' => 'publish',
     ));
 
@@ -1169,7 +1255,8 @@ function handle_booking_form_submission() {
         // Save all booking data as post meta
         update_post_meta($booking_post_id, '_service_type', $service_type);
         update_post_meta($booking_post_id, '_service_id', $service_id);
-        update_post_meta($booking_post_id, '_service_title', $service_title);
+        update_post_meta($booking_post_id, '_service_slug', $base_slug);
+        update_post_meta($booking_post_id, '_service_title', $service_name);
         update_post_meta($booking_post_id, '_name', $name);
         update_post_meta($booking_post_id, '_phone', $phone);
         update_post_meta($booking_post_id, '_email', $email);

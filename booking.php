@@ -99,6 +99,14 @@
     </div>
 
     <div class="form-sector col-lg-6">
+        <!-- Language Switcher -->
+        <div class="booking-language-switcher">
+            <a href="<?php echo home_url('/booking-ar/'); ?>" class="language-switch-btn" title="Switch to Arabic">
+                <i class="fa-solid fa-globe"></i>
+                <span>العربية</span>
+            </a>
+        </div>
+        
         <!-- Service Type Selection -->
         <div id="service-type-selection" class="booking-step active">
             <h1>What are you looking for?</h1>
@@ -152,7 +160,7 @@
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone Number *</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" value="0570277277" required>
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email *</label>

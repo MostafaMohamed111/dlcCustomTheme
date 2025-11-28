@@ -1,16 +1,269 @@
 <?php 
-/*
+
+/* 
 * Template Name: Booking Page Arabic
 */
 
-    get_header('ar');
 ?>
 
+    <!DOCTYPE html>
+    <html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php wp_title(); ?></title>
+    <?php wp_head(); ?>
+    <script>
+        var bookingLanguage = 'ar';
+    </script>
+</head>
+<body>
 
+<div class="row page">
+    <div class="image-sector col-lg-6">
+        <?php
+        // Get ACF fields
+        $phone = get_field('phone');
+        $facebook = get_field('facebook');
+        $instagram = get_field('instagram');
+        $linkedin = get_field('linkedin');
+        $twitter = get_field('twitter');
+        $snapchat = get_field('snapchat');
+        $whatsapp = get_field('whatsapp');
+        ?>
+        
+        <div class="logo">
+            <a href="<?php echo home_url('front-page-ar'); ?>">
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking-logo.png" alt="Dag Law Firm Logo">
+            </a>
+        </div>
 
+        <div class="gif">
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking.gif" alt="Booking Illustration">
+        </div>
 
+        <div class="phone">
+            <h2>Call Us Now</h2>
+            <div class="phone-number">
+                <?php if ($phone) : 
+                    $phone_clean = preg_replace('/[^0-9+]/', '', $phone);
+                ?>
+                    <a href="tel:<?php echo esc_attr($phone_clean); ?>">
+                        <i class="fas fa-phone-alt"></i><?php echo esc_html($phone); ?>
+                    </a>
+                <?php else : ?>
+                    <a href="tel:+966570277277">
+                        <i class="fas fa-phone-alt"></i>0570 277 277
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
 
+        <div class="social-media">
+            <h3>منصات التواصل الاجتماعي</h3>
+            <div class="social-icons">
+                <?php if ($facebook) : ?>
+                    <a href="<?php echo esc_url($facebook); ?>" target="_blank" rel="noopener" class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($instagram) : ?>
+                    <a href="<?php echo esc_url($instagram); ?>" target="_blank" rel="noopener" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($linkedin) : ?>
+                    <a href="<?php echo esc_url($linkedin); ?>" target="_blank" rel="noopener" class="social-icon">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($twitter) : ?>
+                    <a href="<?php echo esc_url($twitter); ?>" target="_blank" rel="noopener" class="social-icon">
+                        <i class="fab fa-x-twitter"></i>
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($snapchat) : ?>
+                    <a href="<?php echo esc_url($snapchat); ?>" target="_blank" rel="noopener" class="social-icon">
+                        <i class="fab fa-snapchat"></i>
+                    </a>
+                <?php endif; ?>
+                
+                <?php if ($whatsapp) : ?>
+                    <a href="<?php echo esc_url($whatsapp); ?>" target="_blank" rel="noopener" class="social-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
 
+    <div class="form-sector col-lg-6">
+        <!-- Language Switcher -->
+        <div class="booking-language-switcher">
+            <a href="<?php echo home_url('/booking/'); ?>" class="language-switch-btn" title="التبديل إلى الإنجليزية">
+                <i class="fa-solid fa-globe"></i>
+                <span>English</span>
+            </a>
+        </div>
+        
+        <!-- Service Type Selection -->
+        <div id="service-type-selection" class="booking-step active">
+            <h1>ماذا تبحث عنه؟</h1>
+            <div class="service-type-options">
+                <button type="button" class="service-type-btn" data-type="companies">
+                    <i class="fa-solid fa-building"></i>
+                    <span>خدمات الشركات</span>
+                </button>
+                <button type="button" class="service-type-btn" data-type="individual">
+                    <i class="fa-solid fa-user"></i>
+                    <span>خدمات الأفراد</span>
+                </button>
+                <button type="button" class="service-type-btn" data-type="international">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>الخدمات الدولية</span>
+                </button>
+            </div>
+        </div>
 
+        <!-- Booking Form -->
+        <div id="booking-form-container" class="booking-step">
+            <div class="form-header">
+                <h1>معلومات حجز الاستشارة</h1>
+            </div>
 
-<?php get_footer('ar'); ?>
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">المعلومات الشخصية</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">معلومات الاستشارة</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">إرسال</div>
+                </div>
+            </div>
+
+            <form id="booking-form" method="POST">
+                <input type="hidden" name="service_type" id="service_type" value="">
+                <input type="hidden" name="security" value="<?php echo wp_create_nonce('booking_form_nonce'); ?>">
+
+                <!-- Phase 1: Personal Info -->
+                <div class="form-phase active" data-phase="1">
+                    <div class="form-group">
+                        <label for="name">الاسم *</label>
+                        <input type="text" id="name" name="name" placeholder="الاسم" required>
+                    </div>
+                    <div class="form-group arabic-phone">
+                        <label for="phone">رقم الهاتف *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required>
+                    </div>
+                    <div class="form-group arabic-email">
+                        <label for="email">البريد الإلكتروني *</label>
+                        <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">المدينة</label>
+                        <input type="text" id="city" name="city" placeholder="المدينة" value="الرياض">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-prev" onclick="goBackToServiceSelection()">السابق</button>
+                        <button type="button" class="btn btn-next" onclick="nextPhase()">التالي</button>
+                    </div>
+                </div>
+
+                <!-- Phase 2: Consultation Info -->
+                <div class="form-phase" data-phase="2">
+                    <div class="form-group">
+                        <label for="service">الخدمة *</label>
+                        <select id="service" name="service" required>
+                            <option value="">اختر خدمة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="case_brief">نبذة عن قضيتك *</label>
+                        <textarea id="case_brief" name="case_brief" rows="5" placeholder="يرجى تقديم وصف موجز لقضيتك" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>هل لديك مستندات لدعم القضية؟ *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="has_documents" value="yes" required>
+                                <span>نعم</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="has_documents" value="no" required>
+                                <span>لا</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>هل سبق لك التعامل مع محامٍ في نفس القضية؟ *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="previous_lawyer" value="yes" required>
+                                <span>نعم</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="previous_lawyer" value="no" required>
+                                <span>لا</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-prev" onclick="prevPhase()">السابق</button>
+                        <button type="button" class="btn btn-next" onclick="nextPhase()">التالي </button>
+                    </div>
+                </div>
+
+                <!-- Phase 3: Venue -->
+                <div class="form-phase" data-phase="3">
+                    <div class="form-group">
+                        <label>اختر نوع الاجتماع *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="meeting_type" value="online" required>
+                                <span>عبر الإنترنت</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="meeting_type" value="offline" required>
+                                <span> في المكتب</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-note">
+                        <i class="fa-solid fa-info-circle"></i>
+                        <p>ملاحظة: ستتلقى بريدًا إلكترونيًا بأقرب وقت حجز متاح بمجرد مراجعة طلبك.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-prev" onclick="prevPhase()">السابق</button>
+                        <button type="submit" class="btn btn-submit">إرسال الحجز</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-message" class="booking-step">
+            <div class="success-content">
+                <i class="fa-solid fa-check-circle"></i>
+                <h2>شكراً لتقديمك</h2>
+                <p>سنتواصل معك في أقرب وقت ممكن.</p>
+                <p class="success-note">يمكنك تأكيد الحجز عن طريق التواصل معنا على واتساب أو الاتصال بنا مباشرة عبر رقمنا.</p>
+                <a href="<?php echo home_url(); ?>" class="btn btn-home">العودة إلى الصفحة الرئيسية</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php wp_footer(); ?>
+
+</body>
+</html>

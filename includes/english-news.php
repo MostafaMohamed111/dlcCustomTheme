@@ -47,62 +47,10 @@
             
             if ($news_query->have_posts()) :
                 while ($news_query->have_posts()) : $news_query->the_post();
-                    ?>
-                    <article class="news-card">
-                        <?php if (has_post_thumbnail()) : ?>
-                            <div class="news-thumbnail">
-                                <a href="<?php the_permalink(); ?>">
-                                    <?php the_post_thumbnail(
-                                        'large',
-                                        array(
-                                            'class' => 'news-image',
-                                            'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                                        )
-                                    ); ?>
-                                </a>
-                                <div class="news-category-badge">
-                                    News
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <div class="news-content">
-                            <div class="news-meta">
-                                <span class="news-date">
-                                    <i class="fa-solid fa-calendar"></i>
-                                    <?php echo get_the_date(); ?>
-                                </span>
-                                <span class="news-author">
-                                    <i class="fa-solid fa-user"></i>
-                                    <?php the_author(); ?>
-                                </span>
-                            </div>
-                            
-                            <h3 class="news-title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h3>
-                            
-                            <div class="news-excerpt">
-                                <?php
-                                $excerpt = get_the_excerpt();
-                                $excerpt_length = 120;
-                                if (strlen($excerpt) > $excerpt_length) {
-                                    $excerpt = substr($excerpt, 0, $excerpt_length);
-                                    $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
-                                }
-                                echo $excerpt;
-                                ?>
-                            </div>
-                            
-                            <div class="news-footer">
-                                <a href="<?php the_permalink(); ?>" class="read-more-news-btn">
-                                    Read More
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    <?php
+                    get_template_part('includes/news-card', null, array(
+                        'badge_text' => 'News',
+                        'button_text' => 'Read More'
+                    ));
                 endwhile;
                 wp_reset_postdata();
             else :

@@ -13,8 +13,8 @@
                <h1 class="main-header-title">Dag Law Firm Legal Consultations<br> Blog
                 
                </h1>
-                <p class="main-header-subtitle">Welcome to our blog where we share the latest news and insights Welcome to our blog where we share the latest news and insights Welcome to our blog where we share the latest news and insights Welcome to our blog where we share the latest news and insights.</p>
-                <p class="main-header-subtitle">Welcome to our blog where we share the latest news and insights Welcome to our blog where we share the latest news and insights Welcome to our blog where we share the latest news and insights Welcome to our blog where we share the latest news and insights.</p>
+                <p class="main-header-subtitle">Welcome to our blog, where we provide expert legal insights, updates, and practical guidance tailored to the evolving legal landscape in the Kingdom of Saudi Arabia. Our team of experienced attorneys is dedicated to simplifying complex laws and delivering clear explanations that help individuals and businesses stay informed and empowered.</p>
+                <p class="main-header-subtitle">Here, you’ll find articles covering the latest legal developments, regulatory changes, and strategic advice across various practice areas—from corporate and commercial law to litigation, contracts, and dispute resolution. Whether you are a client, a professional, or simply interested in Saudi law, our blog is your trusted source for reliable, up-to-date legal knowledge.</p>
 
                 
            </div>
@@ -151,117 +151,7 @@
                     <div class="posts-grid" id="posts-grid">
                         <?php
                         while ( have_posts() ) : the_post();
-                            ?>
-                            <article class="post-card">
-                                <?php if ( has_post_thumbnail() ) : ?>
-                                    <div class="post-thumbnail">
-                                        <a href="<?php the_permalink(); ?>">
-                                            <?php the_post_thumbnail(
-                                                'large',
-                                                array(
-                                                    'class' => 'post-image',
-                                                    'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px'
-                                                )
-                                            ); ?>
-                                        </a>
-                                        <div class="post-category-badge">
-                                            <?php
-                                            $categories = get_the_category();
-                                            if ( ! empty( $categories ) ) {
-                                                echo esc_html( $categories[0]->name );
-                                            }
-                                            ?>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <span class="post-date">
-                                            <i class="fa-solid fa-calendar"></i>
-                                            <?php echo get_the_date(); ?>
-                                        </span>
-                                        <span class="post-author">
-                                            <i class="fa-solid fa-user"></i>
-                                            <?php the_author(); ?>
-                                        </span>
-                                    </div>
-                                    
-                                    <h3 class="post-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </h3>
-                                    
-                                    <div class="post-excerpt">
-                                        <?php 
-                                        $excerpt = get_the_excerpt();
-                                        $excerpt_length = 150;
-                                        if (strlen($excerpt) > $excerpt_length) {
-                                            $excerpt = substr($excerpt, 0, $excerpt_length);
-                                            $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
-                                        }
-                                        echo $excerpt;
-                                        ?>
-                                    </div>
-                                    
-                                    <div class="post-footer">
-                                        <a href="<?php the_permalink(); ?>" class="read-more-btn">
-                                            Read More
-                                            <i class="fa-solid fa-arrow-right"></i>
-                                        </a>
-                                        <div class="post-meta-footer">
-                                            <?php
-                                            $categories = get_the_category();
-                                            if ( ! empty( $categories ) ) {
-                                                $category_count = count($categories);
-                                                ?>
-                                                <div class="post-categories">
-                                                    <?php if ( $category_count == 1 ) : ?>
-                                                        <!-- Single category - show as badge -->
-                                                        <a href="<?php echo get_category_link($categories[0]->term_id); ?>" class="post-category-link">
-                                                            <i class="fa-solid fa-folder"></i>
-                                                            <?php echo esc_html( $categories[0]->name ); ?>
-                                                        </a>
-                                                    <?php else : ?>
-                                                        <!-- Multiple categories - show dropdown only -->
-                                                        <div class="categories-dropdown">
-                                                            <button class="categories-dropdown-toggle" type="button">
-                                                                <i class="fa-solid fa-folder"></i>
-                                                                <span class="dropdown-text">Categories</span>
-                                                                <i class="fa-solid fa-chevron-down"></i>
-                                                            </button>
-                                                            <div class="categories-dropdown-menu">
-                                                                <?php foreach($categories as $category) : ?>
-                                                                    <a href="<?php echo get_category_link($category->term_id); ?>" class="dropdown-category-link">
-                                                                        <i class="fa-solid fa-folder"></i>
-                                                                        <?php echo esc_html( $category->name ); ?>
-                                                                    </a>
-                                                                <?php endforeach; ?>
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <?php
-                                            }
-                                            
-                                            $tags = get_the_tags();
-                                            if ( ! empty( $tags ) ) {
-                                                ?>
-                                                <div class="post-tags">
-                                                    <?php foreach($tags as $tag) : ?>
-                                                        <a href="<?php echo get_tag_link($tag->term_id); ?>" class="post-tag-link">
-                                                            <i class="fa-solid fa-hashtag"></i>
-                                                            <?php echo esc_html( $tag->name ); ?>
-                                                        </a>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                                <?php
-                                            }
-                                            ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </article>
-                            <?php
+                            get_template_part('includes/post-card', null, array('read_more_text' => 'Read More'));
                         endwhile;
                         ?>
                     </div>

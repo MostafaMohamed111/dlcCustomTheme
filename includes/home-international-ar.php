@@ -163,56 +163,10 @@
                         <div class="services-grid" id="services-grid">
                     <?php
                     while ($services_query->have_posts()) : $services_query->the_post();
-                        ?>
-                        <article class="service-card">
-                            <?php if (has_post_thumbnail()) : ?>
-                                <div class="service-thumbnail">
-                                    <a href="<?php the_permalink(); ?>">
-                                        <?php the_post_thumbnail(
-                                            'large',
-                                            array(
-                                                'class' => 'service-image',
-                                                'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px'
-                                            )
-                                        ); ?>
-                                    </a>
-                                    <div class="service-category-badge">
-                                        <?php
-                                        $categories = get_the_category();
-                                        if (!empty($categories)) {
-                                            echo esc_html($categories[0]->name);
-                                        }
-                                        ?>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="service-content">
-                                <h3 class="service-title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                </h3>
-                                
-                                <div class="service-excerpt">
-                                    <?php
-                                    $excerpt = get_the_excerpt();
-                                    $excerpt_length = 120;
-                                    if (strlen($excerpt) > $excerpt_length) {
-                                        $excerpt = substr($excerpt, 0, $excerpt_length);
-                                        $excerpt = substr($excerpt, 0, strrpos($excerpt, ' ')) . '...';
-                                    }
-                                    echo esc_html($excerpt);
-                                    ?>
-                                </div>
-                                
-                                <div class="service-footer">
-                                    <a href="<?php the_permalink(); ?>" class="get-started-service-btn">
-                                        اقرأ المزيد
-                                        <i class="fa-solid fa-arrow-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </article>
-                        <?php
+                        get_template_part('includes/service-card', null, array(
+                            'button_text' => 'اقرأ المزيد',
+                            'excerpt_length' => 120
+                        ));
                         endwhile;
                         wp_reset_postdata();
                         ?>
