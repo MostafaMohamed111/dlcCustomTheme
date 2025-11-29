@@ -23,7 +23,9 @@ $args = wp_parse_args($args ?? array(), array(
                     'large',
                     array(
                         'class' => 'post-image',
-                        'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px'
+                        'loading' => 'lazy',
+                        'sizes' => '(max-width: 768px) 100vw, 900px',
+                        'srcset' => wp_get_attachment_image_srcset(get_post_thumbnail_id(), 'large')
                     )
                 ); ?>
             </a>
@@ -66,38 +68,11 @@ $args = wp_parse_args($args ?? array(), array(
             <div class="post-meta-footer">
                 <?php
                 $categories = get_the_category();
-                if (!empty($categories)) {
-                    $category_count = count($categories);
-                    ?>
-                    <div class="post-categories">
-                        <?php if ($category_count == 1) : ?>
-                            <a href="<?php echo get_category_link($categories[0]->term_id); ?>" class="post-category-link">
-                                <i class="fa-solid fa-folder"></i>
-                                <?php echo esc_html($categories[0]->name); ?>
-                            </a>
-                        <?php else : ?>
-                            <div class="categories-dropdown">
-                                <button class="categories-dropdown-toggle" type="button">
-                                    <i class="fa-solid fa-folder"></i>
-                                    <span class="dropdown-text"><?php echo dlc_is_arabic_page() ? 'التصنيفات' : 'Categories'; ?></span>
-                                    <i class="fa-solid fa-chevron-down"></i>
-                                </button>
-                                <div class="categories-dropdown-menu">
-                                    <?php foreach($categories as $category) : ?>
-                                        <a href="<?php echo get_category_link($category->term_id); ?>" class="dropdown-category-link">
-                                            <i class="fa-solid fa-folder"></i>
-                                            <?php echo esc_html($category->name); ?>
-                                        </a>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                    <?php
-                }
                 
                 $tags = get_the_tags();
                 if (!empty($tags)) {
+                    // Limit to first 2 tags
+                    $tags = array_slice($tags, 0, 2);
                     ?>
                     <div class="post-tags">
                         <?php foreach($tags as $tag) : ?>

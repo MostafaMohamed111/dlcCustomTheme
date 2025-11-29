@@ -125,20 +125,15 @@
 
 .category-badge-single {
     display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    text-decoration: none;
+    padding: 4px 12px;
     font-size: 13px;
     font-weight: 500;
-    transition: all 0.3s ease;
-    background-color: var(--primary-blue);
-    color: var(--white);
-}
-
-.category-badge-single:hover {
-    background-color: var(--light-blue);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(26, 58, 95, 0.2);
+    color: var(--primary-blue);
+    cursor: default;
+    user-select: none;
+    background-color: rgba(26, 58, 95, 0.08);
+    border-radius: 6px;
+    margin-right: 6px;
 }
 
 /* Post Content */
@@ -252,17 +247,21 @@
     padding: 5px 12px;
     background-color: rgba(26, 58, 95, 0.1);
     color: var(--light-blue);
-    text-decoration: none;
+    text-decoration: none !important;
     font-size: 12px;
     font-weight: 500;
     border-radius: 12px;
     transition: all 0.3s ease;
+    border: 1px solid transparent;
 }
 
+
 .tag-link-inline:hover {
-    background-color: var(--light-blue);
-    color: var(--white);
+    background-color: var(--light-blue) !important;
+    color: var(--white) !important;
+    text-decoration: none !important;
     transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(26, 58, 95, 0.2);
 }
 
 /* Post Footer */

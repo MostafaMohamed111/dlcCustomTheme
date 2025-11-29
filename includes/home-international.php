@@ -20,13 +20,28 @@
 </div>
 
 
-
+<div class="page-content">
 <div class="services-landing companies-services-page">
     <div class="header">
         <h2 class="services-title">International Services<li class="fa-solid fa-globe ps-2"></li></h2>
-        <p class="services-subtitle lead">
-            Discover our exclusive legal services tailored for international clients. We provide expert solutions to help businesses navigate Saudi regulations with confidence and ease..
-        </p>
+        <?php
+        // Get the home-international category for default description
+        $display_category = null;
+        if (isset($_GET['cat']) && $_GET['cat'] > 0) {
+            // Show selected category description
+            $display_category = get_category(intval($_GET['cat']));
+        } else {
+            // Show parent category description
+            $display_category = get_category_by_slug('home-international');
+        }
+        
+        if ($display_category && !empty($display_category->description)) {
+            echo '<div class="archive-description services-subtitle lead">' . wpautop($display_category->description) . '</div>';
+        } else {
+            // Fallback if no description is set
+            echo '<p class="services-subtitle lead">Discover our exclusive legal services tailored for international clients. We provide expert solutions to help businesses navigate Saudi regulations with confidence and ease.</p>';
+        }
+        ?>
     </div>
 
     <div class="container">
@@ -54,7 +69,7 @@
             }
             
             // Setup query arguments
-            $paged = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+            $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
             $posts_per_page = 6; // 3 columns × 2 rows
             
             $query_args = array(
@@ -162,47 +177,17 @@
                         
                         <?php
                         // Pagination
-                        $total_pages = $services_query->max_num_pages;
-                        if ($total_pages > 1) :
-                            ?>
-                            <div class="pagination-wrapper">
-                                <?php
-                                // Get pagination links
-                                $base_url = $current_category > 0 
-                                    ? add_query_arg('cat', $current_category, get_category_link($parent_category->term_id))
-                                    : get_category_link($parent_category->term_id);
-                                
-                                $prev_page = ($paged > 1) ? $paged - 1 : 0;
-                                $next_page = ($paged < $total_pages) ? $paged + 1 : 0;
-                                ?>
-                                <div class="pagination-simple">
-                                    <?php if ($prev_page > 0) : ?>
-                                        <div class="pagination-arrow pagination-prev">
-                                            <a href="<?php echo esc_url(add_query_arg('paged', $prev_page, $base_url)); ?>">
-                                                <i class="fa-solid fa-chevron-left"></i>
-                                            </a>
-                                        </div>
-                                    <?php else : ?>
-                                        <div class="pagination-arrow pagination-prev disabled">
-                                            <span><i class="fa-solid fa-chevron-left"></i></span>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <?php if ($next_page > 0) : ?>
-                                        <div class="pagination-arrow pagination-next">
-                                            <a href="<?php echo esc_url(add_query_arg('paged', $next_page, $base_url)); ?>">
-                                                <i class="fa-solid fa-chevron-right"></i>
-                                            </a>
-                                        </div>
-                                    <?php else : ?>
-                                        <div class="pagination-arrow pagination-next disabled">
-                                            <span><i class="fa-solid fa-chevron-right"></i></span>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <?php
-                        endif;
+                        $base_url = $current_category > 0 
+                            ? add_query_arg('cat', $current_category, get_category_link($parent_category->term_id))
+                            : get_category_link($parent_category->term_id);
+                        
+                        get_template_part('includes/pagination', null, array(
+                            'paged' => $paged,
+                            'total_pages' => $services_query->max_num_pages,
+                            'base_url' => $base_url,
+                            'anchor_id' => '#services-title',
+                            'page_text' => 'Page %s of %s'
+                        ));
                     else :
                         ?>
                         <div class="no-services">
@@ -273,11 +258,14 @@ $intellectual_properties_count = (int) get_field('intellectual_properties');
 
 
 <section class="why-choose-us">
-    <div class="container">
+    <div class="why-choose-us-header">
         <h2 class="why-choose-us-title">Why Choose Us</h2>
         <p class="why-choose-us-intro">
             We combine deep legal expertise with a commitment to excellence, ensuring that your business receives the highest quality legal services tailored to your unique needs and goals.
         </p>
+        </div>
+
+    <div class="container">
         
         <div class="why-choose-us-grid">
             <div class="why-choose-us-card">
@@ -324,7 +312,7 @@ $intellectual_properties_count = (int) get_field('intellectual_properties');
 </section>
 
 
-
+</div>
 
 
 

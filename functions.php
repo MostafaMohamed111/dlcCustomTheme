@@ -3,7 +3,7 @@
 // Constants
 define('DLC_POSTS_PER_PAGE', 6);
 define('DLC_EXCERPT_LENGTH_SERVICE', 120);
-define('DLC_EXCERPT_LENGTH_POST', 150);
+define('DLC_EXCERPT_LENGTH_POST', 300);
 
 // Helper: Detect if current page is Arabic
 function dlc_is_arabic_page() {
@@ -190,12 +190,19 @@ function enqueue_theme_css() {
                 wp_enqueue_style('home-international-page');
             }
         } else {
-            wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('archive-page');
+            // Blog archive
+            wp_register_style('blog-page', get_template_directory_uri() . '/assets/en/blog.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('blog-page');
         }
     }
-
-    else if (is_single() && get_post_type() == 'post') {
+    
+    // Generic archives (tags, dates, authors) - handle separately to avoid category routing
+    if (is_archive() && (is_tag() || is_date() || is_author() || !is_category())) {
+        wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('archive-page');
+    }
+    
+    if (is_single() && get_post_type() == 'post') {
         // Single post page
         wp_register_style('single-page', get_template_directory_uri() . '/assets/en/single.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('single-page');
@@ -614,21 +621,21 @@ function show_blog_category_posts($query) {
 }
 add_action('pre_get_posts', 'show_blog_category_posts');
 
-// Block access to child category URLs
-add_action('template_redirect', function() {
-    if (is_category()) {
-        $category = get_queried_object();
+// // Block access to child category URLs
+// add_action('template_redirect', function() {
+//     if (is_category()) {
+//         $category = get_queried_object();
         
-        // Check if this category has a parent
-        if ($category && $category->parent != 0) {
-            // This is a child category - redirect to 404
-            global $wp_query;
-            $wp_query->set_404();
-            status_header(404);
-            nocache_headers();
-        }
-    }
-});
+//         // Check if this category has a parent
+//         if ($category && $category->parent != 0) {
+//             // This is a child category - redirect to 404
+//             global $wp_query;
+//             $wp_query->set_404();
+//             status_header(404);
+//             nocache_headers();
+//         }
+//     }
+// });
 
 function add_language_metabox() {
     add_meta_box(
@@ -1573,39 +1580,10 @@ function load_archive_posts_ajax() {
                                 </a>
                                 <div class="post-meta-footer">
                                     <?php
-                                    $categories = get_the_category();
-                                    if (!empty($categories)) {
-                                        $category_count = count($categories);
-                                        ?>
-                                        <div class="post-categories">
-                                            <?php if ($category_count == 1) : ?>
-                                                <a href="<?php echo get_category_link($categories[0]->term_id); ?>" class="post-category-link">
-                                                    <i class="fa-solid fa-folder"></i>
-                                                    <?php echo esc_html($categories[0]->name); ?>
-                                                </a>
-                                            <?php else : ?>
-                                                <div class="categories-dropdown">
-                                                    <button class="categories-dropdown-toggle" type="button">
-                                                        <i class="fa-solid fa-folder"></i>
-                                                        <span class="dropdown-text">Categories</span>
-                                                        <i class="fa-solid fa-chevron-down"></i>
-                                                    </button>
-                                                    <div class="categories-dropdown-menu">
-                                                        <?php foreach($categories as $category) : ?>
-                                                            <a href="<?php echo get_category_link($category->term_id); ?>" class="dropdown-category-link">
-                                                                <i class="fa-solid fa-folder"></i>
-                                                                <?php echo esc_html($category->name); ?>
-                                                            </a>
-                                                        <?php endforeach; ?>
-                                                    </div>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                        <?php
-                                    }
-                                    
                                     $tags = get_the_tags();
                                     if (!empty($tags)) {
+                                        // Limit to first 2 tags
+                                        $tags = array_slice($tags, 0, 2);
                                         ?>
                                         <div class="post-tags">
                                             <?php foreach($tags as $tag) : ?>

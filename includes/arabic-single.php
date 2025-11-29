@@ -52,9 +52,9 @@
                                             التصنيفات:
                                         </span>
                                         <?php foreach($categories as $category) : ?>
-                                            <a href="<?php echo get_category_link($category->term_id); ?>" class="category-badge-single">
+                                            <span class="category-badge-single">
                                                 <?php echo esc_html( $category->name ); ?>
-                                            </a>
+                                            </span>
                                         <?php endforeach; ?>
                                     </div>
                             <?php endif; ?>

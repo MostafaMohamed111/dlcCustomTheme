@@ -156,38 +156,26 @@
                         ?>
                     </div>
                     
-                    <div class="pagination-wrapper">
-                        <?php
-                        $prev_link = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>');
-                        $next_link = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>');
-                        
-                        if ($prev_link || $next_link) :
-                            ?>
-                            <div class="pagination-simple">
-                                <?php if ($prev_link) : ?>
-                                    <div class="pagination-arrow pagination-prev">
-                                        <?php echo $prev_link; ?>
-                                    </div>
-                                <?php else : ?>
-                                    <div class="pagination-arrow pagination-prev disabled">
-                                        <span><i class="fa-solid fa-chevron-left"></i></span>
-                                    </div>
-                                <?php endif; ?>
-                                
-                                <?php if ($next_link) : ?>
-                                    <div class="pagination-arrow pagination-next">
-                                        <?php echo $next_link; ?>
-                                    </div>
-                                <?php else : ?>
-                                    <div class="pagination-arrow pagination-next disabled">
-                                        <span><i class="fa-solid fa-chevron-right"></i></span>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            <?php
-                        endif;
-                        ?>
-                    </div>
+                    <?php
+                    // Pagination
+                    global $wp_query;
+                    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+                    
+                    // Get base URL
+                    if (is_category()) {
+                        $base_url = get_category_link(get_queried_object_id());
+                    } else {
+                        $base_url = get_pagenum_link(1);
+                    }
+                    
+                    get_template_part('includes/pagination', null, array(
+                        'paged' => $paged,
+                        'total_pages' => $wp_query->max_num_pages,
+                        'base_url' => $base_url,
+                        'anchor_id' => '#category-title',
+                        'page_text' => 'Page %s of %s'
+                    ));
+                    ?>
                 <?php else : ?>
                     <div class="no-posts">
                         <i class="fa-solid fa-file-circle-question"></i>

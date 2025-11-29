@@ -129,15 +129,15 @@
         });
     }
     
-    // Helper: Display error message
-    const showError = (message) => {
-        const errorHtml = `<div class="no-posts">
-            <i class="fa-solid fa-file-circle-question"></i>
-            <h3>Error loading ${contentType}</h3>
-            <p>${message}</p>
-        </div>`;
-        ($gridContainer.length ? $gridContainer : $mainContainer).html(errorHtml);
-    };
+        // Helper: Display error message
+        const showError = (message) => {
+            const errorHtml = `<div class="no-posts">
+                <i class="fa-solid fa-file-circle-question"></i>
+                <h3>Error loading ${contentType}</h3>
+                <p>${message}</p>
+            </div>`;
+            ($gridContainer.length ? $gridContainer : $mainContainer).html(errorHtml);
+        };
 
     // Handle browser back/forward buttons
     $(window).on('popstate', function(e) {

@@ -148,36 +148,20 @@
 
 
 /* why choose us */
-.why-choose-us {
-    width: 100%;
-    background-image: url("../images/geometricPattern.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    padding: 80px 0;
-    position: relative;
-}
-
-.why-choose-us::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    z-index: 0;
-}
 
 .why-choose-us .container {
     position: relative;
-    z-index: 1;
+}
+
+.why-choose-us-header {
+    padding: 40px 0;
+    background-color: var(--primary-blue);
+    margin-bottom: 40px;
 }
 
 .why-choose-us-title {
     text-align: center;
-    color: var(--light-blue);
+    color: var(--white);
     font-size: 38px;
     font-weight: 500;
     margin-bottom: 30px;
@@ -185,7 +169,7 @@
 
 .why-choose-us-intro {
     text-align: center;
-    color: var(--dark-gray);
+    color: var(--light-gray);
     font-size: 17px;
     line-height: 1.7;
     max-width: 900px;

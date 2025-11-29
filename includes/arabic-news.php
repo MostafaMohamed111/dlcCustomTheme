@@ -26,7 +26,7 @@
 
 <div class="news ">
     <div class="header">
-        <h2 class="news-title">اخر الأخبار<li class="fa-regular fa-newspaper ps-2"></li></h2>
+        <h2 id="news-title" class="news-title">اخر الأخبار<li class="fa-regular fa-newspaper ps-2"></li></h2>
         <p class="news-subtitle lead">اكتشف أحدث رؤانا وتحديثاتنا في الشؤون القانونية.</p>
     </div>
         
@@ -36,10 +36,14 @@
         $news_category = get_category_by_slug('news-ar');
         
         if ($news_category) {
+            // Setup pagination
+            $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+            
             // Query posts from the news-ar category, filtered by Arabic language
             $news_query = new WP_Query(array(
                 'category_name' => 'news-ar',
-                'posts_per_page' => -1, // Get all news posts
+                'posts_per_page' => 6, // 6 posts per page
+                'paged' => $paged,
                 'post_status' => 'publish',
                 'orderby' => 'date',
                 'order' => 'DESC',
@@ -60,8 +64,21 @@
                     ));
                 endwhile;
                 wp_reset_postdata();
+                ?>
+                </div>
+                
+                <?php
+                // Pagination
+                get_template_part('includes/pagination', null, array(
+                    'paged' => $paged,
+                    'total_pages' => $news_query->max_num_pages,
+                    'base_url' => get_category_link($news_category->term_id),
+                    'anchor_id' => '#news-title',
+                    'page_text' => 'صفحة %s من %s'
+                ));
             else :
                 ?>
+                </div>
                 <div class="no-news">
                     <i class="fa-solid fa-newspaper"></i>
                     <h3>لا توجد مقالات إخبارية</h3>
@@ -71,6 +88,7 @@
             endif;
         } else {
             ?>
+            </div>
             <div class="no-news">
                 <i class="fa-solid fa-newspaper"></i>
                 <h3>فئة الأخبار غير موجودة</h3>
@@ -79,7 +97,6 @@
             <?php
         }
         ?>
-    </div>
 </div>
 </section>
 

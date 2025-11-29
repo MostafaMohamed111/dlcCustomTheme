@@ -1,80 +1,47 @@
 
 <?php
-// Get the current queried object (category, tag, etc.)
+/**
+ * Archive Template
+ * Routes to appropriate template based on archive type
+ */
+
+// Get the current queried object
 $queried_object = get_queried_object();
 
-// Determine language and category type
-$is_arabic_page = false;
-$is_news_category = false;
-$is_companies_services = false;
-$is_individual_services = false;
-$is_home_international = false;
-
-// Check if it's a category
-if (isset($queried_object->slug)) {
-    $slug = $queried_object->slug;
-    
-    // Check if it's Arabic (slug contains '-ar')
-    if (strpos($slug, '-ar') !== false) {
-        $is_arabic_page = true;
-    }
-    
-    // Check if it's a news category (slug contains 'news')
-    if (strpos($slug, 'news') !== false) {
-        $is_news_category = true;
-    }
-    
-    // Check if it's companies services category
-    if (strpos($slug, 'companies-services') !== false) {
-        $is_companies_services = true;
-    }
-    
-    // Check if it's individual services category
-    if (strpos($slug, 'individual-services') !== false) {
-        $is_individual_services = true;
-    }
-    
-    // Check if it's home international category
-    if (strpos($slug, 'home-international') !== false) {
-        $is_home_international = true;
-    }
+// Check if it's a tag, date, author, or other non-category archive
+if (is_tag() || is_date() || is_author() || !is_category()) {
+    // Use generic archive template for tags, dates, authors, etc.
+    get_template_part('includes/generic-archive');
+    return;
 }
 
-// Load the appropriate template based on category type and language
-if ($is_news_category) {
+// It's a category archive - determine which specific template to use
+$is_arabic_page = false;
+$slug = $queried_object->slug ?? '';
+
+// Check if it's Arabic (slug contains '-ar')
+if (strpos($slug, '-ar') !== false) {
+    $is_arabic_page = true;
+}
+
+// Route to specific category templates
+if (strpos($slug, 'news') !== false) {
     // News category
-    if ($is_arabic_page) {
-        get_template_part('includes/arabic-news');
-    } else {
-        get_template_part('includes/english-news');
-    }
-} elseif ($is_companies_services) {
+    get_template_part('includes/' . ($is_arabic_page ? 'arabic-news' : 'english-news'));
+} elseif (strpos($slug, 'companies-services') !== false) {
     // Companies services category
-    if ($is_arabic_page) {
-        get_template_part('includes/arabic-companies-services');
-    } else {
-        get_template_part('includes/companies-services');
-    }
-} elseif ($is_individual_services) {
+    get_template_part('includes/' . ($is_arabic_page ? 'arabic-companies-services' : 'companies-services'));
+} elseif (strpos($slug, 'individual-services') !== false) {
     // Individual services category
-    if ($is_arabic_page) {
-        get_template_part('includes/arabic-individual-services');
-    } else {
-        get_template_part('includes/individual-services');
-    }
-} elseif ($is_home_international) {
+    get_template_part('includes/' . ($is_arabic_page ? 'arabic-individual-services' : 'individual-services'));
+} elseif (strpos($slug, 'home-international') !== false) {
     // Home international category
-    if ($is_arabic_page) {
-        get_template_part('includes/home-international-ar');
-    } else {
-        get_template_part('includes/home-international');
-    }
+    get_template_part('includes/' . ($is_arabic_page ? 'home-international-ar' : 'home-international'));
+} elseif (strpos($slug, 'blog') !== false || $queried_object->parent != 0) {
+    // Blog category or child category - use blog template
+    get_template_part('includes/' . ($is_arabic_page ? 'arabic-blog' : 'english-blog'));
 } else {
-    // Blog category (default)
-    if ($is_arabic_page) {
-        get_template_part('includes/arabic-archive');
-    } else {
-        get_template_part('includes/english-archive');
-    }
+    // Unknown category - use generic archive
+    get_template_part('includes/generic-archive');
 }
 ?>
