@@ -1,8 +1,6 @@
 
 <?php
-/*  
-* Template Name: About Us Page - Arabic
-*/
+
 
 $company_pdf      = get_field('company_pdf');
 $company_pdf_url  = '';

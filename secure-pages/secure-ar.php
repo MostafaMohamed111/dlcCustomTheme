@@ -1,7 +1,4 @@
 <?php
-/* 
-Template Name: Secure Yourself - Arabic
-*/
 
 get_header('ar'); ?>
 

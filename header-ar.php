@@ -22,11 +22,12 @@
 
                 <div class="col-6 nav-center">
                     <?php
+                        $menu_location = dlc_get_menu_location('primary');
                         // Check if menu location exists and has a menu assigned
-                        if ( has_nav_menu( 'primary-menu' ) ) {
+                        if ( has_nav_menu( $menu_location ) ) {
                             wp_nav_menu( 
                                 array(
-                                    'theme_location' => 'primary-ar-menu',
+                                    'theme_location' => $menu_location,
                                     'container' => 'div',
                                     'container_class' => 'main-menu',
                                     'fallback_cb' => false,
@@ -41,17 +42,13 @@
                 <div class="col-1">
                     <div class="language-changer language-changer-desktop">
                         <?php
-                        // Special case: front-page-ar goes to home
-                        if (is_page('front-page-ar')) {
-                            $english_url = home_url('/');
-                        } else {
-                            $current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                            $english_url = preg_replace('/-ar(\/?)$/', '$1', $current_url);
-                        }
+                        $switcher = dlc_get_polylang_switcher();
+                        if ($switcher) :
                         ?>
-                        <a href="<?php echo esc_url($english_url); ?>">
-                            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/english-language-changer.svg" alt="Language Icon" class="language-icon">
+                        <a href="<?php echo esc_url($switcher['url']); ?>">
+                            <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon">
                         </a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -96,9 +93,14 @@
                             </div>
                         </div>
                         <div class="language-changer mobile-language-changer">
-                            <a href="<?php echo esc_url($english_url); ?>">
-                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/english-language-changer.svg" alt="Language Icon" class="language-icon">
+                            <?php
+                            $switcher = dlc_get_polylang_switcher();
+                            if ($switcher) :
+                            ?>
+                            <a href="<?php echo esc_url($switcher['url']); ?>">
+                                <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon">
                             </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <h2 class="mobile-nav-title text-center">شركة داج للمحاماة والاستشارات القانونية</h2>
@@ -106,11 +108,12 @@
                     <div class="row">
                         <div class="mobile-menu">
                             <?php
+                                $menu_location = dlc_get_menu_location('primary');
                                 // Check if menu location exists and has a menu assigned
-                                if ( has_nav_menu( 'primary-menu' ) ) {
+                                if ( has_nav_menu( $menu_location ) ) {
                                     wp_nav_menu( 
                                         array(
-                                            'theme_location' => 'primary-ar-menu',
+                                            'theme_location' => $menu_location,
                                             'container' => 'div',
                                             'container_class' => 'main-menu',
                                             'fallback_cb' => false,
@@ -168,13 +171,56 @@
             </div>
             <div class="define-presence-modal-body">
                 <?php
-                // Get URLs
-                $home_international_category = get_category_by_slug('home-international-ar');
-                $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
+                // Get Arabic home-international category using Polylang
+                $international_url = '#';
+                if (function_exists('pll_get_term')) {
+                    $international_en = get_category_by_slug('home-international');
+                    if (!$international_en) {
+                        $international_en = get_term_by('name', 'Home International', 'category');
+                    }
+                    
+                    if ($international_en) {
+                        $international_ar_id = pll_get_term($international_en->term_id, 'ar');
+                        if ($international_ar_id) {
+                            $international_url = get_category_link($international_ar_id);
+                        }
+                    }
+                }
                 
-                // Get Arabic front page URL
-                $arabic_front_page = get_page_by_path('front-page-ar');
-                $local_url = $arabic_front_page ? get_permalink($arabic_front_page) : home_url('/front-page-ar/');
+                // Fallback: try to get by slug/name if Polylang not available
+                if ($international_url === '#') {
+                    $home_international_category = get_category_by_slug('home-international-ar');
+                    if (!$home_international_category) {
+                        $home_international_category = get_term_by('name', 'الخدمات الدولية', 'category');
+                    }
+                    $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
+                }
+                
+                // Get Arabic home page URL using Polylang
+                $local_url = home_url();
+                if (function_exists('pll_home_url')) {
+                    $local_url = pll_home_url('ar');
+                } elseif (function_exists('pll_get_post')) {
+                    // Try to get Arabic version of home page
+                    $home_page_id = get_option('page_on_front');
+                    if ($home_page_id) {
+                        $arabic_home_id = pll_get_post($home_page_id, 'ar');
+                        if ($arabic_home_id) {
+                            $local_url = get_permalink($arabic_home_id);
+                        }
+                    }
+                }
+                
+                // Fallback: try to get by slug if Polylang not available
+                if ($local_url === home_url()) {
+                    $arabic_front_page = get_page_by_path('front-page-ar');
+                    if ($arabic_front_page) {
+                        $local_url = get_permalink($arabic_front_page);
+                    } else {
+                        // Last fallback: construct Arabic home URL
+                        $local_url = home_url('/ar/');
+                    }
+                }
                 ?>
                 <div class="define-presence-options">
                     <a href="<?php echo esc_url($international_url); ?>" class="define-presence-option">

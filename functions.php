@@ -15,48 +15,371 @@ function dlc_is_arabic_page() {
     
     $is_arabic_page = false;
     
-    // Check template slug pattern
-    if (function_exists('get_page_template_slug')) {
-        $template = get_page_template_slug();
-        if ($template && preg_match('/-ar(\.php)?$/', $template)) {
-            $is_arabic_page = true;
-            return $is_arabic_page;
-        }
+    // Use Polylang to detect current language
+    if (function_exists('pll_current_language')) {
+    $current_lang = pll_current_language();
+        $is_arabic_page = ($current_lang === 'ar');
+        return $is_arabic_page;
     }
     
-    // Check template file basename
-    $template_file = get_page_template();
-    if ($template_file && is_string($template_file)) {
-        if (preg_match('/-ar\.php$/', basename($template_file))) {
-            $is_arabic_page = true;
-            return $is_arabic_page;
-        }
-    }
-    
-    // Check post language meta
-    if (is_single() && get_post_type() == 'post') {
-        $post_language = get_post_meta(get_the_ID(), '_post_language', true);
-        if ($post_language === 'ar') {
-            $is_arabic_page = true;
-            return $is_arabic_page;
-        }
-    }
-    
-    // Check archive category slug
-    if (is_archive()) {
-        $queried_object = get_queried_object();
-        if (isset($queried_object->slug) && strpos($queried_object->slug, '-ar') !== false) {
-            $is_arabic_page = true;
-            return $is_arabic_page;
-        }
-    }
-    
-    // Check RTL setting
+    // Fallback: Check RTL setting if Polylang is not available
     if (is_rtl()) {
         $is_arabic_page = true;
     }
     
     return $is_arabic_page;
+}
+
+// Helper: Get menu location based on current language
+function dlc_get_menu_location($menu_type = 'primary') {
+    $is_arabic = dlc_is_arabic_page();
+    
+    // If Polylang is active, use its language detection
+    if (function_exists('pll_current_language')) {
+        $current_lang = pll_current_language();
+        $is_arabic = ($current_lang === 'ar');
+    }
+    
+    // For now, we use the same menu location for both languages
+    // Polylang will handle the language-specific menu assignment
+    return $menu_type . '-menu';
+}
+
+// Helper: Check if a category is a blog category or child of blog category
+function dlc_is_blog_category($category_id = null) {
+    if (!$category_id) {
+        $queried_object = get_queried_object();
+        $category_id = $queried_object->term_id ?? 0;
+    }
+    
+    if (!$category_id) {
+        return false;
+    }
+    
+    // Get blog categories for both languages
+    $blog_en_id = get_cat_ID('blog'); // English blog category
+    $blog_ar_id = null;
+    
+    if (function_exists('pll_get_term') && $blog_en_id) {
+        $blog_ar_id = pll_get_term($blog_en_id, 'ar'); // Arabic blog category
+    }
+    
+    // Fallback: try to get Arabic blog by slug/name
+    if (!$blog_ar_id) {
+        $blog_ar_cat = get_category_by_slug('blog-ar');
+        if (!$blog_ar_cat) {
+            $blog_ar_cat = get_term_by('name', 'المدونة', 'category');
+        }
+        $blog_ar_id = $blog_ar_cat ? $blog_ar_cat->term_id : null;
+    }
+    
+    // Check if current category is blog category itself (English or Arabic)
+    if ($category_id == $blog_en_id || $category_id == $blog_ar_id) {
+        return true;
+    }
+    
+    // Get English mapped category slug for additional check
+    $cat_en_id = function_exists('pll_get_term') ? pll_get_term($category_id, 'en') : null;
+    $cat_en_slug = $cat_en_id ? get_term_field('slug', $cat_en_id) : '';
+    
+    // Check if English slug contains 'blog'
+    if ($cat_en_slug && strpos($cat_en_slug, 'blog') !== false) {
+        return true;
+    }
+    
+    // Check if current category is a child of English or Arabic blog category
+    if ($blog_en_id && cat_is_ancestor_of($blog_en_id, $category_id)) {
+        return true;
+    }
+    
+    if ($blog_ar_id && cat_is_ancestor_of($blog_ar_id, $category_id)) {
+        return true;
+    }
+    
+    return false;
+}
+
+// Helper: Check if a category is a companies-services category or child of companies-services category
+function dlc_is_companies_services_category($category_id = null) {
+    if (!$category_id) {
+        $queried_object = get_queried_object();
+        $category_id = $queried_object->term_id ?? 0;
+    }
+    
+    if (!$category_id) {
+        return false;
+    }
+    
+    // Get companies-services categories for both languages
+    $companies_en_id = get_cat_ID('companies-services'); // English companies-services category
+    $companies_ar_id = null;
+    
+    if (function_exists('pll_get_term') && $companies_en_id) {
+        $companies_ar_id = pll_get_term($companies_en_id, 'ar'); // Arabic companies-services category
+    }
+    
+    // Fallback: try to get Arabic companies-services by slug/name
+    if (!$companies_ar_id) {
+        $companies_ar_cat = get_category_by_slug('companies-services-ar');
+        if (!$companies_ar_cat) {
+            $companies_ar_cat = get_term_by('name', 'خدمات الشركات', 'category');
+        }
+        $companies_ar_id = $companies_ar_cat ? $companies_ar_cat->term_id : null;
+    }
+    
+    // Check if current category is companies-services category itself (English or Arabic)
+    if ($category_id == $companies_en_id || $category_id == $companies_ar_id) {
+        return true;
+    }
+    
+    // Get English mapped category slug for additional check
+    $cat_en_id = function_exists('pll_get_term') ? pll_get_term($category_id, 'en') : null;
+    $cat_en_slug = $cat_en_id ? get_term_field('slug', $cat_en_id) : '';
+    
+    // Check if English slug contains 'companies-services'
+    if ($cat_en_slug && strpos($cat_en_slug, 'companies-services') !== false) {
+        return true;
+    }
+    
+    // Check if current category is a child of English or Arabic companies-services category
+    if ($companies_en_id && cat_is_ancestor_of($companies_en_id, $category_id)) {
+        return true;
+    }
+    
+    if ($companies_ar_id && cat_is_ancestor_of($companies_ar_id, $category_id)) {
+        return true;
+    }
+    
+    return false;
+}
+
+// Helper: Check if a category is a news category or child of news category
+function dlc_is_news_category($category_id = null) {
+    if (!$category_id) {
+        $queried_object = get_queried_object();
+        $category_id = $queried_object->term_id ?? 0;
+    }
+    
+    if (!$category_id) {
+        return false;
+    }
+    
+    // Get news categories for both languages
+    $news_en_cat = get_category_by_slug('news');
+    if (!$news_en_cat) {
+        $news_en_cat = get_term_by('name', 'News', 'category');
+    }
+    $news_en_id = $news_en_cat ? $news_en_cat->term_id : null;
+    $news_ar_id = null;
+    
+    if (function_exists('pll_get_term') && $news_en_id) {
+        $news_ar_id = pll_get_term($news_en_id, 'ar'); // Arabic news category
+    }
+    
+    // Fallback: try to get Arabic news by slug/name
+    if (!$news_ar_id) {
+        $news_ar_cat = get_category_by_slug('news-ar');
+        if (!$news_ar_cat) {
+            $news_ar_cat = get_term_by('name', 'الأخبار', 'category');
+        }
+        $news_ar_id = $news_ar_cat ? $news_ar_cat->term_id : null;
+    }
+    
+    // Check if current category is news category itself (English or Arabic)
+    if ($category_id == $news_en_id || $category_id == $news_ar_id) {
+        return true;
+    }
+    
+    // Get English mapped category slug for additional check
+    $cat_en_id = function_exists('pll_get_term') ? pll_get_term($category_id, 'en') : null;
+    $cat_en_slug = $cat_en_id ? get_term_field('slug', $cat_en_id) : '';
+    
+    // Check if English slug contains 'news'
+    if ($cat_en_slug && strpos($cat_en_slug, 'news') !== false) {
+        return true;
+    }
+    
+    // Check if current category is a child of English or Arabic news category
+    if ($news_en_id && cat_is_ancestor_of($news_en_id, $category_id)) {
+        return true;
+    }
+    
+    if ($news_ar_id && cat_is_ancestor_of($news_ar_id, $category_id)) {
+        return true;
+    }
+    
+    return false;
+}
+
+// Helper: Check if a category is an individual-services category or child of individual-services category
+function dlc_is_individual_services_category($category_id = null) {
+    if (!$category_id) {
+        $queried_object = get_queried_object();
+        $category_id = $queried_object->term_id ?? 0;
+    }
+    
+    if (!$category_id) {
+        return false;
+    }
+    
+    // Get individual-services categories for both languages
+    $individual_en_cat = get_category_by_slug('individual-services');
+    if (!$individual_en_cat) {
+        $individual_en_cat = get_term_by('name', 'Individual Services', 'category');
+    }
+    $individual_en_id = $individual_en_cat ? $individual_en_cat->term_id : null;
+    $individual_ar_id = null;
+    
+    if (function_exists('pll_get_term') && $individual_en_id) {
+        $individual_ar_id = pll_get_term($individual_en_id, 'ar'); // Arabic individual-services category
+    }
+    
+    // Fallback: try to get Arabic individual-services by slug/name
+    if (!$individual_ar_id) {
+        $individual_ar_cat = get_category_by_slug('individual-services-ar');
+        if (!$individual_ar_cat) {
+            $individual_ar_cat = get_term_by('name', 'خدمات الأفراد', 'category');
+        }
+        $individual_ar_id = $individual_ar_cat ? $individual_ar_cat->term_id : null;
+    }
+    
+    // Check if current category is individual-services category itself (English or Arabic)
+    if ($category_id == $individual_en_id || $category_id == $individual_ar_id) {
+        return true;
+    }
+    
+    // Get English mapped category slug for additional check
+    $cat_en_id = function_exists('pll_get_term') ? pll_get_term($category_id, 'en') : null;
+    $cat_en_slug = $cat_en_id ? get_term_field('slug', $cat_en_id) : '';
+    
+    // Check if English slug contains 'individual-services'
+    if ($cat_en_slug && strpos($cat_en_slug, 'individual-services') !== false) {
+        return true;
+    }
+    
+    // Check if current category is a child of English or Arabic individual-services category
+    if ($individual_en_id && cat_is_ancestor_of($individual_en_id, $category_id)) {
+        return true;
+    }
+    
+    if ($individual_ar_id && cat_is_ancestor_of($individual_ar_id, $category_id)) {
+        return true;
+    }
+    
+    return false;
+}
+
+// Helper: Check if a category is a home-international category or child of home-international category
+function dlc_is_home_international_category($category_id = null) {
+    if (!$category_id) {
+        $queried_object = get_queried_object();
+        $category_id = $queried_object->term_id ?? 0;
+    }
+    
+    if (!$category_id) {
+        return false;
+    }
+    
+    // Get home-international categories for both languages
+    $international_en_cat = get_category_by_slug('home-international');
+    if (!$international_en_cat) {
+        $international_en_cat = get_term_by('name', 'Home International', 'category');
+    }
+    $international_en_id = $international_en_cat ? $international_en_cat->term_id : null;
+    $international_ar_id = null;
+    
+    if (function_exists('pll_get_term') && $international_en_id) {
+        $international_ar_id = pll_get_term($international_en_id, 'ar'); // Arabic home-international category
+    }
+    
+    // Fallback: try to get Arabic home-international by slug/name
+    if (!$international_ar_id) {
+        $international_ar_cat = get_category_by_slug('home-international-ar');
+        if (!$international_ar_cat) {
+            $international_ar_cat = get_term_by('name', 'الخدمات الدولية', 'category');
+        }
+        $international_ar_id = $international_ar_cat ? $international_ar_cat->term_id : null;
+    }
+    
+    // Check if current category is home-international category itself (English or Arabic)
+    if ($category_id == $international_en_id || $category_id == $international_ar_id) {
+        return true;
+    }
+    
+    // Get English mapped category slug for additional check
+    $cat_en_id = function_exists('pll_get_term') ? pll_get_term($category_id, 'en') : null;
+    $cat_en_slug = $cat_en_id ? get_term_field('slug', $cat_en_id) : '';
+    
+    // Check if English slug contains 'home-international'
+    if ($cat_en_slug && strpos($cat_en_slug, 'home-international') !== false) {
+        return true;
+    }
+    
+    // Check if current category is a child of English or Arabic home-international category
+    if ($international_en_id && cat_is_ancestor_of($international_en_id, $category_id)) {
+        return true;
+    }
+    
+    if ($international_ar_id && cat_is_ancestor_of($international_ar_id, $category_id)) {
+        return true;
+    }
+    
+    return false;
+}
+
+// Helper: Get alternate language URL and icon using Polylang
+function dlc_get_polylang_switcher() {
+    // Only work if Polylang is active - no fallback
+    if (!function_exists('pll_current_language') || !function_exists('pll_the_languages')) {
+        return null;
+    }
+    
+    $current_lang = pll_current_language();
+    $target_lang = ($current_lang === 'ar') ? 'en' : 'ar';
+    
+    $alternate_url = '#';
+    
+    // Special handling for category archives
+    if (is_category() && function_exists('pll_get_term')) {
+        $queried_object = get_queried_object();
+        $current_category_id = $queried_object->term_id ?? 0;
+        
+        if ($current_category_id) {
+            // Get the translated category ID
+            $translated_category_id = pll_get_term($current_category_id, $target_lang);
+            
+            if ($translated_category_id) {
+                // Build category URL for translated category
+                $alternate_url = get_category_link($translated_category_id);
+            }
+        }
+    }
+    
+    // If category handling didn't work, try pll_translate_url
+    if ($alternate_url === '#' && function_exists('pll_translate_url')) {
+        $current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $alternate_url = pll_translate_url($current_url, $target_lang);
+    }
+    
+    // Fallback to pll_the_languages
+    if ($alternate_url === '#' || $alternate_url === home_url('/')) {
+        $languages = pll_the_languages(array('raw' => 1));
+        if (isset($languages[$target_lang])) {
+            $alternate_url = $languages[$target_lang]['url'];
+        }
+    }
+    
+    // Determine icon based on target language
+    if ($target_lang === 'ar') {
+        $icon_path = get_template_directory_uri() . '/assets/images/arabic-language-changer.svg';
+    } else {
+        $icon_path = get_template_directory_uri() . '/assets/images/english-language-changer.svg';
+    }
+    
+    return array(
+        'url' => $alternate_url,
+        'icon' => $icon_path
+    );
 }
 
 // Helper: Detect service category type
@@ -176,16 +499,18 @@ function enqueue_theme_css() {
     if (is_archive()) {
         $service_type = dlc_get_archive_service_type();
         $queried_object = get_queried_object();
-        $is_news = isset($queried_object->slug) && strpos($queried_object->slug, 'news') !== false;
-        
+        $is_news = dlc_is_news_category($queried_object->term_id ?? 0);
+        $is_companies = dlc_is_companies_services_category($queried_object->term_id ?? 0);
+        $is_individual = dlc_is_individual_services_category($queried_object->term_id ?? 0);
+        $is_international = dlc_is_home_international_category($queried_object->term_id ?? 0);
         if ($is_news) {
             wp_register_style('news-page', get_template_directory_uri() . '/assets/en/news.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('news-page');
-        } elseif ($service_type) {
+        } elseif ($is_companies || $is_individual || $is_international) {
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
             
-            if ($service_type === 'international') {
+            if ($is_international) {
                 wp_register_style('home-international-page', get_template_directory_uri() . '/assets/en/home-international.css', array('services-page'), '1.0.0', 'all');
                 wp_enqueue_style('home-international-page');
             }
@@ -196,10 +521,15 @@ function enqueue_theme_css() {
         }
     }
     
-    // Generic archives (tags, dates, authors) - handle separately to avoid category routing
-    if (is_archive() && (is_tag() || is_date() || is_author() || !is_category())) {
-        wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('archive-page');
+    // Generic archive template (categories, tags, dates, authors)
+    // Check if it's a general archive (not routed to specific templates)
+    if (is_archive()) {
+        $category_type = dlc_get_category_type_slug();
+        // Only enqueue if it's not a specific category type (will use general template)
+        if (!$category_type || !in_array($category_type, ['news', 'blog', 'companies-services', 'individual-services', 'home-international'])) {
+            wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('archive-page');
+        }
     }
     
     if (is_single() && get_post_type() == 'post') {
@@ -212,6 +542,63 @@ function enqueue_theme_css() {
    
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_theme_css' );
+
+// Helper: Get top parent category
+
+function dlc_get_top_parent_category($cat_id) {
+    $term = get_term($cat_id);
+
+    while ($term->parent != 0) {
+        $term = get_term($term->parent);
+    }
+
+    return $term; // This is the TOP parent
+}
+
+/**
+ * Get the English slug of the top parent category
+ * If category is Arabic, translates to English equivalent using Polylang
+ * 
+ * @param int|null $cat_id Category ID, or null to use queried object
+ * @return string|null English slug of the top parent category, or null if not found
+ */
+function dlc_get_category_type_slug($cat_id = null) {
+    if (!$cat_id) {
+        $queried_object = get_queried_object();
+        $cat_id = $queried_object->term_id ?? 0;
+    }
+    
+    if (!$cat_id) {
+        return null;
+    }
+    
+    // Get top parent category
+    $top_parent = dlc_get_top_parent_category($cat_id);
+    if (!$top_parent || is_wp_error($top_parent)) {
+        return null;
+    }
+    
+    // Get the language of the top parent
+    $parent_lang = null;
+    if (function_exists('pll_get_term_language')) {
+        $parent_lang = pll_get_term_language($top_parent->term_id);
+    }
+    
+    // If it's Arabic, get the English equivalent
+    if ($parent_lang === 'ar' && function_exists('pll_get_term')) {
+        $en_parent_id = pll_get_term($top_parent->term_id, 'en');
+        if ($en_parent_id) {
+            $en_parent = get_term($en_parent_id);
+            if ($en_parent && !is_wp_error($en_parent)) {
+                return $en_parent->slug;
+            }
+        }
+    }
+    
+    // Return the slug (already English or fallback)
+    return $top_parent->slug;
+}
+
 
 
 
@@ -266,12 +653,10 @@ function dlc_theme_setup() {
     add_theme_support('post-thumbnails');
     add_theme_support('html5', array('comment-form', 'comment-list', 'gallery', 'caption'));
     
-    // Register menus
+    // Register menus (Polylang will create language-specific versions automatically)
     register_nav_menus(array(
         'primary-menu' => __('Primary Menu'),
-        'primary-ar-menu' => __('Primary Arabic Menu'),
         'footer-menu' => __('Footer Menu'),
-        'footer-ar-menu' => __('Footer Arabic Menu'),
     ));
 }
 add_action('after_setup_theme', 'dlc_theme_setup');
@@ -806,7 +1191,7 @@ function dlc_get_service_archive_url($post_id = null) {
 
     if ($category) {
         return get_category_link($category->term_id);
-    }
+                }
 
     // Fallback to English version if Arabic not found
     $fallback_category = get_category_by_slug($base_slug);
@@ -930,7 +1315,7 @@ function dlc_get_post_archive_url($post_id = null, $language = null) {
             $category = get_category_by_slug('blog');
             if (!$category) {
                 $category = get_term_by('name', 'Blog', 'category');
-            }
+                }
         }
     }
     

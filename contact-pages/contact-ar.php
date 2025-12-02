@@ -1,6 +1,5 @@
 <?php
-/* Template Name: Contact Us Arabic
-*/
+
     get_header('ar');
 ?>
 

@@ -1,9 +1,5 @@
 <?php
-/*
-Template Name: Front Page Arabic
 
-
-*/
 get_header('ar');
 
 $cases_count = (int) get_field('cases');

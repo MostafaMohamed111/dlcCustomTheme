@@ -52,9 +52,9 @@
                                             التصنيفات:
                                         </span>
                                         <?php foreach($categories as $category) : ?>
-                                            <span class="category-badge-single">
+                                            <a href="<?php echo esc_url(get_category_link($category->term_id)); ?>" class="category-badge-single">
                                                 <?php echo esc_html( $category->name ); ?>
-                                            </span>
+                                            </a>
                                         <?php endforeach; ?>
                                     </div>
                             <?php endif; ?>
@@ -86,17 +86,8 @@
                     </div>
 
                     <?php 
-                    // Disable comments for news-ar category posts
-                    $post_categories = get_the_category();
-                    $is_news = false;
-                    foreach ($post_categories as $category) {
-                        if ($category->slug === 'news-ar') {
-                            $is_news = true;
-                            break;
-                        }
-                    }
-                    
-                    if ( !$is_news && (comments_open() || get_comments_number()) ) : ?>
+                    // Comments are enabled for blog posts
+                    if (comments_open() || get_comments_number()) : ?>
                         <section class="post-comments" id="comments">
                             <h3 class="comments-title">
                                 <i class="fa-solid fa-comment"></i>
@@ -208,9 +199,15 @@
                         </div>
                         <div class="post-navigation-inline">
                             <?php
-                            // Get previous/next posts filtered by Arabic language and category type (news/blog)
-                            $prev_post = get_previous_post_by_language_and_category('ar');
-                            $next_post = get_next_post_by_language_and_category('ar');
+                            // Get current language using Polylang
+                            $current_lang = 'ar';
+                            if (function_exists('pll_get_post_language')) {
+                                $current_lang = pll_get_post_language(get_the_ID()) ?: 'ar';
+                            }
+                            
+                            // Get previous/next posts filtered by current language and blog category
+                            $prev_post = get_previous_post_by_language_and_category($current_lang);
+                            $next_post = get_next_post_by_language_and_category($current_lang);
                             ?>
                             <?php if ( $next_post ) : ?>
                                 <a href="<?php echo get_permalink($next_post->ID); ?>" class="nav-arrow nav-next" title="<?php echo esc_attr(get_the_title($next_post->ID)); ?>">
@@ -242,19 +239,25 @@
                     // Get some tags (not all) - take first 3 tags
                     $tags_to_match = array_slice($post_tags, 0, 3);
                     
-                    $related_query = new WP_Query(array(
+                    // Get current language using Polylang
+                    $current_lang = 'ar';
+                    if (function_exists('pll_get_post_language')) {
+                        $current_lang = pll_get_post_language(get_the_ID()) ?: 'ar';
+                    }
+                    
+                    $related_query_args = array(
                         'tag__in' => $tags_to_match,
                         'post__not_in' => array(get_the_ID()),
                         'posts_per_page' => 3,
-                        'orderby' => 'rand',
-                        'meta_query' => array(
-                            array(
-                                'key' => '_post_language',
-                                'value' => 'ar',
-                                'compare' => '='
-                            )
-                        )
-                    ));
+                        'orderby' => 'rand'
+                    );
+                    
+                    // Add Polylang language filter if available
+                    if (function_exists('pll_get_post_language')) {
+                        $related_query_args['lang'] = $current_lang;
+                    }
+                    
+                    $related_query = new WP_Query($related_query_args);
                     
                     if ( $related_query->have_posts() ) :
                         ?>
@@ -301,8 +304,14 @@
         
         <div class="back-to-posts">
             <?php 
-            // Get the correct archive URL based on post type (news/blog) and language
-            $back_url = dlc_get_post_archive_url(get_the_ID(), 'ar');
+            // Get current language using Polylang
+            $current_lang = 'ar';
+            if (function_exists('pll_get_post_language')) {
+                $current_lang = pll_get_post_language(get_the_ID()) ?: 'ar';
+            }
+            
+            // Get the blog archive URL for current language
+            $back_url = dlc_get_post_archive_url(get_the_ID(), $current_lang);
             ?>
             <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
                 <i class="fa-solid fa-arrow-left"></i>

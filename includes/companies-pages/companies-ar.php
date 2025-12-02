@@ -17,14 +17,35 @@
         <div class="header">
             <h2 id="services-title" class="services-title">خدمات الشركات<li class="fa-solid fa-building ps-2"></li></h2>
             <?php
-            // Get the companies-services-ar category for default description
+            // Get current language using Polylang
+            $current_lang = 'ar';
+            if (function_exists('pll_current_language')) {
+                $current_lang = pll_current_language();
+            }
+            
+            // Get the companies-services category for default description
             $display_category = null;
             if (isset($_GET['cat']) && $_GET['cat'] > 0) {
                 // Show selected category description
                 $display_category = get_category(intval($_GET['cat']));
             } else {
-                // Show parent category description
-                $display_category = get_category_by_slug('companies-services-ar');
+                // Get parent category using Polylang
+                $companies_en = get_category_by_slug('companies-services');
+                if (!$companies_en) {
+                    $companies_en = get_term_by('name', 'Companies Services', 'category');
+                }
+                
+                if ($companies_en && function_exists('pll_get_term')) {
+                    $companies_ar_id = pll_get_term($companies_en->term_id, 'ar');
+                    if ($companies_ar_id) {
+                        $display_category = get_category($companies_ar_id);
+                    }
+                }
+                
+                // Fallback
+                if (!$display_category) {
+                    $display_category = $companies_en;
+                }
             }
             
             if ($display_category && !empty($display_category->description)) {
@@ -38,17 +59,69 @@
 
         <div class="container">
             <?php
-            // Get the companies-services-ar category
-            $parent_category = get_category_by_slug('companies-services-ar');
+            // Get current language using Polylang
+            $current_lang = 'ar';
+            if (function_exists('pll_current_language')) {
+                $current_lang = pll_current_language();
+            }
+            
+            // Get the companies-services category using Polylang
+            $parent_category = null;
+            if (function_exists('pll_get_term')) {
+                $companies_en = get_category_by_slug('companies-services');
+                if (!$companies_en) {
+                    $companies_en = get_term_by('name', 'Companies Services', 'category');
+                }
+                
+                if ($companies_en) {
+                    if ($current_lang === 'ar') {
+                        $companies_ar_id = pll_get_term($companies_en->term_id, 'ar');
+                        if ($companies_ar_id) {
+                            $parent_category = get_category($companies_ar_id);
+                        }
+                    } else {
+                        $parent_category = $companies_en;
+                    }
+                }
+            }
+            
+            // Fallback: try to get by slug/name if Polylang translation not found
+            if (!$parent_category) {
+                if ($current_lang === 'ar') {
+                    $parent_category = get_category_by_slug('companies-services-ar');
+                    if (!$parent_category) {
+                        $parent_category = get_term_by('name', 'خدمات الشركات', 'category');
+                    }
+                } else {
+                    $parent_category = get_category_by_slug('companies-services');
+                    if (!$parent_category) {
+                        $parent_category = get_term_by('name', 'Companies Services', 'category');
+                    }
+                }
+            }
             
             if ($parent_category) {
                 // Get all child categories
-                $child_categories = get_categories(array(
+                $all_child_categories = get_categories(array(
                     'parent' => $parent_category->term_id,
                     'hide_empty' => true,
                     'orderby' => 'name',
                     'order' => 'ASC'
                 ));
+                
+                // Filter child categories by current language using Polylang
+                $child_categories = array();
+                foreach ($all_child_categories as $cat) {
+                    if (function_exists('pll_get_term_language')) {
+                        $cat_lang = pll_get_term_language($cat->term_id);
+                        if ($cat_lang === $current_lang) {
+                            $child_categories[] = $cat;
+                        }
+                    } else {
+                        // Fallback: include all if Polylang not available
+                        $child_categories[] = $cat;
+                    }
+                }
                 
                 // Get current category filter from URL
                 $current_category = isset($_GET['cat']) ? intval($_GET['cat']) : 0;
@@ -70,15 +143,13 @@
                     'posts_per_page' => $posts_per_page,
                     'paged' => $paged,
                     'orderby' => 'date',
-                    'order' => 'DESC',
-                    'meta_query' => array(
-                        array(
-                            'key' => '_post_language',
-                            'value' => 'ar',
-                            'compare' => '='
-                        )
-                    )
+                    'order' => 'DESC'
                 );
+                
+                // Add Polylang language filter if available
+                if (function_exists('pll_current_language')) {
+                    $query_args['lang'] = $current_lang;
+                }
                 
                 // Filter by category
                 if ($current_category > 0) {
@@ -125,19 +196,19 @@
                             <ul class="categories-list">
                                 <li>
                                     <?php
-                                    // Get post count for "All Services" (all Arabic posts in companies-services-ar and children)
-                                    $all_services_query = new WP_Query(array(
+                                    // Get post count for "All Services" (all posts in companies-services and children, filtered by language)
+                                    $all_services_query_args = array(
                                         'category__in' => $all_category_ids,
                                         'posts_per_page' => -1,
-                                        'post_status' => 'publish',
-                                        'meta_query' => array(
-                                            array(
-                                                'key' => '_post_language',
-                                                'value' => 'ar',
-                                                'compare' => '='
-                                            )
-                                        )
-                                    ));
+                                        'post_status' => 'publish'
+                                    );
+                                    
+                                    // Add Polylang language filter if available
+                                    if (function_exists('pll_current_language')) {
+                                        $all_services_query_args['lang'] = $current_lang;
+                                    }
+                                    
+                                    $all_services_query = new WP_Query($all_services_query_args);
                                     $all_services_count = $all_services_query->found_posts;
                                     wp_reset_postdata();
                                     ?>
@@ -209,7 +280,7 @@
                 <div class="no-services">
                     <i class="fa-solid fa-briefcase"></i>
                     <h3>الفئة غير موجودة</h3>
-                    <p>فئة خدمات الشركات غير موجودة. يرجى إنشاء فئة بالاسم "companies-services-ar".</p>
+                    <p>فئة خدمات الشركات غير موجودة. يرجى إنشاء فئة خدمات الشركات.</p>
                 </div>
                 <?php
             }

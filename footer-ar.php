@@ -11,10 +11,11 @@
             </div>
             <div class="col-md-6 footer-nav text-center">
                 <?php
-                    if ( has_nav_menu( 'primary-menu' ) ) {
+                    $menu_location = dlc_get_menu_location('footer');
+                    if ( has_nav_menu( $menu_location ) ) {
                         wp_nav_menu(
                             array(
-                                'theme_location' => 'footer-ar-menu',
+                                'theme_location' => $menu_location,
                                 'container'      => 'nav',
                                 'container_class'=> 'footer-menu',
                                 'menu_class'     => 'list-unstyled d-flex flex-wrap justify-content-center gap-3 mb-0',

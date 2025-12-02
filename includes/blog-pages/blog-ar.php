@@ -65,29 +65,79 @@
                     <ul class="categories-list">
                         <li>
                             <?php 
-                            // Get the Arabic Blog parent category (blog-ar)
-                            $blog_category = get_category_by_slug('blog-ar');
+                            // Get current language using Polylang
+                            $current_lang = 'ar';
+                            if (function_exists('pll_current_language')) {
+                                $current_lang = pll_current_language();
+                            }
+                            
+                            // Get the Blog parent category for current language using Polylang
+                            $blog_category = null;
+                            if (function_exists('pll_get_term')) {
+                                // Try to get blog category by slug first
+                                $blog_category_en = get_category_by_slug('blog');
+                                if (!$blog_category_en) {
+                                    $blog_category_en = get_term_by('name', 'Blog', 'category');
+                                }
+                                
+                                // If we have English blog category, get its Arabic translation
+                                if ($blog_category_en && $current_lang === 'ar') {
+                                    $blog_category_id = pll_get_term($blog_category_en->term_id, 'ar');
+                                    if ($blog_category_id) {
+                                        $blog_category = get_category($blog_category_id);
+                                    }
+                                } elseif ($blog_category_en && $current_lang === 'en') {
+                                    $blog_category = $blog_category_en;
+                                }
+                            }
+                            
+                            // Fallback: try to get by slug if Polylang translation not found
                             if (!$blog_category) {
-                                // Fallback to 'blog' if blog-ar doesn't exist
-                            $blog_category = get_category_by_slug('blog');
+                                $blog_category = get_category_by_slug('blog-ar');
+                                if (!$blog_category) {
+                                    $blog_category = get_term_by('name', 'المدونة', 'category');
+                                }
+                                if (!$blog_category) {
+                                    $blog_category = get_category_by_slug('blog');
+                                }
                             }
                             
                             if ($blog_category) {
                                 $blog_url = get_category_link($blog_category->term_id);
                                 $is_blog_active = is_category($blog_category->term_id) || (is_archive() && !is_category());
-                                // Get actual post count for Blog category (including child categories)
-                                $blog_query = new WP_Query(array(
+                                
+                                // Get actual post count for Blog category (including child categories) filtered by language
+                                $blog_query_args = array(
                                     'cat' => $blog_category->term_id,
                                     'posts_per_page' => -1,
                                     'post_status' => 'publish'
-                                ));
+                                );
+                                
+                                // Add Polylang language filter if available
+                                if (function_exists('pll_current_language')) {
+                                    $blog_query_args['lang'] = $current_lang;
+                                }
+                                
+                                $blog_query = new WP_Query($blog_query_args);
                                 $blog_count = $blog_query->found_posts;
                                 wp_reset_postdata();
                             } else {
                                 // Fallback to posts page
                                 $blog_url = get_permalink( get_option( 'page_for_posts' ) ) ?: home_url();
                                 $is_blog_active = is_home() || (is_archive() && !is_category() && !is_tag());
-                                $blog_count = wp_count_posts()->publish;
+                                
+                                // Get post count filtered by language if Polylang is available
+                                if (function_exists('pll_current_language')) {
+                                    $lang_query = new WP_Query(array(
+                                        'posts_per_page' => -1,
+                                        'post_status' => 'publish',
+                                        'lang' => $current_lang
+                                    ));
+                                    $blog_count = $lang_query->found_posts;
+                                    wp_reset_postdata();
+                                } else {
+                                    $blog_count = wp_count_posts()->publish;
+                                }
                             }
                             ?>
                             <a href="<?php echo esc_url($blog_url . '#category-title'); ?>" 
@@ -98,7 +148,13 @@
                             </a>
                         </li>
                         <?php
-                        // Get only Arabic categories (children of 'blog-ar' category)
+                        // Get current language using Polylang
+                        $current_lang = 'ar';
+                        if (function_exists('pll_current_language')) {
+                            $current_lang = pll_current_language();
+                        }
+                        
+                        // Get only categories for current language (children of blog category)
                         if ($blog_category) {
                             $all_categories = get_categories(array(
                                 'child_of' => $blog_category->term_id,
@@ -107,21 +163,32 @@
                                 'hide_empty' => true
                             ));
                         } else {
-                            // Fallback: get only categories with '-ar' in slug
-                        $all_categories = get_categories(array(
-                            'orderby' => 'name',
-                            'order' => 'ASC',
-                            'hide_empty' => true
-                        ));
+                            // Fallback: get all categories
+                            $all_categories = get_categories(array(
+                                'orderby' => 'name',
+                                'order' => 'ASC',
+                                'hide_empty' => true
+                            ));
                         }
                         
                         foreach($all_categories as $category) {
-                            // If no blog-ar parent, only show categories with '-ar' in slug
-                            if (!$blog_category && strpos($category->slug, '-ar') === false) {
-                                continue;
+                            // Use Polylang to filter by language
+                            if (function_exists('pll_get_term_language')) {
+                                $category_lang = pll_get_term_language($category->term_id);
+                                // Skip if category language doesn't match current language
+                                if ($category_lang !== $current_lang) {
+                                    continue;
+                                }
+                            } else {
+                                // Fallback: Skip categories with '-ar' in slug if Polylang is not available
+                                if ($current_lang === 'ar' && strpos($category->slug, '-ar') === false) {
+                                    continue;
+                                } elseif ($current_lang === 'en' && strpos($category->slug, '-ar') !== false) {
+                                    continue;
+                                }
                             }
                             
-                            // Skip the Blog-ar parent category itself
+                            // Skip the Blog parent category
                             if ($blog_category && $category->term_id == $blog_category->term_id) {
                                 continue;
                             }

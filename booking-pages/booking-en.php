@@ -1,21 +1,14 @@
 <?php 
 
-/* 
-* Template Name: Booking Page Arabic
-*/
-
 ?>
 
-    <!DOCTYPE html>
-    <html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php wp_title(); ?></title>
     <?php wp_head(); ?>
-    <script>
-        var bookingLanguage = 'ar';
-    </script>
 </head>
 <body>
 
@@ -33,7 +26,7 @@
         ?>
         
         <div class="logo">
-            <a href="<?php echo home_url('front-page-ar'); ?>">
+            <a href="<?php echo esc_url(home_url()); ?>">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking-logo.png" alt="Dag Law Firm Logo">
             </a>
         </div>
@@ -60,7 +53,7 @@
         </div>
 
         <div class="social-media">
-            <h3>منصات التواصل الاجتماعي</h3>
+            <h3>Social Media Platform</h3>
             <div class="social-icons">
                 <?php if ($facebook) : ?>
                     <a href="<?php echo esc_url($facebook); ?>" target="_blank" rel="noopener" class="social-icon">
@@ -104,27 +97,37 @@
     <div class="form-sector col-lg-6">
         <!-- Language Switcher -->
         <div class="booking-language-switcher">
-            <a href="<?php echo home_url('/booking/'); ?>" class="language-switch-btn" title="التبديل إلى الإنجليزية">
+            <?php
+            $switcher = dlc_get_polylang_switcher();
+            if ($switcher) :
+                // Determine target language and labels
+                $current_lang = function_exists('pll_current_language') ? pll_current_language() : 'en';
+                $target_lang = ($current_lang === 'ar') ? 'en' : 'ar';
+                $label = ($target_lang === 'ar') ? 'العربية' : 'English';
+                $title = ($target_lang === 'ar') ? 'Switch to Arabic' : 'Switch to English';
+            ?>
+            <a href="<?php echo esc_url($switcher['url']); ?>" class="language-switch-btn" title="<?php echo esc_attr($title); ?>">
                 <i class="fa-solid fa-globe"></i>
-                <span>English</span>
+                <span><?php echo esc_html($label); ?></span>
             </a>
+            <?php endif; ?>
         </div>
         
         <!-- Service Type Selection -->
         <div id="service-type-selection" class="booking-step active">
-            <h1>ماذا تبحث عنه؟</h1>
+            <h1>What are you looking for?</h1>
             <div class="service-type-options">
                 <button type="button" class="service-type-btn" data-type="companies">
                     <i class="fa-solid fa-building"></i>
-                    <span>خدمات الشركات</span>
+                    <span>Companies Services</span>
                 </button>
                 <button type="button" class="service-type-btn" data-type="individual">
                     <i class="fa-solid fa-user"></i>
-                    <span>خدمات الأفراد</span>
+                    <span>Individual Services</span>
                 </button>
                 <button type="button" class="service-type-btn" data-type="international">
                     <i class="fa-solid fa-globe"></i>
-                    <span>الخدمات الدولية</span>
+                    <span>International Services</span>
                 </button>
             </div>
         </div>
@@ -132,22 +135,22 @@
         <!-- Booking Form -->
         <div id="booking-form-container" class="booking-step">
             <div class="form-header">
-                <h1>معلومات حجز الاستشارة</h1>
+                <h1>Consultation Booking Information</h1>
             </div>
 
             <!-- Progress Steps -->
             <div class="progress-steps">
                 <div class="step-item active" data-step="1">
                     <div class="step-number">1</div>
-                    <div class="step-label">المعلومات الشخصية</div>
+                    <div class="step-label">Personal info</div>
                 </div>
                 <div class="step-item" data-step="2">
                     <div class="step-number">2</div>
-                    <div class="step-label">معلومات الاستشارة</div>
+                    <div class="step-label">Consultation info</div>
                 </div>
                 <div class="step-item" data-step="3">
                     <div class="step-number">3</div>
-                    <div class="step-label">إرسال</div>
+                    <div class="step-label">Submit</div>
                 </div>
             </div>
 
@@ -158,93 +161,93 @@
                 <!-- Phase 1: Personal Info -->
                 <div class="form-phase active" data-phase="1">
                     <div class="form-group">
-                        <label for="name">الاسم *</label>
-                        <input type="text" id="name" name="name" placeholder="الاسم" required>
-                    </div>
-                    <div class="form-group arabic-phone">
-                        <label for="phone">رقم الهاتف *</label>
-                        <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required>
-                    </div>
-                    <div class="form-group arabic-email">
-                        <label for="email">البريد الإلكتروني *</label>
-                        <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" name="name" placeholder="Name" required>
                     </div>
                     <div class="form-group">
-                        <label for="city">المدينة</label>
-                        <input type="text" id="city" name="city" placeholder="المدينة" value="الرياض">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="City" value="Riyadh">
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-prev" onclick="goBackToServiceSelection()">السابق</button>
-                        <button type="button" class="btn btn-next" onclick="nextPhase()">التالي</button>
+                        <button type="button" class="btn btn-prev" onclick="goBackToServiceSelection()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPhase()">Next</button>
                     </div>
                 </div>
 
                 <!-- Phase 2: Consultation Info -->
                 <div class="form-phase" data-phase="2">
                     <div class="form-group">
-                        <label for="service">الخدمة *</label>
+                        <label for="service">Service *</label>
                         <select id="service" name="service" required>
-                            <option value="">اختر خدمة</option>
+                            <option value="">Select a service</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="case_brief">نبذة عن قضيتك *</label>
-                        <textarea id="case_brief" name="case_brief" rows="5" placeholder="يرجى تقديم وصف موجز لقضيتك" required></textarea>
+                        <label for="case_brief">Brief about your case *</label>
+                        <textarea id="case_brief" name="case_brief" rows="5" placeholder="Please provide a brief description of your case" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label>هل لديك مستندات لدعم القضية؟ *</label>
+                        <label>Do you have documents to support the issue? *</label>
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="has_documents" value="yes" required>
-                                <span>نعم</span>
+                                <span>Yes</span>
                             </label>
                             <label class="radio-label">
                                 <input type="radio" name="has_documents" value="no" required>
-                                <span>لا</span>
+                                <span>No</span>
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>هل سبق لك التعامل مع محامٍ في نفس القضية؟ *</label>
+                        <label>Have you ever dealt with a lawyer before in the same case? *</label>
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="previous_lawyer" value="yes" required>
-                                <span>نعم</span>
+                                <span>Yes</span>
                             </label>
                             <label class="radio-label">
                                 <input type="radio" name="previous_lawyer" value="no" required>
-                                <span>لا</span>
+                                <span>No</span>
                             </label>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-prev" onclick="prevPhase()">السابق</button>
-                        <button type="button" class="btn btn-next" onclick="nextPhase()">التالي </button>
+                        <button type="button" class="btn btn-prev" onclick="prevPhase()">Previous</button>
+                        <button type="button" class="btn btn-next" onclick="nextPhase()">Next</button>
                     </div>
                 </div>
 
                 <!-- Phase 3: Venue -->
                 <div class="form-phase" data-phase="3">
                     <div class="form-group">
-                        <label>اختر نوع الاجتماع *</label>
+                        <label>Select meeting type *</label>
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="meeting_type" value="online" required>
-                                <span>عبر الإنترنت</span>
+                                <span>Online</span>
                             </label>
                             <label class="radio-label">
                                 <input type="radio" name="meeting_type" value="offline" required>
-                                <span> في المكتب</span>
+                                <span>Offline</span>
                             </label>
                         </div>
                     </div>
                     <div class="form-note">
                         <i class="fa-solid fa-info-circle"></i>
-                        <p>ملاحظة: ستتلقى بريدًا إلكترونيًا بأقرب وقت حجز متاح بمجرد مراجعة طلبك.</p>
+                        <p>Note: You will receive an email with the closest available booking time as soon as we review your request.</p>
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-prev" onclick="prevPhase()">السابق</button>
-                        <button type="submit" class="btn btn-submit">إرسال الحجز</button>
+                        <button type="button" class="btn btn-prev" onclick="prevPhase()">Previous</button>
+                        <button type="submit" class="btn btn-submit">Submit Your Booking</button>
                     </div>
                 </div>
             </form>
@@ -254,10 +257,10 @@
         <div id="success-message" class="booking-step">
             <div class="success-content">
                 <i class="fa-solid fa-check-circle"></i>
-                <h2>شكراً لتقديمك</h2>
-                <p>سنتواصل معك في أقرب وقت ممكن.</p>
-                <p class="success-note">يمكنك تأكيد الحجز عن طريق التواصل معنا على واتساب أو الاتصال بنا مباشرة عبر رقمنا.</p>
-                <a href="<?php echo home_url(); ?>" class="btn btn-home">العودة إلى الصفحة الرئيسية</a>
+                <h2>Thanks for submission</h2>
+                <p>We will be contacting you as soon as possible.</p>
+                <p class="success-note">You can confirm the reservation by contacting us on WhatsApp or calling us directly through our number.</p>
+                <a href="<?php echo home_url(); ?>" class="btn btn-home">Go to Home Page</a>
             </div>
         </div>
     </div>
