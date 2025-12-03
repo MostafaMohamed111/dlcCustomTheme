@@ -155,7 +155,7 @@
 
 .why-choose-us-header {
     padding: 40px 0;
-    background-color: var(--primary-blue);
+    background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
     margin-bottom: 40px;
 }
 
