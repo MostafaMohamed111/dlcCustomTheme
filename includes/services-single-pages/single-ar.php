@@ -53,7 +53,12 @@
                     <!-- Post Footer -->
                     <footer class="post-footer-single">
                         <div class="service-cta">
-                            <a href="<?php echo add_query_arg('service', get_the_ID(), home_url('/booking-ar/')); ?>" class="service-cta-btn get-started-service-btn">
+                            <?php 
+                            // Get booking page URL using Polylang
+                            $booking_url = dlc_get_booking_page_url('ar');
+                            $booking_url = add_query_arg('service', get_the_ID(), $booking_url);
+                            ?>
+                            <a href="<?php echo esc_url($booking_url); ?>" class="service-cta-btn get-started-service-btn">
                                 احجز  الخدمة
                                 <i class="fa-solid fa-briefcase"></i>
                             </a>
@@ -152,15 +157,26 @@
         ?>
         
         <div class="back-to-posts">
-            <?php 
-            // Get the correct archive URL for the service type
-            $back_url = dlc_get_service_archive_url(get_the_ID());
-            ?>
-            <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
-                <i class="fa-solid fa-arrow-left"></i>
-                العودة إلى جميع الخدمات
-            </a>
+                    <?php 
+                    // Get the first category of the post for the back link
+                    $categories = get_the_category();
+                    $back_url = home_url();
+                    $back_text = 'العودة إلى المنشورات';
+                    
+                    if (!empty($categories)) {
+                        $first_category = $categories[0];
+                        $back_url = get_category_link($first_category->term_id);
+                        $back_text = 'العودة إلى ' . esc_html($first_category->name);
+                    } elseif (function_exists('pll_home_url')) {
+                        $back_url = pll_home_url('ar');
+                        $back_text = 'العودة إلى الرئيسية';
+                    }
+                    ?>
+                    <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <?php echo $back_text; ?>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 <?php get_footer('ar'); ?>

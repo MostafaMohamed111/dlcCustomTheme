@@ -42,4 +42,8 @@ switch ($category_type) {
     case 'blog':
         get_template_part('includes/blog-single-pages/single-' . $lang_suffix);
         break;
+
+    default:
+        get_template_part('includes/general-single-pages/single-' . $lang_suffix);
+        break;
 }

@@ -527,8 +527,11 @@ function enqueue_theme_css() {
         $category_type = dlc_get_category_type_slug();
         // Only enqueue if it's not a specific category type (will use general template)
         if (!$category_type || !in_array($category_type, ['news', 'blog', 'companies-services', 'individual-services', 'home-international'])) {
-            wp_register_style('archive-page', get_template_directory_uri() . '/assets/en/archive.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('archive-page');
+            // Enqueue blog.css first for post-card styles, then general-archive.css
+            wp_register_style('blog-page', get_template_directory_uri() . '/assets/en/blog.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('blog-page');
+            wp_register_style('general-archive', get_template_directory_uri() . '/assets/en/general-archive.css', array('blog-page'), '1.0.0', 'all');
+            wp_enqueue_style('general-archive');
         }
     }
     
@@ -536,6 +539,27 @@ function enqueue_theme_css() {
         // Single post page
         wp_register_style('single-page', get_template_directory_uri() . '/assets/en/single.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('single-page');
+    }
+
+    // Generic page layout (fallback for normal pages that are not using a special template)
+    if (is_page()
+        && !is_front_page()
+        && !is_page_template('front-page-ar.php')
+        && !is_page_template('services.php')
+        && !is_page_template('services-ar.php')
+        && !is_page_template('secure-yourself.php')
+        && !is_page_template('secure-yourself-ar.php')
+        && !is_page_template('contact-us.php')
+        && !is_page_template('contact-us-ar.php')
+        && !is_page_template('about-us.php')
+        && !is_page_template('about-us-ar.php')
+        && !is_page_template('privacy-policy.php')
+        && !is_page_template('privacy-policy-ar.php')
+        && !is_page_template('booking.php')
+        && !is_page_template('booking-ar.php')
+    ) {
+        wp_register_style('generic-page', get_template_directory_uri() . '/assets/en/page.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('generic-page');
     }
 
 
@@ -1202,6 +1226,44 @@ function dlc_get_service_archive_url($post_id = null) {
     return home_url('/');
 }
 
+// Helper to get booking page URL using Polylang
+function dlc_get_booking_page_url($language = null) {
+    if (!$language) {
+        if (function_exists('pll_current_language')) {
+            $language = pll_current_language();
+        } else {
+            $language = 'en';
+        }
+    }
+    
+    // Get booking page by template
+    $booking_pages = get_pages(array(
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'booking.php'
+    ));
+    
+    if (!empty($booking_pages)) {
+        // If Polylang is active, get the translated page
+        if (function_exists('pll_get_post') && $language !== 'en') {
+            $en_booking_id = $booking_pages[0]->ID;
+            $translated_booking_id = pll_get_post($en_booking_id, $language);
+            if ($translated_booking_id) {
+                return get_permalink($translated_booking_id);
+            }
+        }
+        
+        // Return English booking page or fallback
+        return get_permalink($booking_pages[0]->ID);
+    }
+    
+    // Fallback URLs
+    if ($language === 'ar') {
+        return home_url('/ar/حجز-استشارة/');
+    }
+    
+    return home_url('/booking/');
+}
+
 // Helper to get adjacent service posts within the same service type and language
 function dlc_get_adjacent_service_post($direction = 'next', $language = 'en') {
     global $post;
@@ -1474,34 +1536,29 @@ function get_service_type() {
         wp_send_json_error('Invalid service ID.');
     }
     
-    // Get post categories including parents
+    // Get post categories
     $categories = get_the_category($service_id);
-    $service_type = '';
+    if (empty($categories)) {
+        wp_send_json_error('Post has no categories.');
+        return;
+    }
     
-    foreach ($categories as $category) {
-        // Check current category and all parent categories
-        $cat_to_check = $category;
-        
-        while ($cat_to_check) {
-            $slug = $cat_to_check->slug;
-            
-            // Check which service type this belongs to
-            if (strpos($slug, 'companies-services') !== false) {
+    // Use Polylang-aware function to get category type
+    $service_type = null;
+    foreach ($categories as $cat) {
+        $category_type = dlc_get_category_type_slug($cat->term_id);
+        if ($category_type) {
+            // Map category type slug to service type
+            switch ($category_type) {
+                case 'companies-services':
                 $service_type = 'companies';
                 break 2; // Break both loops
-            } elseif (strpos($slug, 'individual-services') !== false) {
+                case 'individual-services':
                 $service_type = 'individual';
                 break 2;
-            } elseif (strpos($slug, 'home-international') !== false) {
+                case 'home-international':
                 $service_type = 'international';
                 break 2;
-            }
-            
-            // Check parent category
-            if ($cat_to_check->parent) {
-                $cat_to_check = get_category($cat_to_check->parent);
-            } else {
-                break;
             }
         }
     }
@@ -1525,49 +1582,94 @@ function get_booking_services() {
     $service_type = sanitize_text_field($_POST['service_type']);
     $language = isset($_POST['language']) ? sanitize_text_field($_POST['language']) : 'en';
     
-    // Map service type to category slug based on language
-    $category_slug = '';
-    $suffix = ($language === 'ar') ? '-ar' : '';
-    
+    // Map service type to English category slug (same as companies-ar.php pattern)
+    $base_category_slug = '';
     switch ($service_type) {
         case 'companies':
-            $category_slug = 'companies-services' . $suffix;
+            $base_category_slug = 'companies-services';
             break;
         case 'individual':
-            $category_slug = 'individual-services' . $suffix;
+            $base_category_slug = 'individual-services';
             break;
         case 'international':
-            $category_slug = 'home-international' . $suffix;
+            $base_category_slug = 'home-international';
             break;
         default:
             wp_send_json_error('Invalid service type.');
             return;
     }
 
-    // Get category tree
-    $category_ids = dlc_get_category_tree_ids($category_slug);
+    // Get the parent category using Polylang (same pattern as companies-ar.php)
+    $parent_category = null;
+    if (function_exists('pll_get_term')) {
+        $en_category = get_category_by_slug($base_category_slug);
+        if (!$en_category) {
+            // Try by name as fallback
+            $en_category = get_term_by('name', ucfirst(str_replace('-', ' ', $base_category_slug)), 'category');
+    }
     
-    if (empty($category_ids)) {
+        if ($en_category) {
+            if ($language === 'ar') {
+                $ar_category_id = pll_get_term($en_category->term_id, 'ar');
+                if ($ar_category_id) {
+                    $parent_category = get_category($ar_category_id);
+                }
+            } else {
+                $parent_category = $en_category;
+            }
+        }
+    }
+    
+    // Fallback: try to get by slug/name if Polylang translation not found
+    if (!$parent_category) {
+        if ($language === 'ar') {
+            $parent_category = get_category_by_slug($base_category_slug . '-ar');
+            if (!$parent_category) {
+                // Try by Arabic name
+                $ar_names = array(
+                    'companies-services' => 'خدمات الشركات',
+                    'individual-services' => 'خدمات الأفراد',
+                    'home-international' => 'الخدمات الدولية'
+                );
+                $ar_name = isset($ar_names[$base_category_slug]) ? $ar_names[$base_category_slug] : '';
+                if ($ar_name) {
+                    $parent_category = get_term_by('name', $ar_name, 'category');
+                }
+            }
+        } else {
+            $parent_category = get_category_by_slug($base_category_slug);
+            if (!$parent_category) {
+                $parent_category = get_term_by('name', ucfirst(str_replace('-', ' ', $base_category_slug)), 'category');
+            }
+        }
+    }
+    
+    if (!$parent_category) {
         wp_send_json_error('Category not found.');
         return;
     }
 
-    // Get all posts from these categories with language filter
+    // Get all category IDs (parent + all children) - same as companies-ar.php
+    $all_category_ids = array($parent_category->term_id);
+    $all_children = get_term_children($parent_category->term_id, 'category');
+    if (!is_wp_error($all_children)) {
+        $all_category_ids = array_merge($all_category_ids, $all_children);
+    }
+
+    // Setup query arguments - same pattern as companies-ar.php
     $query_args = array(
         'post_type' => 'post',
         'post_status' => 'publish',
         'posts_per_page' => -1,
         'orderby' => 'title',
         'order' => 'ASC',
-        'category__in' => $category_ids,
-        'meta_query' => array(
-            array(
-                'key' => '_post_language',
-                'value' => $language,
-                'compare' => '='
-            )
-        )
+        'category__in' => $all_category_ids
     );
+    
+    // Add Polylang language filter if available - same as companies-ar.php
+    if (function_exists('pll_current_language')) {
+        $query_args['lang'] = $language;
+    }
 
     $services_query = new WP_Query($query_args);
     $services = array();
@@ -1597,17 +1699,17 @@ function handle_booking_form_submission() {
     }
 
     // Sanitize and validate all fields
-    $service_type = sanitize_text_field($_POST['service_type']);
-    $name = sanitize_text_field($_POST['name']);
-    $phone = sanitize_text_field($_POST['phone']);
-    $email = sanitize_email($_POST['email']);
-    $city = sanitize_text_field($_POST['city']);
-    $service_id = intval($_POST['service']);
-    $service_slug = isset($_POST['service_slug']) ? sanitize_text_field($_POST['service_slug']) : '';
-    $case_brief = sanitize_textarea_field($_POST['case_brief']);
-    $has_documents = sanitize_text_field($_POST['has_documents']);
+    $service_type    = sanitize_text_field($_POST['service_type']);
+    $name            = sanitize_text_field($_POST['name']);
+    $phone           = sanitize_text_field($_POST['phone']);
+    $email           = sanitize_email($_POST['email']);
+    $city            = sanitize_text_field($_POST['city']);
+    $service_id      = intval($_POST['service']); // This may be AR or EN
+    $service_slug    = isset($_POST['service_slug']) ? sanitize_text_field($_POST['service_slug']) : '';
+    $case_brief      = sanitize_textarea_field($_POST['case_brief']);
+    $has_documents   = sanitize_text_field($_POST['has_documents']);
     $previous_lawyer = sanitize_text_field($_POST['previous_lawyer']);
-    $meeting_type = sanitize_text_field($_POST['meeting_type']);
+    $meeting_type    = sanitize_text_field($_POST['meeting_type']);
 
     // Validate required fields
     if (empty($name) || empty($phone) || empty($email) || empty($service_id) || empty($case_brief) || 
@@ -1624,14 +1726,35 @@ function handle_booking_form_submission() {
         $service_slug = get_post_field('post_name', $service_id);
     }
     
-    // Remove -ar suffix from slug if present for consistent naming
-    $base_slug = str_replace('-ar', '', $service_slug);
+    /**
+     * Resolve English equivalent service for consistent storage / admin view
+     * - If the submitted service is Arabic, use its EN translation for:
+     *   - booking post title
+     *   - stored service id/slug/title meta
+     */
+    $booking_service_id = $service_id;
+
+    if (function_exists('pll_get_post_language') && function_exists('pll_get_post')) {
+        $service_lang = pll_get_post_language($service_id);
+        if ($service_lang === 'ar') {
+            $en_service_id = pll_get_post($service_id, 'en');
+            if ($en_service_id) {
+                $booking_service_id = $en_service_id;
+            }
+        }
+    }
+
+    // Use the resolved booking service for naming/meta
+    $booking_service_slug = get_post_field('post_name', $booking_service_id);
+    if (empty($booking_service_slug)) {
+        $booking_service_slug = $service_slug;
+    }
+
+    // Create readable service name from slug (capitalize and replace hyphens with spaces)
+    $service_name = ucwords(str_replace('-', ' ', $booking_service_slug));
     
-    // Create service name from slug (capitalize and replace hyphens with spaces)
-    $service_name = ucwords(str_replace('-', ' ', $base_slug));
-    
-    // Get actual service title for email
-    $service_display_title = get_the_title($service_id);
+    // Get actual service title (prefer EN equivalent)
+    $service_display_title = get_the_title($booking_service_id);
     if (empty($service_display_title)) {
         $service_display_title = $service_name;
     }
@@ -1646,9 +1769,13 @@ function handle_booking_form_submission() {
     if (!is_wp_error($booking_post_id) && $booking_post_id) {
         // Save all booking data as post meta
         update_post_meta($booking_post_id, '_service_type', $service_type);
-        update_post_meta($booking_post_id, '_service_id', $service_id);
-        update_post_meta($booking_post_id, '_service_slug', $base_slug);
-        update_post_meta($booking_post_id, '_service_title', $service_name);
+
+        // Store both original submitted service and normalized EN service
+        update_post_meta($booking_post_id, '_service_id_original', $service_id);
+        update_post_meta($booking_post_id, '_service_id', $booking_service_id);
+
+        update_post_meta($booking_post_id, '_service_slug', $booking_service_slug);
+        update_post_meta($booking_post_id, '_service_title', $service_display_title);
         update_post_meta($booking_post_id, '_name', $name);
         update_post_meta($booking_post_id, '_phone', $phone);
         update_post_meta($booking_post_id, '_email', $email);
@@ -1679,7 +1806,7 @@ function handle_booking_form_submission() {
         <p><strong>City:</strong> $city</p>
         
         <h3>Consultation Information</h3>
-        <p><strong>Service:</strong> $service_title</p>
+        <p><strong>Service:</strong> $service_display_title</p>
         <p><strong>Case Brief:</strong><br>" . nl2br($case_brief) . "</p>
         <p><strong>Has Documents:</strong> " . ucfirst($has_documents) . "</p>
         <p><strong>Previous Lawyer:</strong> " . ucfirst($previous_lawyer) . "</p>
@@ -1714,8 +1841,27 @@ function load_archive_posts_ajax() {
     $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
     $parent_category_id = isset($_POST['parent_category_id']) ? intval($_POST['parent_category_id']) : 0;
     $paged = isset($_POST['paged']) ? max(1, intval($_POST['paged'])) : 1;
+    $is_general_archive = isset($_POST['is_general_archive']) ? (bool) intval($_POST['is_general_archive']) : false;
     $posts_per_page = DLC_POSTS_PER_PAGE;
-    $is_services_page = $parent_category_id > 0;
+    
+    // Check if this is actually a services page by verifying the category type
+    // Just having a parent_category_id > 0 doesn't mean it's a services page
+    $is_services_page = false;
+    if ($parent_category_id > 0) {
+        // Check if the parent category is actually a services category type
+        $parent_category_type = dlc_get_category_type_slug($parent_category_id);
+        if ($parent_category_type && in_array($parent_category_type, ['companies-services', 'individual-services', 'home-international'])) {
+            $is_services_page = true;
+        }
+    }
+    
+    // Also check the current category itself
+    if (!$is_services_page && $category_id > 0) {
+        $category_type = dlc_get_category_type_slug($category_id);
+        if ($category_type && in_array($category_type, ['companies-services', 'individual-services', 'home-international'])) {
+            $is_services_page = true;
+        }
+    }
 
     // Setup query arguments
     $query_args = array(
@@ -1729,24 +1875,30 @@ function load_archive_posts_ajax() {
 
     if ($is_services_page) {
         // Services page logic
-        $parent_category = get_category($parent_category_id);
+        // Get the actual parent category (might be from parent_category_id or category_id)
+        $actual_parent_id = $parent_category_id > 0 ? $parent_category_id : $category_id;
+        $parent_category = get_category($actual_parent_id);
+        
+        // If we don't have a parent category, try to get it from the category itself
+        if (!$parent_category && $category_id > 0) {
+            $cat = get_category($category_id);
+            if ($cat && $cat->parent > 0) {
+                $parent_category = get_category($cat->parent);
+                $actual_parent_id = $cat->parent;
+            } else {
+                $parent_category = $cat;
+                $actual_parent_id = $category_id;
+            }
+        }
+        
         if (!$parent_category) {
             wp_send_json_error('Parent category not found.');
             return;
         }
 
-        // Check if this is an Arabic category (slug ends with '-ar')
-        $is_arabic_category = (strpos($parent_category->slug, '-ar') !== false);
-        
-        // Add language filter for Arabic categories
-        if ($is_arabic_category) {
-            $query_args['meta_query'] = array(
-                array(
-                    'key' => '_post_language',
-                    'value' => 'ar',
-                    'compare' => '='
-                )
-            );
+        // Use Polylang language filter instead of meta_query
+        if (function_exists('pll_current_language')) {
+            $query_args['lang'] = pll_current_language();
         }
 
         // Get all category IDs (parent + children)
@@ -1777,25 +1929,30 @@ function load_archive_posts_ajax() {
             $category_title = $is_arabic_category ? 'جميع الخدمات' : 'All Services';
         }
     } else {
-        // Blog archive page logic
-        // Get the Blog parent category
-        $blog_category = get_category_by_slug('blog');
-        if (!$blog_category) {
-            $blog_category = get_term_by('name', 'Blog', 'category');
-        }
-
+        // Blog archive page or general archive logic
         if ($category_id > 0) {
             // Get specific category
             $category = get_category($category_id);
             if ($category) {
-                $query_args['cat'] = $category_id;
+                // Get category and its children
+                $category_ids = array($category_id);
+                $children = get_term_children($category_id, 'category');
+                if (!is_wp_error($children)) {
+                    $category_ids = array_merge($category_ids, $children);
+                }
+                $query_args['category__in'] = $category_ids;
                 $category_title = $category->name;
             } else {
                 wp_send_json_error('Category not found.');
                 return;
             }
         } else {
-            // All posts - get all posts from blog category and children
+            // All posts - try to get blog category first
+            $blog_category = get_category_by_slug('blog');
+            if (!$blog_category) {
+                $blog_category = get_term_by('name', 'Blog', 'category');
+            }
+            
             if ($blog_category) {
                 $category_ids = array($blog_category->term_id);
                 $children = get_term_children($blog_category->term_id, 'category');
@@ -1806,63 +1963,73 @@ function load_archive_posts_ajax() {
             }
             $category_title = 'All Posts';
         }
+        
+        // Add Polylang language filter
+        if (function_exists('pll_current_language')) {
+            $query_args['lang'] = pll_current_language();
+        }
     }
 
     // Create custom query
     $archive_query = new WP_Query($query_args);
 
+    // Get current language for button text and pagination
+    $current_lang = 'en';
+    if (function_exists('pll_current_language')) {
+        $current_lang = pll_current_language();
+    }
+    $read_more_text = ($current_lang === 'ar') ? 'اقرأ المزيد' : 'Read More';
+    $page_text = ($current_lang === 'ar') ? 'صفحة %s من %s' : 'Page %s of %s';
+
     // Buffer output for posts/services HTML
     ob_start();
     
     if ($archive_query->have_posts()) :
-        // Determine if this is a services page or blog page
+        // Determine if this is a services page, blog page, or general archive
+        // Use the flag from JavaScript if provided, otherwise detect from context
+        if (!isset($is_general_archive)) {
+            $is_general_archive = (!$is_services_page && $category_id > 0);
+        }
+        
         if ($is_services_page) :
             ?>
             <div class="services-grid">
             <?php
             while ($archive_query->have_posts()) : $archive_query->the_post();
-                ?>
-                <article class="service-card">
-                    <?php if (has_post_thumbnail()) : ?>
-                        <div class="service-thumbnail">
-                            <a href="<?php the_permalink(); ?>">
-                                <?php the_post_thumbnail(
-                                    'large',
-                                    array(
-                                        'class' => 'service-image',
-                                        'sizes' => '(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px'
-                                    )
-                                ); ?>
-                            </a>
-                            <div class="service-category-badge">
+                get_template_part('includes/service-card', null, array('button_text' => $read_more_text));
+            endwhile;
+            ?>
+        </div>
+        
                                 <?php
-                                $categories = get_the_category();
-                                if (!empty($categories)) {
-                                    echo esc_html($categories[0]->name);
+        // Pagination
+        $total_pages = $archive_query->max_num_pages;
+        if ($total_pages > 1) :
+            // Build base URL for pagination
+            $base_url = '';
+            if ($category_id > 0) {
+                $base_url = get_category_link($category_id);
+            } else {
+                $base_url = get_category_link($parent_category->term_id);
                                 }
-                                ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <div class="service-content">
-                        <h3 class="service-title">
-                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                        </h3>
-                        
-                        <div class="service-excerpt">
-                            <?php echo esc_html(dlc_truncate_excerpt(get_the_excerpt(), DLC_EXCERPT_LENGTH_SERVICE)); ?>
-                        </div>
-                        
-                        <div class="service-footer">
-                            <a href="<?php the_permalink(); ?>" class="get-started-service-btn">
-                                Get Started
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
+            
+                    get_template_part('includes/pagination', null, array(
+                        'paged' => $paged,
+                        'total_pages' => $total_pages,
+                        'base_url' => trailingslashit($base_url),
+                        'anchor_id' => '#services-title',
+                        'page_text' => $page_text
+                    ));
+        endif;
+        
+        wp_reset_postdata();
+        elseif ($is_general_archive) :
+            // General archive posts structure - use same pattern as blog
+            ?>
+            <div class="posts-grid">
                 <?php
+                while ($archive_query->have_posts()) : $archive_query->the_post();
+                    get_template_part('includes/post-card', null, array('read_more_text' => $read_more_text));
             endwhile;
             ?>
         </div>
@@ -1874,34 +2041,31 @@ function load_archive_posts_ajax() {
             ?>
             <div class="pagination-wrapper">
                 <?php
-                $prev_link = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>', $archive_query->max_num_pages);
-                $next_link = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>', $archive_query->max_num_pages);
-                
-                if ($prev_link || $next_link) :
-                    ?>
-                    <div class="pagination-simple">
-                        <?php if ($prev_link) : ?>
-                            <div class="pagination-arrow pagination-prev">
-                                <?php echo $prev_link; ?>
-                            </div>
-                        <?php else : ?>
-                            <div class="pagination-arrow pagination-prev disabled">
-                                <span><i class="fa-solid fa-chevron-left"></i></span>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <?php if ($next_link) : ?>
-                            <div class="pagination-arrow pagination-next">
-                                <?php echo $next_link; ?>
-                            </div>
-                        <?php else : ?>
-                            <div class="pagination-arrow pagination-next disabled">
-                                <span><i class="fa-solid fa-chevron-right"></i></span>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                    <?php
-                endif;
+                    // Build base URL based on archive type
+                    $base_url = '';
+                    if ($category_id > 0) {
+                        $base_url = get_category_link($category_id);
+                    } else {
+                        // For non-category archives, try to get from current query
+                        if (is_tag()) {
+                            $base_url = get_tag_link(get_queried_object_id());
+                        } elseif (is_date()) {
+                            $base_url = get_pagenum_link(1);
+                            $base_url = preg_replace('/page\/\d+\//', '', $base_url);
+                        } elseif (is_author()) {
+                            $base_url = get_author_posts_url(get_the_author_meta('ID'));
+                        } else {
+                            $base_url = home_url();
+                        }
+                    }
+                    
+                    get_template_part('includes/pagination', null, array(
+                        'paged' => $paged,
+                        'total_pages' => $total_pages,
+                        'base_url' => trailingslashit($base_url),
+                        'anchor_id' => '#category-title',
+                        'page_text' => $page_text
+                    ));
                 ?>
             </div>
             <?php
@@ -1960,7 +2124,7 @@ function load_archive_posts_ajax() {
                             
                             <div class="post-footer">
                                 <a href="<?php the_permalink(); ?>" class="read-more-btn">
-                                    Read More
+                                    <?php echo esc_html($read_more_text); ?>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                                 <div class="post-meta-footer">
@@ -1994,40 +2158,26 @@ function load_archive_posts_ajax() {
             // Pagination
             $total_pages = $archive_query->max_num_pages;
             if ($total_pages > 1) :
-                ?>
-                <div class="pagination-wrapper">
-                    <?php
-                    $prev_link = get_previous_posts_link('<i class="fa-solid fa-chevron-left"></i>', $archive_query->max_num_pages);
-                    $next_link = get_next_posts_link('<i class="fa-solid fa-chevron-right"></i>', $archive_query->max_num_pages);
-                    
-                    if ($prev_link || $next_link) :
-                        ?>
-                        <div class="pagination-simple">
-                            <?php if ($prev_link) : ?>
-                                <div class="pagination-arrow pagination-prev">
-                                    <?php echo $prev_link; ?>
-                                </div>
-                            <?php else : ?>
-                                <div class="pagination-arrow pagination-prev disabled">
-                                    <span><i class="fa-solid fa-chevron-left"></i></span>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <?php if ($next_link) : ?>
-                                <div class="pagination-arrow pagination-next">
-                                    <?php echo $next_link; ?>
-                                </div>
-                            <?php else : ?>
-                                <div class="pagination-arrow pagination-next disabled">
-                                    <span><i class="fa-solid fa-chevron-right"></i></span>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        <?php
-                    endif;
-                    ?>
-                </div>
-                <?php
+                // Build base URL for pagination
+                $base_url = '';
+                if ($category_id > 0) {
+                    $base_url = get_category_link($category_id);
+                } else {
+                    // Try to get blog category
+                    $blog_category = get_category_by_slug('blog');
+                    if (!$blog_category) {
+                        $blog_category = get_term_by('name', 'Blog', 'category');
+                    }
+                    $base_url = $blog_category ? get_category_link($blog_category->term_id) : home_url();
+                }
+                
+                get_template_part('includes/pagination', null, array(
+                    'paged' => $paged,
+                    'total_pages' => $total_pages,
+                    'base_url' => trailingslashit($base_url),
+                    'anchor_id' => '#category-title',
+                    'page_text' => $page_text
+                ));
             endif;
             
             wp_reset_postdata();

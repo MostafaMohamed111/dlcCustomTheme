@@ -58,8 +58,17 @@
                 'order' => 'ASC'
             ));
             
-            // Get current category filter from URL
+            // Get current category filter from URL or queried object
+            $current_category = 0;
+            if (is_category()) {
+                $queried_category = get_queried_object();
+                // Check if this is a child of the parent category
+                if ($queried_category->parent == $parent_category->term_id || $queried_category->term_id == $parent_category->term_id) {
+                    $current_category = $queried_category->term_id;
+                }
+            } else {
             $current_category = isset($_GET['cat']) ? intval($_GET['cat']) : 0;
+            }
             
             // Get all category IDs for home-international and its children (for "All Services" count)
             $all_category_ids = array($parent_category->term_id);
@@ -147,7 +156,7 @@
                                 $is_active = ($current_category == $child_cat->term_id);
                                 ?>
                                 <li>
-                                    <a href="<?php echo add_query_arg('cat', $child_cat->term_id, get_category_link($parent_category->term_id)); ?>" 
+                                    <a href="<?php echo esc_url(get_category_link($child_cat->term_id) . '#services-title'); ?>" 
                                        class="category-link <?php echo $is_active ? 'active' : ''; ?>"
                                        data-category-id="<?php echo $child_cat->term_id; ?>"
                                        data-parent-category-id="<?php echo $parent_category->term_id; ?>">
@@ -178,7 +187,7 @@
                         <?php
                         // Pagination
                         $base_url = $current_category > 0 
-                            ? add_query_arg('cat', $current_category, get_category_link($parent_category->term_id))
+                            ? get_category_link($current_category)
                             : get_category_link($parent_category->term_id);
                         
                         get_template_part('includes/pagination', null, array(

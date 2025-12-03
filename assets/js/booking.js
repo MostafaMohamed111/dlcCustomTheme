@@ -16,10 +16,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         preselectedServiceId = urlParams.get('service');
         
-        // If service is preselected, auto-load
+        // If service is preselected, auto-load and bypass service type selection
         if (preselectedServiceId) {
-            // Hide service selection
-            $('#service-type-selection').removeClass('active');
+            // Hide service selection immediately and keep it hidden
+            $('#service-type-selection').removeClass('active').hide();
             $('#booking-form-container').addClass('active');
             detectAndLoadServiceType(preselectedServiceId);
         }
@@ -80,15 +80,32 @@
                     // Load services for the detected type
                     loadServices(serviceType);
                 } else {
-                    // If detection fails, show service selection
+                    // If detection fails, keep form visible but show error in service dropdown
+                    // Don't show service selection if we came from a service link
+                    if (preselectedServiceId) {
+                        const serviceSelect = $('#service');
+                        const language = typeof bookingLanguage !== 'undefined' ? bookingLanguage : 'en';
+                        const errorText = language === 'ar' ? 'خطأ في تحميل الخدمة' : 'Error loading service';
+                        serviceSelect.html(`<option value="">${errorText}</option>`);
+                    } else {
+                        // Only show service selection if we didn't come from a service link
                     $('#booking-form-container').removeClass('active');
-                    $('#service-type-selection').addClass('active');
+                        $('#service-type-selection').addClass('active').show();
+                    }
                 }
             },
             error: function() {
-                // On error, show service selection
+                // On error, keep form visible but show error if we came from service link
+                if (preselectedServiceId) {
+                    const serviceSelect = $('#service');
+                    const language = typeof bookingLanguage !== 'undefined' ? bookingLanguage : 'en';
+                    const errorText = language === 'ar' ? 'خطأ في تحميل الخدمة' : 'Error loading service';
+                    serviceSelect.html(`<option value="">${errorText}</option>`);
+                } else {
+                    // Only show service selection if we didn't come from a service link
                 $('#booking-form-container').removeClass('active');
-                $('#service-type-selection').addClass('active');
+                    $('#service-type-selection').addClass('active').show();
+                }
             }
         });
     }

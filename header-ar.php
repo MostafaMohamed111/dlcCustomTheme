@@ -189,11 +189,11 @@
                 
                 // Fallback: try to get by slug/name if Polylang not available
                 if ($international_url === '#') {
-                    $home_international_category = get_category_by_slug('home-international-ar');
+                $home_international_category = get_category_by_slug('home-international-ar');
                     if (!$home_international_category) {
                         $home_international_category = get_term_by('name', 'الخدمات الدولية', 'category');
                     }
-                    $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
+                $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
                 }
                 
                 // Get Arabic home page URL using Polylang
@@ -213,7 +213,7 @@
                 
                 // Fallback: try to get by slug if Polylang not available
                 if ($local_url === home_url()) {
-                    $arabic_front_page = get_page_by_path('front-page-ar');
+                $arabic_front_page = get_page_by_path('front-page-ar');
                     if ($arabic_front_page) {
                         $local_url = get_permalink($arabic_front_page);
                     } else {

@@ -14,11 +14,64 @@
     padding-top: 40px;
 }
 
+.archive-header-section {
+    position: relative;
+}
+
 .archive-hero {
     text-align: center;
     margin-bottom: 60px;
     padding: 60px 20px;
     background-color: var(--primary-blue);
+}
+
+/* Language Switcher */
+.archive-language-switcher {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.archive-language-switch-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.archive-language-switch-btn:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.archive-language-switch-btn i {
+    font-size: 16px;
+}
+
+.archive-language-switch-btn span {
+    letter-spacing: 0.5px;
+}
+
+/* RTL Support for Arabic */
+[dir="rtl"] .archive-language-switcher {
+    right: auto;
+    left: 20px;
+}
+
+[dir="rtl"] .archive-language-switch-btn:hover i {
+    transform: translateX(-2px);
 }
 
 
@@ -379,6 +432,25 @@
         margin-bottom: 40px;
     }
     
+    .archive-language-switcher {
+        top: 15px;
+        right: 15px;
+    }
+    
+    [dir="rtl"] .archive-language-switcher {
+        right: auto;
+        left: 15px;
+    }
+    
+    .archive-language-switch-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    
+    .archive-language-switch-btn i {
+        font-size: 14px;
+    }
+    
     .archive-main-title {
         font-size: 36px;
     }
@@ -402,6 +474,25 @@
 }
 
 @media (max-width: 600px) {
+    .archive-language-switcher {
+        top: 10px;
+        right: 10px;
+    }
+    
+    [dir="rtl"] .archive-language-switcher {
+        right: auto;
+        left: 10px;
+    }
+    
+    .archive-language-switch-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .archive-language-switch-btn span {
+        display: none;
+    }
+    
     .archive-main-title {
         font-size: 28px;
     }

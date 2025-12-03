@@ -52,9 +52,9 @@
                                             التصنيفات:
                                         </span>
                                         <?php foreach($categories as $category) : ?>
-                                            <span class="category-badge-single">
+                                            <a href="<?php echo esc_url(get_category_link($category->term_id)); ?>" class="category-badge-single">
                                                 <?php echo esc_html( $category->name ); ?>
-                                            </span>
+                                            </a>
                                         <?php endforeach; ?>
                                     </div>
                             <?php endif; ?>
@@ -199,14 +199,25 @@
         endif;
         ?>
         
-        <div class="back-to-posts">
+         <div class="back-to-posts">
             <?php 
-            // Get the correct archive URL based on post type (news/blog) and language
-            $back_url = dlc_get_post_archive_url(get_the_ID(), 'ar');
+            // Get the first category of the post for the back link
+            $categories = get_the_category();
+            $back_url = home_url();
+            $back_text = 'العودة إلى المنشورات';
+            
+            if (!empty($categories)) {
+                $first_category = $categories[0];
+                $back_url = get_category_link($first_category->term_id);
+                $back_text = 'العودة إلى ' . esc_html($first_category->name);
+            } elseif (function_exists('pll_home_url')) {
+                $back_url = pll_home_url('ar');
+                $back_text = 'العودة إلى الرئيسية';
+            }
             ?>
             <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
                 <i class="fa-solid fa-arrow-left"></i>
-                العودة إلى جميع الاخبار
+                <?php echo $back_text; ?>
             </a>
         </div>
     </div>

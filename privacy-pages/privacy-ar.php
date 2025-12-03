@@ -1,6 +1,11 @@
 <?php
+get_header('ar');
 
-get_header('ar'); ?>
+$page_id = get_queried_object_id();
+$contact_email = function_exists('get_field') ? get_field('email', $page_id) : '';
+$contact_phone = function_exists('get_field') ? get_field('phone', $page_id) : '';
+$contact_phone_clean = $contact_phone ? preg_replace('/[^0-9+]/', '', $contact_phone) : '';
+?>
 
 <main class="privacy-policy-page">
     <div class="privacy-policy-hero">
@@ -40,8 +45,23 @@ get_header('ar'); ?>
                                 <h3>أسئلة حول سياسة الخصوصية لدينا؟</h3>
                                 <p>إذا كان لديك أي أسئلة حول سياسة الخصوصية هذه، يرجى الاتصال بنا:</p>
                                 <div class="contact-info">
-                                    <p><i class="fa-solid fa-envelope"></i> <a href="mailto:info@daglaw.com">info@daglaw.com</a></p>
-                                    <p><i class="fa-solid fa-phone"></i> <a href="tel:+966XXXXXXXXX">+966 XXXXXXXXX</a></p>
+                                    <?php if (!empty($contact_email)) : ?>
+                                        <p>
+                                            <i class="fa-solid fa-envelope"></i>
+                                            <a href="mailto:<?php echo esc_attr($contact_email); ?>">
+                                                <?php echo esc_html($contact_email); ?>
+                                            </a>
+                                        </p>
+                                    <?php endif; ?>
+
+                                    <?php if (!empty($contact_phone)) : ?>
+                                        <p>
+                                            <i class="fa-solid fa-phone"></i>
+                                            <a href="tel:<?php echo esc_attr($contact_phone_clean); ?>">
+                                                <?php echo esc_html($contact_phone); ?>
+                                            </a>
+                                        </p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </footer>

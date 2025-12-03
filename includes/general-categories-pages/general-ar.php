@@ -19,6 +19,31 @@
 <main class="main">
     <!-- Archive Header Section -->
     <div class="archive-header-section">
+        <!-- Header Actions -->
+        <div class="archive-header-actions">
+            <!-- Home Button -->
+            <a href="<?php echo esc_url(home_url()); ?>" class="archive-home-btn" title="الذهاب إلى الصفحة الرئيسية">
+                <i class="fa-solid fa-house"></i>
+                <span>الرئيسية</span>
+            </a>
+            <!-- Language Switcher -->
+            <div class="archive-language-switcher">
+                <?php
+                $switcher = dlc_get_polylang_switcher();
+                if ($switcher) :
+                    // Determine target language and labels
+                    $current_lang = function_exists('pll_current_language') ? pll_current_language() : 'ar';
+                    $target_lang = ($current_lang === 'ar') ? 'en' : 'ar';
+                    $label = ($target_lang === 'ar') ? 'العربية' : 'English';
+                    $title = ($target_lang === 'ar') ? 'التبديل إلى العربية' : 'التبديل إلى الإنجليزية';
+                ?>
+                <a href="<?php echo esc_url($switcher['url']); ?>" class="archive-language-switch-btn" title="<?php echo esc_attr($title); ?>">
+                    <i class="fa-solid fa-globe"></i>
+                    <span><?php echo esc_html($label); ?></span>
+                </a>
+                <?php endif; ?>
+            </div>
+        </div>
         <?php
         // Get current language using Polylang
         $current_lang = 'ar';
@@ -88,7 +113,7 @@
                     <span><?php echo esc_html($badge_text); ?></span>
                 </div>
                 
-                <h1 class="archive-main-title"><?php echo esc_html($archive_title); ?></h1>
+                <h1 id="category-title" class="archive-main-title"><?php echo esc_html($archive_title); ?></h1>
                 
                 <p class="archive-subtitle"><?php echo esc_html($archive_subtitle); ?></p>
                 
@@ -150,113 +175,144 @@
         </div>
     </div>
 
+    <!-- Category Navigation Bar -->
+    <?php
+    // Only show navigation for category archives with subcategories
+    if (is_category()) :
+        // Get current language
+        $current_lang = 'ar';
+        if (function_exists('pll_current_language')) {
+            $current_lang = pll_current_language();
+        }
+        
+        // Get categories for navigation
+        $nav_categories = array();
+        $current_category_id = 0;
+        $parent_category_id = 0;
+        
+        $current_category = get_queried_object();
+        $current_category_id = $current_category->term_id;
+        
+        // Get parent category
+        if ($current_category->parent > 0) {
+            $parent_category = get_category($current_category->parent);
+            $parent_category_id = $parent_category->term_id;
+            
+            // Get all siblings (children of parent)
+            $nav_categories = get_categories(array(
+                'parent' => $parent_category_id,
+                'hide_empty' => true,
+                'orderby' => 'name',
+                'order' => 'ASC'
+            ));
+        } else {
+            // This is a parent category, get its children
+            $parent_category_id = $current_category_id;
+            $nav_categories = get_categories(array(
+                'parent' => $current_category_id,
+                'hide_empty' => true,
+                'orderby' => 'name',
+                'order' => 'ASC'
+            ));
+        }
+        
+        // Filter by language
+        if (function_exists('pll_get_term_language')) {
+            $filtered_cats = array();
+            foreach ($nav_categories as $cat) {
+                $cat_lang = pll_get_term_language($cat->term_id);
+                if ($cat_lang === $current_lang) {
+                    $filtered_cats[] = $cat;
+                }
+            }
+            $nav_categories = $filtered_cats;
+        }
+        
+        // Show navigation only if we have subcategories or if we're showing parent category link
+        $show_parent_link = ($parent_category_id > 0 && $parent_category_id != $current_category_id);
+        $has_categories = !empty($nav_categories);
+        
+        // Only show navigation if we have at least one subcategory to navigate between
+        if ($has_categories || $show_parent_link) :
+    ?>
+    <div class="archive-category-nav">
+        <div class="archive-category-nav-container">
+            <nav class="archive-category-nav-list" id="archive-category-nav">
+                <?php if (is_category() && $parent_category_id > 0) : 
+                    $parent_category = get_category($parent_category_id);
+                    $is_parent_active = ($current_category_id == $parent_category_id);
+                ?>
+                    <a href="<?php echo esc_url(get_category_link($parent_category_id)); ?>" 
+                       class="archive-category-nav-item <?php echo $is_parent_active ? 'active' : ''; ?>"
+                       data-category-id="<?php echo $parent_category_id; ?>"
+                       data-parent-category-id="0">
+                        <span><?php echo esc_html($parent_category->name); ?></span>
+                    </a>
+                <?php endif; ?>
+                
+                <?php foreach ($nav_categories as $nav_cat) : 
+                    $is_active = ($current_category_id == $nav_cat->term_id);
+                ?>
+                    <a href="<?php echo esc_url(get_category_link($nav_cat->term_id)); ?>" 
+                       class="archive-category-nav-item <?php echo $is_active ? 'active' : ''; ?>"
+                       data-category-id="<?php echo $nav_cat->term_id; ?>"
+                       data-parent-category-id="<?php echo $parent_category_id; ?>">
+                        <span><?php echo esc_html($nav_cat->name); ?></span>
+                        <span class="archive-category-count"><?php echo $nav_cat->count; ?></span>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
+        </div>
+    </div>
+    <?php endif; ?>
+    <?php endif; ?>
+
     <?php if ($filtered_query->have_posts()) : ?>
         <div class="archive-posts-container">
-            <div class="archive-posts-grid">
-                <?php
-                while ($filtered_query->have_posts()) : $filtered_query->the_post();
-                    // Determine post type badge using generic function
-                    $post_categories = wp_get_post_categories(get_the_ID());
-                    $post_type_badge = 'المدونة';
-                    
-                    foreach ($post_categories as $cat_id) {
-                        $category_type = dlc_get_category_type_slug($cat_id);
-                        if ($category_type) {
-                            switch ($category_type) {
-                                case 'news':
-                                    $post_type_badge = 'الأخبار';
-                                    break 2;
-                                case 'companies-services':
-                                case 'individual-services':
-                                case 'home-international':
-                                    $post_type_badge = 'الخدمات';
-                                    break 2;
-                                case 'blog':
-                                    $post_type_badge = 'المدونة';
-                                    break 2;
-                            }
-                        }
-                    }
+            <div class="posts-container" id="posts-container">
+                <div class="posts-grid" id="posts-grid">
+                    <?php
+                    while ($filtered_query->have_posts()) : $filtered_query->the_post();
+                        get_template_part('includes/post-card', null, array('read_more_text' => 'اقرأ المزيد'));
+                    endwhile;
                     ?>
+                </div>
+                
+                    <?php
+                    // Build base URL based on archive type
+                    if (is_category()) {
+                        $base_url = get_category_link(get_queried_object_id());
+                    } elseif (is_tag()) {
+                        $base_url = get_tag_link(get_queried_object_id());
+                    } elseif (is_date()) {
+                        $base_url = get_pagenum_link(1);
+                        $base_url = preg_replace('/page\/\d+\//', '', $base_url);
+                    } elseif (is_author()) {
+                        $base_url = get_author_posts_url(get_the_author_meta('ID'));
+                    } else {
+                        $base_url = get_pagenum_link(1);
+                    }
                     
-                    <article class="archive-post-card">
-                        <div class="archive-post-thumbnail">
-                            <?php if (has_post_thumbnail()) : ?>
-                                <a href="<?php the_permalink(); ?>">
-                                    <?php the_post_thumbnail('large', array('class' => 'archive-post-image', 'alt' => get_the_title())); ?>
-                                </a>
-                            <?php endif; ?>
-                            
-                            <span class="archive-post-type-badge">
-                                <?php echo esc_html($post_type_badge); ?>
-                            </span>
-                        </div>
-                        
-                        <div class="archive-post-content">
-                            <div class="archive-post-meta">
-                                <span>
-                                    <i class="fa-regular fa-calendar"></i>
-                                    <?php echo get_the_date('j M Y'); ?>
-                                </span>
-                                <span>
-                                    <i class="fa-regular fa-user"></i>
-                                    <?php the_author(); ?>
-                                </span>
-                            </div>
-                            
-                            <h2 class="archive-post-title">
-                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h2>
-                            
-                            <div class="archive-post-excerpt">
-                                <?php echo wp_trim_words(get_the_excerpt(), 20, '...'); ?>
-                            </div>
-                            
-                            <div class="archive-post-footer">
-                                <a href="<?php the_permalink(); ?>" class="archive-read-more">
-                                    اقرأ المزيد
-                                    <i class="fa-solid fa-arrow-left"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </article>
+                    get_template_part('includes/pagination', null, array(
+                        'paged' => $paged,
+                        'total_pages' => $filtered_query->max_num_pages,
+                        'base_url' => trailingslashit($base_url),
+                        'anchor_id' => '#category-title',
+                        'page_text' => 'صفحة %s من %s'
+                    ));
                     
-                <?php endwhile; ?>
+                    wp_reset_postdata();
+                    ?>
+                </div>
             </div>
         </div>
-        
-        <div class="archive-pagination">
-            <?php
-            // Build base URL based on archive type
-            if (is_category()) {
-                $base_url = get_category_link(get_queried_object_id());
-            } elseif (is_tag()) {
-                $base_url = get_tag_link(get_queried_object_id());
-            } elseif (is_date()) {
-                $base_url = get_pagenum_link(1);
-                $base_url = preg_replace('/page\/\d+\//', '', $base_url);
-            } elseif (is_author()) {
-                $base_url = get_author_posts_url(get_the_author_meta('ID'));
-            } else {
-                $base_url = get_pagenum_link(1);
-            }
-            
-            get_template_part('includes/pagination', null, array(
-                'paged' => $paged,
-                'total_pages' => $filtered_query->max_num_pages,
-                'base_url' => trailingslashit($base_url),
-                'anchor_id' => '',
-                'page_text' => 'صفحة %s من %s'
-            ));
-            
-            wp_reset_postdata();
-            ?>
-        </div>
     <?php else : ?>
-        <div class="archive-no-posts">
-            <i class="fa-solid fa-inbox"></i>
-            <h3>لا توجد منشورات</h3>
-            <p>لم يتم العثور على منشورات في هذا الأرشيف.</p>
+        <div class="archive-posts-container">
+            <div class="no-posts">
+                <i class="fa-solid fa-file-circle-question"></i>
+                <h3>لا توجد منشورات</h3>
+                <p>لا توجد منشورات في هذه الفئة حتى الآن.</p>
+            </div>
         </div>
     <?php 
     endif;
@@ -264,7 +320,6 @@
     ?>
 </main>
 
-<?php wp_footer(); ?>
-</body>
+<?php get_footer('ar'); ?>
 </html>
 

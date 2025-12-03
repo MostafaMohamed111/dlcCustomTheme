@@ -303,21 +303,26 @@
         ?>
         
         <div class="back-to-posts">
-            <?php 
-            // Get current language using Polylang
-            $current_lang = 'ar';
-            if (function_exists('pll_get_post_language')) {
-                $current_lang = pll_get_post_language(get_the_ID()) ?: 'ar';
-            }
-            
-            // Get the blog archive URL for current language
-            $back_url = dlc_get_post_archive_url(get_the_ID(), $current_lang);
-            ?>
-            <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
-                <i class="fa-solid fa-arrow-left"></i>
-                العودة إلى جميع المنشورات
-            </a>
+                    <?php 
+                    // Get the first category of the post for the back link
+                    $categories = get_the_category();
+                    $back_url = home_url();
+                    $back_text = 'العودة إلى المنشورات';
+                    
+                    if (!empty($categories)) {
+                        $first_category = $categories[0];
+                        $back_url = get_category_link($first_category->term_id);
+                        $back_text = 'العودة إلى ' . esc_html($first_category->name);
+                    } elseif (function_exists('pll_home_url')) {
+                        $back_url = pll_home_url('ar');
+                        $back_text = 'العودة إلى الرئيسية';
+                    }
+                    ?>
+                    <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <?php echo $back_text; ?>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 <?php get_footer('ar'); ?>

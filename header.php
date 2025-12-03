@@ -192,7 +192,7 @@
                 
                 // Fallback: try to get by slug if Polylang not available
                 if ($local_url === home_url()) {
-                    $arabic_front_page = get_page_by_path('front-page-ar');
+                $arabic_front_page = get_page_by_path('front-page-ar');
                     if ($arabic_front_page) {
                         $local_url = get_permalink($arabic_front_page);
                     } else {
