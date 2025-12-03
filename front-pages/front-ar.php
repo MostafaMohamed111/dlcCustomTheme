@@ -16,8 +16,8 @@ $clients_count = (int) get_field('clients');
             <h2 class="hero-title">للمحاماة و الاستشارات القانونية</h2>
             <p class="hero-subtitle">منصة قانونية رقمية للحلول الدقيقة</p>
             <div class="hero-buttons">
-                <a href="<?php echo esc_url(home_url('/booking')); ?>" class="btn-primary">احجز الآن</a>
-                <a href="<?php echo home_url('/about-us-ar'); ?>" class="btn-secondary">تعرف أكثر</a>
+                <a href="<?php echo esc_url(dlc_get_booking_page_url('ar')); ?>" class="btn-primary">احجز الآن</a>
+                <a href="<?php echo esc_url(dlc_get_about_us_page_url('ar')); ?>" class="btn-secondary">تعرف أكثر</a>
             </div>
         </div>
     </section>
@@ -89,7 +89,7 @@ $clients_count = (int) get_field('clients');
                         </div>
                         <h3>طلب استشارة</h3>
                         <p>احصل على نصائح قانونية من فريقنا المتمرس من المحامين. حدد موعدًا للاستشارة لمناقشة مسائل قانونية.</p>
-                        <a href="<?php echo home_url('/services-ar'); ?>" class="service-btn">اعرف أكثر</a>
+                        <a href="<?php echo esc_url(dlc_get_services_page_url('ar')); ?>" class="service-btn">اعرف أكثر</a>
            
                     </div>
                          </div>
@@ -101,7 +101,7 @@ $clients_count = (int) get_field('clients');
                     </div>
                     <h3>حاسبة نهاية الخدمة</h3>
                     <p>استخدم حاسبتنا المتقدمة لتحديد مكافأة نهاية الخدمة الخاصة بك وفقًا لقانون العمل السعودي.</p>
-                    <a href="<?php echo home_url('/services-ar'); ?>" class="service-btn">اعرف أكثر</a>
+                    <a href="<?php echo esc_url(dlc_get_services_page_url('ar')); ?>" class="service-btn">اعرف أكثر</a>
         
                     </div>    
                 </div>
@@ -115,7 +115,7 @@ $clients_count = (int) get_field('clients');
                     </div>
                     <h3>حاسبة الميراث</h3>
                     <p>احسب حصص الميراث وفقًا للشريعة الإسلامية واللوائح السعودية باستخدام أداتنا المتخصصة.</p>
-                    <a href="<?php echo home_url('/services-ar'); ?>" class="service-btn">اعرف أكثر</a>
+                    <a href="<?php echo esc_url(dlc_get_services_page_url('ar')); ?>" class="service-btn">اعرف أكثر</a>
                 </div>
             </div>
         </div>

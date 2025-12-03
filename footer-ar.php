@@ -28,7 +28,7 @@
             <div class="col-md-3 footer-actions text-center ">
                 <h6 class="footer-action-title mb-2">انضم إلى مجتمعنا</h6>
                 <div class="footer-buttons ">
-                    <a href="<?php echo home_url('/contact-us-ar'); ?>" class="btn nav-btn get-in-touch me-2">تواصل معنا</a>
+                    <a href="<?php echo esc_url(dlc_get_contact_us_page_url('ar')); ?>" class="btn nav-btn get-in-touch me-2">تواصل معنا</a>
                     <div class="sign-in-dropdown">
                         <button class="btn nav-btn sign-in sign-in-toggle footer-sign-in" type="button">
                             تسجيل الدخول

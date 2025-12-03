@@ -397,6 +397,7 @@
 .pagination-wrapper {
     margin-top: 60px;
     text-align: center;
+    direction: ltr !important; /* Force LTR for pagination regardless of page language */
 }
 
 .pagination-simple {

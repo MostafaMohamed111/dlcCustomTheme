@@ -269,7 +269,9 @@
                                 'total_pages' => $services_query->max_num_pages,
                                 'base_url' => $base_url,
                                 'anchor_id' => '#services-title',
-                                'page_text' => 'صفحة %s من %s'
+                                'page_text' => 'صفحة %s من %s',
+                                'category_id' => $current_category,
+                                'parent_category_id' => $parent_category->term_id
                             ));
                         else :
                             ?>

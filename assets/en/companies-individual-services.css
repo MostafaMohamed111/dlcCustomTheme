@@ -203,7 +203,7 @@
     z-index: 1;
 }
 
-.services-landing .header {
+    .header {
     background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
     text-align: center;
     padding: 70px 0;
@@ -211,13 +211,13 @@
 
 }
 
-.services-landing .header h2 {
+ .header h2 {
     color:  var(--white);
     font-size: 36px;
     margin-bottom: 20px;
     scroll-margin-top: 100px;
 }
-.services-landing .header p {
+ .header p {
     font-size: 20px;
     max-width: 1000px;
     margin: 0 auto;
@@ -518,6 +518,7 @@
 .pagination-wrapper {
     margin-top: 60px;
     text-align: center;
+    direction: ltr !important; /* Force LTR for pagination regardless of page language */
 }
 
 .pagination-simple {

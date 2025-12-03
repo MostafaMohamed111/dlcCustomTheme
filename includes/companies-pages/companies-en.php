@@ -184,7 +184,9 @@
                                 'total_pages' => $services_query->max_num_pages,
                                 'base_url' => $base_url,
                                 'anchor_id' => '#services-title',
-                                'page_text' => 'Page %s of %s'
+                                'page_text' => 'Page %s of %s',
+                                'category_id' => $current_category,
+                                'parent_category_id' => $parent_category->term_id
                             ));
                         else :
                             ?>

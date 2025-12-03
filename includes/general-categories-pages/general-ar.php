@@ -280,8 +280,10 @@
                 
                     <?php
                     // Build base URL based on archive type
+                    $category_id = 0;
                     if (is_category()) {
-                        $base_url = get_category_link(get_queried_object_id());
+                        $category_id = get_queried_object_id();
+                        $base_url = get_category_link($category_id);
                     } elseif (is_tag()) {
                         $base_url = get_tag_link(get_queried_object_id());
                     } elseif (is_date()) {
@@ -298,7 +300,9 @@
                         'total_pages' => $filtered_query->max_num_pages,
                         'base_url' => trailingslashit($base_url),
                         'anchor_id' => '#category-title',
-                        'page_text' => 'صفحة %s من %s'
+                        'page_text' => 'صفحة %s من %s',
+                        'category_id' => $category_id,
+                        'parent_category_id' => 0
                     ));
                     
                     wp_reset_postdata();

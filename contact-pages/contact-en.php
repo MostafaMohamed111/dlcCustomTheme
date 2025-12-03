@@ -127,7 +127,7 @@
                 </a>
             </div>
             <div class="col-md-6 col-sm-12">
-                <a class="quick-link calendar" href="<?php echo home_url('/booking'); ?>">
+                <a class="quick-link calendar" href="<?php echo esc_url(dlc_get_booking_page_url('en')); ?>">
                     <i class="fas fa-calendar-check"></i>
                     <span>Book a Consultation</span>
                 </a>

@@ -280,9 +280,11 @@
             
                 <?php
                 // Build base URL based on archive type
-                        if (is_category()) {
-                            $base_url = get_category_link(get_queried_object_id());
-                        } elseif (is_tag()) {
+                $category_id = 0;
+                if (is_category()) {
+                    $category_id = get_queried_object_id();
+                    $base_url = get_category_link($category_id);
+                } elseif (is_tag()) {
                     $base_url = get_tag_link(get_queried_object_id());
                 } elseif (is_date()) {
                     $base_url = get_pagenum_link(1);
@@ -297,8 +299,10 @@
                     'paged' => $paged,
                     'total_pages' => $filtered_query->max_num_pages,
                     'base_url' => trailingslashit($base_url),
-                            'anchor_id' => '#category-title',
-                    'page_text' => 'Page %s of %s'
+                    'anchor_id' => '#category-title',
+                    'page_text' => 'Page %s of %s',
+                    'category_id' => $category_id,
+                    'parent_category_id' => 0
                 ));
                 
                 wp_reset_postdata();

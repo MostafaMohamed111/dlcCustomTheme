@@ -225,9 +225,11 @@
                     global $wp_query;
                     $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
                     
-                    // Get base URL
+                    // Get base URL and category context
+                    $category_id = 0;
                     if (is_category()) {
-                        $base_url = get_category_link(get_queried_object_id());
+                        $category_id = get_queried_object_id();
+                        $base_url = get_category_link($category_id);
                     } else {
                         $base_url = get_pagenum_link(1);
                     }
@@ -237,7 +239,9 @@
                         'total_pages' => $wp_query->max_num_pages,
                         'base_url' => $base_url,
                         'anchor_id' => '#category-title',
-                        'page_text' => 'صفحة %s من %s'
+                        'page_text' => 'صفحة %s من %s',
+                        'category_id' => $category_id,
+                        'parent_category_id' => 0
                     ));
                     ?>
                 <?php else : ?>

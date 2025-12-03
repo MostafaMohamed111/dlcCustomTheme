@@ -45,8 +45,8 @@ function dlc_get_menu_location($menu_type = 'primary') {
     return $menu_type . '-menu';
 }
 
-// Helper: Check if a category is a blog category or child of blog category
-function dlc_is_blog_category($category_id = null) {
+// Generic helper: Check if a category matches a specific category type slug
+function dlc_is_category_type($category_slug, $category_id = null) {
     if (!$category_id) {
         $queried_object = get_queried_object();
         $category_id    = $queried_object->term_id ?? 0;
@@ -59,71 +59,37 @@ function dlc_is_blog_category($category_id = null) {
     // Use Polylang-aware helper to get the top parent slug and compare
     $top_slug = dlc_get_category_type_slug($category_id);
 
-    return ($top_slug === 'blog');
+    return ($top_slug === $category_slug);
+}
+
+// Helper: Check if a category is a blog category or child of blog category
+function dlc_is_blog_category($category_id = null) {
+    return dlc_is_category_type('blog', $category_id);
 }
 
 // Helper: Check if a category is a companies-services category or child of companies-services category
 function dlc_is_companies_services_category($category_id = null) {
-    if (!$category_id) {
-        $queried_object = get_queried_object();
-        $category_id    = $queried_object->term_id ?? 0;
-    }
-
-    if (!$category_id) {
-        return false;
-    }
-
-    $top_slug = dlc_get_category_type_slug($category_id);
-
-    return ($top_slug === 'companies-services');
+    return dlc_is_category_type('companies-services', $category_id);
 }
 
 // Helper: Check if a category is a news category or child of news category
 function dlc_is_news_category($category_id = null) {
-    if (!$category_id) {
-        $queried_object = get_queried_object();
-        $category_id    = $queried_object->term_id ?? 0;
-    }
-
-    if (!$category_id) {
-        return false;
-    }
-
-    $top_slug = dlc_get_category_type_slug($category_id);
-
-    return ($top_slug === 'news');
+    return dlc_is_category_type('news', $category_id);
 }
 
 // Helper: Check if a category is an individual-services category or child of individual-services category
 function dlc_is_individual_services_category($category_id = null) {
-    if (!$category_id) {
-        $queried_object = get_queried_object();
-        $category_id    = $queried_object->term_id ?? 0;
-    }
+    return dlc_is_category_type('individual-services', $category_id);
+}
 
-    if (!$category_id) {
-        return false;
-    }
-
-    $top_slug = dlc_get_category_type_slug($category_id);
-
-    return ($top_slug === 'individual-services');
+// Helper: Check if a category is a secure-yourself category or child of secure-yourself category
+function dlc_is_secure_yourself_category($category_id = null) {
+    return dlc_is_category_type('secure-yourself', $category_id);
 }
 
 // Helper: Check if a category is a home-international category or child of home-international category
 function dlc_is_home_international_category($category_id = null) {
-    if (!$category_id) {
-        $queried_object = get_queried_object();
-        $category_id    = $queried_object->term_id ?? 0;
-    }
-
-    if (!$category_id) {
-        return false;
-    }
-
-    $top_slug = dlc_get_category_type_slug($category_id);
-
-    return ($top_slug === 'home-international');
+    return dlc_is_category_type('home-international', $category_id);
 }
 
 // Helper: Get alternate language URL and icon using Polylang
@@ -257,13 +223,7 @@ function enqueue_theme_css() {
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
             break;
-            
-        case is_page_template('secure-yourself.php'):
-        case is_page_template('secure-yourself-ar.php'):
-            wp_register_style('secure-yourself-page', get_template_directory_uri() . '/assets/en/secure-yourself.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('secure-yourself-page');
-            break;
-            
+          
         case is_page_template('contact-us.php'):
         case is_page_template('contact-us-ar.php'):
             wp_register_style('contact-us-page', get_template_directory_uri() . '/assets/en/contact-us.css', array('main'), '1.0.0', 'all');
@@ -302,9 +262,21 @@ function enqueue_theme_css() {
         $is_companies = dlc_is_companies_services_category($queried_object->term_id ?? 0);
         $is_individual = dlc_is_individual_services_category($queried_object->term_id ?? 0);
         $is_international = dlc_is_home_international_category($queried_object->term_id ?? 0);
+        $is_secure = dlc_is_secure_yourself_category($queried_object->term_id ?? 0);
+        
         if ($is_news) {
             wp_register_style('news-page', get_template_directory_uri() . '/assets/en/news.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('news-page');
+
+        } elseif ($is_secure) {
+            // Load service card styles (companies-individual-services.css) for service-card component
+            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('services-page');
+            // Load secure-yourself specific styles
+            wp_register_style('secure-yourself-page', get_template_directory_uri() . '/assets/en/secure-yourself.css', array('services-page'), '1.0.0', 'all');
+            wp_enqueue_style('secure-yourself-page');
+            
+        
         } elseif ($is_companies || $is_individual || $is_international) {
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
@@ -1051,8 +1023,8 @@ function dlc_get_service_archive_url($post_id = null) {
     return get_category_link($target_id);
 }
 
-// Helper to get booking page URL using Polylang
-function dlc_get_booking_page_url($language = null) {
+// Generic helper to get page URL by template name using Polylang
+function dlc_get_page_url_by_template($template_name, $language = null, $fallback_urls = array()) {
     if (!$language) {
         if (function_exists('pll_current_language')) {
             $language = pll_current_language();
@@ -1061,32 +1033,71 @@ function dlc_get_booking_page_url($language = null) {
         }
     }
     
-    // Get booking page by template
-    $booking_pages = get_pages(array(
+    // Get pages by template
+    $pages = get_pages(array(
         'meta_key' => '_wp_page_template',
-        'meta_value' => 'booking.php'
+        'meta_value' => $template_name
     ));
     
-    if (!empty($booking_pages)) {
+    if (!empty($pages)) {
         // If Polylang is active, get the translated page
         if (function_exists('pll_get_post') && $language !== 'en') {
-            $en_booking_id = $booking_pages[0]->ID;
-            $translated_booking_id = pll_get_post($en_booking_id, $language);
-            if ($translated_booking_id) {
-                return get_permalink($translated_booking_id);
+            $en_page_id = $pages[0]->ID;
+            $translated_page_id = pll_get_post($en_page_id, $language);
+            if ($translated_page_id) {
+                return get_permalink($translated_page_id);
             }
         }
         
-        // Return English booking page or fallback
-        return get_permalink($booking_pages[0]->ID);
+        // Return English page or fallback
+        return get_permalink($pages[0]->ID);
     }
     
-    // Fallback URLs
-    if ($language === 'ar') {
-        return home_url('/ar/حجز-استشارة/');
+    // Fallback URLs if provided
+    if (!empty($fallback_urls)) {
+        if (isset($fallback_urls[$language])) {
+            return $fallback_urls[$language];
+        }
+        // Default to English fallback if language-specific not found
+        if (isset($fallback_urls['en'])) {
+            return $fallback_urls['en'];
+        }
     }
     
-    return home_url('/booking/');
+    // Ultimate fallback
+    return home_url('/');
+}
+
+// Helper to get booking page URL using Polylang
+function dlc_get_booking_page_url($language = null) {
+    return dlc_get_page_url_by_template('booking.php', $language, array(
+        'ar' => home_url('/ar/حجز-استشارة/'),
+        'en' => home_url('/booking/')
+    ));
+}
+
+// Helper to get services page URL using Polylang
+function dlc_get_services_page_url($language = null) {
+    return dlc_get_page_url_by_template('services.php', $language, array(
+        'ar' => home_url('/الخدمات'),
+        'en' => home_url('/services/')
+    ));
+}
+
+// Helper to get about-us page URL using Polylang
+function dlc_get_about_us_page_url($language = null) {
+    return dlc_get_page_url_by_template('about-us.php', $language, array(
+        'ar' => home_url('/about-us-ar'),
+        'en' => home_url('/about-us/')
+    ));
+}
+
+// Helper to get contact-us page URL using Polylang
+function dlc_get_contact_us_page_url($language = null) {
+    return dlc_get_page_url_by_template('contact-us.php', $language, array(
+        'ar' => home_url('/contact-us-ar'),
+        'en' => home_url('/contact-us/')
+    ));
 }
 
 // Helper to get adjacent service posts within the same service type and language
@@ -1673,7 +1684,7 @@ function load_archive_posts_ajax() {
     if ($parent_category_id > 0) {
         // Check if the parent category is actually a services category type
         $parent_category_type = dlc_get_category_type_slug($parent_category_id);
-        if ($parent_category_type && in_array($parent_category_type, ['companies-services', 'individual-services', 'home-international'])) {
+        if ($parent_category_type && in_array($parent_category_type, ['companies-services', 'individual-services', 'home-international', 'secure-yourself'])) {
             $is_services_page = true;
         }
     }
@@ -1681,7 +1692,7 @@ function load_archive_posts_ajax() {
     // Also check the current category itself
     if (!$is_services_page && $category_id > 0) {
         $category_type = dlc_get_category_type_slug($category_id);
-        if ($category_type && in_array($category_type, ['companies-services', 'individual-services', 'home-international'])) {
+        if ($category_type && in_array($category_type, ['companies-services', 'individual-services', 'home-international', 'secure-yourself'])) {
             $is_services_page = true;
         }
     }
@@ -1841,7 +1852,9 @@ function load_archive_posts_ajax() {
                         'total_pages' => $total_pages,
                         'base_url' => trailingslashit($base_url),
                         'anchor_id' => '#services-title',
-                        'page_text' => $page_text
+                        'page_text' => $page_text,
+                        'category_id' => $category_id,
+                        'parent_category_id' => $parent_category_id
                     ));
         endif;
         
@@ -1887,7 +1900,9 @@ function load_archive_posts_ajax() {
                         'total_pages' => $total_pages,
                         'base_url' => trailingslashit($base_url),
                         'anchor_id' => '#category-title',
-                        'page_text' => $page_text
+                        'page_text' => $page_text,
+                        'category_id' => $category_id,
+                        'parent_category_id' => 0
                     ));
                 ?>
             </div>
@@ -1999,7 +2014,9 @@ function load_archive_posts_ajax() {
                     'total_pages' => $total_pages,
                     'base_url' => trailingslashit($base_url),
                     'anchor_id' => '#category-title',
-                    'page_text' => $page_text
+                    'page_text' => $page_text,
+                    'category_id' => $category_id,
+                    'parent_category_id' => 0
                 ));
             endif;
             

@@ -10,15 +10,36 @@
     const getCategoryIdFromUrl = (url) => {
         if (!url) return 0;
         
+        // Clean URL: remove page numbers, anchors, query params
+        const cleanUrl = url.split('#')[0].split('?')[0].replace(/\/page\/\d+\//, '').replace(/\/page\/\d+$/, '').replace(/\/$/, '');
+        
         // Try to find matching link by URL
-        const cleanUrl = url.split('#')[0].split('?')[0];
         const $matchingLink = $('.category-link, .archive-category-nav-item').filter(function() {
-            const linkUrl = $(this).attr('href').split('#')[0].split('?')[0];
-            return linkUrl === cleanUrl || cleanUrl.endsWith(linkUrl) || linkUrl.endsWith(cleanUrl);
+            const linkUrl = $(this).attr('href').split('#')[0].split('?')[0].replace(/\/$/, '');
+            const normalizedLinkUrl = linkUrl.replace(/\/$/, '');
+            const normalizedCleanUrl = cleanUrl.replace(/\/$/, '');
+            return normalizedLinkUrl === normalizedCleanUrl || 
+                   normalizedCleanUrl.endsWith(normalizedLinkUrl) || 
+                   normalizedLinkUrl.endsWith(normalizedCleanUrl);
         });
         
         if ($matchingLink.length) {
             return parseInt($matchingLink.first().data('category-id')) || 0;
+        }
+        
+        // Try to extract from URL pattern: /category/slug/ or /ar/category/slug/
+        const categoryMatch = cleanUrl.match(/\/(?:ar\/)?category\/([^\/]+)/);
+        if (categoryMatch) {
+            const categorySlug = categoryMatch[1];
+            // Try to find a link with this slug in the href
+            const $slugLink = $('.category-link, .archive-category-nav-item').filter(function() {
+                const href = $(this).attr('href') || '';
+                return href.includes('/category/' + categorySlug) || href.includes(categorySlug);
+            });
+            
+            if ($slugLink.length) {
+                return parseInt($slugLink.first().data('category-id')) || 0;
+            }
         }
         
         return 0;
@@ -133,6 +154,79 @@
             $('.category-link[data-category-id="0"], .archive-category-nav-item[data-category-id="0"]').addClass('active');
         }
     };
+    
+    // Helper: Get current category context from page
+    const getCurrentCategoryContext = () => {
+        const context = {
+            categoryId: 0,
+            parentCategoryId: 0,
+            baseUrl: '',
+            anchorId: '#category-title'
+        };
+        
+        // Try to get from active category link
+        const $activeLink = $('.category-link.active, .archive-category-nav-item.active').first();
+        if ($activeLink.length) {
+            context.categoryId = parseInt($activeLink.data('category-id')) || 0;
+            const rawParentId = parseInt($activeLink.data('parent-category-id')) || 0;
+            
+            // Only use parentId if it's in services context
+            const isInServicesContext = $activeLink.closest('.services-sidebar, .services-main').length > 0;
+            const isInGeneralNav = $activeLink.hasClass('archive-category-nav-item');
+            
+            if (isInServicesContext && !isInGeneralNav && rawParentId > 0) {
+                context.parentCategoryId = rawParentId;
+            }
+            
+            // Get URL from active link
+            const linkUrl = $activeLink.attr('href');
+            if (linkUrl) {
+                context.baseUrl = linkUrl.split('#')[0].split('?')[0];
+            }
+        }
+        
+        // Try to get from pagination wrapper data attributes
+        const $paginationWrapper = $('.pagination-wrapper').first();
+        if ($paginationWrapper.length) {
+            const paginationCategoryId = parseInt($paginationWrapper.data('category-id')) || 0;
+            const paginationParentId = parseInt($paginationWrapper.data('parent-category-id')) || 0;
+            const paginationBaseUrl = $paginationWrapper.data('base-url') || '';
+            const paginationAnchor = $paginationWrapper.data('anchor-id') || '#category-title';
+            
+            if (paginationCategoryId > 0 || paginationParentId > 0) {
+                context.categoryId = paginationCategoryId;
+                context.parentCategoryId = paginationParentId;
+            }
+            
+            if (paginationBaseUrl) {
+                context.baseUrl = paginationBaseUrl;
+            }
+            
+            if (paginationAnchor) {
+                context.anchorId = paginationAnchor;
+            }
+        }
+        
+        // Fallback: try to extract from current URL
+        if (!context.categoryId) {
+            const currentUrl = window.location.href;
+            const extractedCategoryId = getCategoryIdFromUrl(currentUrl);
+            if (extractedCategoryId > 0) {
+                context.categoryId = extractedCategoryId;
+                if (isServicesCategory(extractedCategoryId)) {
+                    context.parentCategoryId = detectParentCategoryId(currentUrl, extractedCategoryId);
+                }
+            }
+        }
+        
+        // Always update baseUrl from current URL if not set
+        if (!context.baseUrl) {
+            const currentUrl = window.location.href;
+            context.baseUrl = currentUrl.split('#')[0].split('?')[0].replace(/\/page\/\d+\//, '').replace(/\/page\/\d+$/, '');
+        }
+        
+        return context;
+    };
 
     // Initialize
     $(document).ready(function() {
@@ -163,14 +257,64 @@
             updateUIState(categoryData.name, categoryData.id);
             loadArchivePosts(categoryData.id, url, categoryData.parentId);
         });
+        
+        // Handle pagination clicks
+        $(document).on('click', '.pagination-link', function(e) {
+            e.preventDefault();
+            
+            const $link = $(this);
+            const pageNumber = parseInt($link.data('page')) || 1;
+            const href = $link.attr('href');
+            
+            // Get current category context
+            const context = getCurrentCategoryContext();
+            
+            // Build URL with page number
+            let targetUrl = context.baseUrl || href.split('#')[0].split('?')[0];
+            
+            // Remove existing page from URL
+            targetUrl = targetUrl.replace(/\/page\/\d+\//, '/').replace(/\/page\/\d+$/, '');
+            
+            // Add page number
+            if (pageNumber > 1) {
+                targetUrl = targetUrl + 'page/' + pageNumber + '/';
+            }
+            
+            // Add anchor if available
+            if (context.anchorId) {
+                targetUrl = targetUrl + context.anchorId;
+            }
+            
+            // Load posts with pagination
+            loadArchivePosts(context.categoryId, targetUrl, context.parentCategoryId, pageNumber);
+        });
     });
 
     /**
      * Load archive posts/services via AJAX
      */
-    function loadArchivePosts(categoryId, url, parentCategoryId) {
-        // Determine page type
-        const isServicesPage = (parentCategoryId || 0) > 0;
+    function loadArchivePosts(categoryId, url, parentCategoryId, pagedOverride = null) {
+        // Determine page type - check if it's a services page (including secure-yourself)
+        // Secure pages also use services-grid, so we need to detect them
+        let isServicesPage = (parentCategoryId || 0) > 0;
+        
+        // Check if current page has services-grid container (secure pages use it too)
+        if (!isServicesPage && $('#services-grid').length > 0) {
+            isServicesPage = true;
+        }
+        
+        // Also check if category is secure-yourself type
+        if (!isServicesPage && categoryId > 0) {
+            const $categoryLink = $('.category-link[data-category-id="' + categoryId + '"], .archive-category-nav-item[data-category-id="' + categoryId + '"]');
+            if ($categoryLink.length) {
+                // Check if we're on a secure page by looking at the current URL or page structure
+                const currentUrl = window.location.href;
+                if (currentUrl.includes('secure-yourself') || currentUrl.includes('امن-نفسك')) {
+                    isServicesPage = true;
+                }
+            }
+        }
+        
         const contentType = isServicesPage ? 'services' : 'posts';
         
         // Get containers - check for all possible container IDs
@@ -200,9 +344,22 @@
         </div>`;
         ($gridContainer.length ? $gridContainer : $mainContainer).html(loadingHtml);
         
-        // Extract page number from URL
-        const urlParams = new URLSearchParams(url.split('?')[1] || '');
-        const paged = urlParams.get('paged') || 1;
+        // Extract page number from URL or use override
+        let paged = 1;
+        if (pagedOverride !== null) {
+            paged = pagedOverride;
+        } else {
+            // Try to extract from URL path (e.g., /page/2/)
+            const urlPath = url.split('?')[0];
+            const pageMatch = urlPath.match(/\/page\/(\d+)\//);
+            if (pageMatch) {
+                paged = parseInt(pageMatch[1]) || 1;
+            } else {
+                // Fallback to query parameter
+                const urlParams = new URLSearchParams(url.split('?')[1] || '');
+                paged = parseInt(urlParams.get('paged')) || 1;
+            }
+        }
         
         $.ajax({
             url: ajax_object.ajaxurl,
@@ -219,24 +376,39 @@
                 
                 if (response.success) {
                     // Extract and update content
+                    const $tempDiv = $('<div>').html(response.data.posts_html);
+                    
+                    // Extract pagination from posts_html if it exists
+                    const $paginationInResponse = $tempDiv.find('.pagination-wrapper');
+                    
                     if ($gridContainer.length) {
-                        const $tempDiv = $('<div>').html(response.data.posts_html);
                         const gridClass = isServicesPage ? '.services-grid' : '.posts-grid';
                         const $gridContent = $tempDiv.find(gridClass);
                         
                         if ($gridContent.length) {
+                            // Remove pagination from grid content if it exists
+                            $gridContent.find('.pagination-wrapper').remove();
                             $gridContainer.html($gridContent.html());
                         } else {
                             // If grid wrapper not found, try to find the content directly
+                            $tempDiv.find('.pagination-wrapper').remove();
                             $gridContainer.html($tempDiv.html());
                         }
                     } else {
-                        $mainContainer.html(response.data.posts_html);
+                        // Remove pagination from main container content
+                        $tempDiv.find('.pagination-wrapper').remove();
+                        $mainContainer.html($tempDiv.html());
                     }
                     
-                    // Update pagination
-                    if (response.data.pagination_html && $paginationWrapper.length) {
-                        $paginationWrapper.html(response.data.pagination_html);
+                    // Update pagination wrapper (use pagination from response or separate pagination_html)
+                    if ($paginationWrapper.length) {
+                        if ($paginationInResponse.length) {
+                            // Use pagination from posts_html
+                            $paginationWrapper.html($paginationInResponse.html());
+                        } else if (response.data.pagination_html) {
+                            // Use separate pagination_html if available
+                            $paginationWrapper.html(response.data.pagination_html);
+                        }
                     }
                     
                     // Update and scroll to title
@@ -256,7 +428,12 @@
                     // Update URL without page reload
                     if (window.history && window.history.pushState) {
                         const cleanUrl = url.split('#')[0];
-                        window.history.pushState({path: cleanUrl}, '', cleanUrl);
+                        // Store category context in history state for back/forward navigation
+                        window.history.pushState({
+                            path: cleanUrl,
+                            categoryId: categoryId,
+                            parentCategoryId: parentCategoryId
+                        }, '', cleanUrl);
                     }
                 } else {
                     showError(response.data || 'Please try again.', contentType, $gridContainer, $mainContainer);
@@ -291,8 +468,37 @@
         });
         
         const categoryData = getCategoryData($link, url);
-        updateUIState(categoryData.name, categoryData.id);
-        loadArchivePosts(categoryData.id, url, categoryData.parentId);
+        let categoryId = categoryData.id;
+        let parentCategoryId = categoryData.parentId;
+        
+        // Ensure secure pages are treated as services pages
+        // Check URL for secure-yourself indicators or if services-grid exists
+        if ((url.includes('secure-yourself') || url.includes('امن-نفسك') || $('#services-grid').length > 0) && !parentCategoryId) {
+            // If we're on a secure page but don't have parentCategoryId, set it
+            // Try to get from pagination wrapper
+            const $paginationWrapper = $('.pagination-wrapper').first();
+            if ($paginationWrapper.length) {
+                const paginationParentId = parseInt($paginationWrapper.data('parent-category-id')) || 0;
+                const paginationCategoryId = parseInt($paginationWrapper.data('category-id')) || 0;
+                if (paginationParentId > 0) {
+                    parentCategoryId = paginationParentId;
+                } else if (paginationCategoryId > 0) {
+                    // For secure pages, use category_id as parent_category_id
+                    parentCategoryId = paginationCategoryId;
+                }
+            }
+            
+            // If still no parent, use categoryId as parent for secure pages
+            if (!parentCategoryId && categoryId > 0) {
+                parentCategoryId = categoryId;
+            } else if (!parentCategoryId) {
+                // Last resort: set a non-zero value to trigger services page detection
+                parentCategoryId = 1;
+            }
+        }
+        
+        updateUIState(categoryData.name, categoryId);
+        loadArchivePosts(categoryId, url, parentCategoryId);
     });
 
 })(jQuery);

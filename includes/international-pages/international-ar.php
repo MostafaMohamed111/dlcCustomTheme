@@ -272,7 +272,7 @@
                             <?php
                             // Pagination
                             $base_url = $current_category > 0 
-                            ? get_category_link($current_category)
+                                ? get_category_link($current_category)
                                 : get_category_link($parent_category->term_id);
                             
                             get_template_part('includes/pagination', null, array(
@@ -280,7 +280,9 @@
                                 'total_pages' => $services_query->max_num_pages,
                                 'base_url' => $base_url,
                                 'anchor_id' => '#services-title',
-                                'page_text' => 'صفحة %s من %s'
+                                'page_text' => 'صفحة %s من %s',
+                                'category_id' => $current_category,
+                                'parent_category_id' => $parent_category->term_id
                             ));
                         else :
                             ?>

@@ -67,7 +67,9 @@
                     'total_pages' => $news_query->max_num_pages,
                     'base_url' => get_category_link($news_category->term_id),
                     'anchor_id' => '#news-title',
-                    'page_text' => 'Page %s of %s'
+                    'page_text' => 'Page %s of %s',
+                    'category_id' => $news_category->term_id,
+                    'parent_category_id' => 0
                 ));
             else :
                 ?>

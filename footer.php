@@ -28,7 +28,7 @@
             <div class="col-md-3 footer-actions text-center ">
                 <h6 class="footer-action-title mb-2">Join Our Community</h6>
                 <div class="footer-buttons ">
-                    <a href="<?php echo home_url('/contact-us'); ?>" class="btn nav-btn get-in-touch me-2">Get in Touch</a>
+                    <a href="<?php echo esc_url(dlc_get_contact_us_page_url('en')); ?>" class="btn nav-btn get-in-touch me-2">Get in Touch</a>
                     <div class="sign-in-dropdown">
                         <button class="btn nav-btn sign-in sign-in-toggle footer-sign-in" type="button">
                             Sign In
