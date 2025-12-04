@@ -20,9 +20,15 @@
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
                 </div>
+
+                <div class="phone mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="Your Phone Number" required>
+                </div>
+
                 <div class=" email mb-3">
                     <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" >
                 </div> 
                 <div class=" message mb-3">
                     <label for="message" class="form-label">Message</label>

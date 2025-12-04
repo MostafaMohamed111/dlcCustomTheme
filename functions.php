@@ -223,7 +223,7 @@ function enqueue_theme_css() {
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
             break;
-          
+            
         case is_page_template('contact-us.php'):
         case is_page_template('contact-us-ar.php'):
             wp_register_style('contact-us-page', get_template_directory_uri() . '/assets/en/contact-us.css', array('main'), '1.0.0', 'all');
@@ -878,7 +878,7 @@ function dlc_get_category_ids_by_type($category_type = 'blog', $include_children
             $blog_category = get_term_by('name', 'Blog', 'category');
         }
 
-        if ($blog_category) {
+            if ($blog_category) {
             $category_ids[] = $blog_category->term_id;
 
             // Add translated equivalents via Polylang
@@ -925,9 +925,9 @@ function dlc_get_service_type($post_id = null) {
             case 'companies-services':
                 return 'companies';
             case 'individual-services':
-                return 'individual';
+            return 'individual';
             case 'home-international':
-                return 'home-international';
+            return 'home-international';
         }
     }
 
@@ -942,7 +942,7 @@ function dlc_get_service_category_ids($service_type = 'companies', $language = '
         'international'     => 'home-international',
         'companies'         => 'companies-services',
     );
-
+    
     $base_slug = $base_slug_map[$service_type] ?? 'companies-services';
 
     // Start from the English parent category and translate via Polylang for the target language
@@ -987,7 +987,7 @@ function dlc_get_service_archive_url($post_id = null) {
     
     // Get post language; Polylang is now the source of truth
     if (function_exists('pll_get_post_language')) {
-        $language = pll_get_post_language($post_id) ?: 'en';
+    $language = pll_get_post_language($post_id) ?: 'en';
     } else {
         $language = 'en';
     }
@@ -1051,7 +1051,7 @@ function dlc_get_page_url_by_template($template_name, $language = null, $fallbac
         
         // Return English page or fallback
         return get_permalink($pages[0]->ID);
-    }
+                }
     
     // Fallback URLs if provided
     if (!empty($fallback_urls)) {
@@ -1061,8 +1061,8 @@ function dlc_get_page_url_by_template($template_name, $language = null, $fallbac
         // Default to English fallback if language-specific not found
         if (isset($fallback_urls['en'])) {
             return $fallback_urls['en'];
+            }
         }
-    }
     
     // Ultimate fallback
     return home_url('/');
@@ -1192,7 +1192,7 @@ function dlc_get_post_archive_url($post_id = null, $language = null) {
     // Determine language using Polylang where possible
     if (!$language) {
         if (function_exists('pll_get_post_language')) {
-            $language = pll_get_post_language($post_id) ?: 'en';
+        $language = pll_get_post_language($post_id) ?: 'en';
         } else {
             $language = 'en';
         }
@@ -1200,7 +1200,7 @@ function dlc_get_post_archive_url($post_id = null, $language = null) {
     
     $is_news = dlc_is_news_post($post_id);
     $base_slug = $is_news ? 'news' : 'blog';
-
+    
     // Get base English category
     $base_category = get_category_by_slug($base_slug);
     if (!$base_category) {
@@ -1220,7 +1220,7 @@ function dlc_get_post_archive_url($post_id = null, $language = null) {
         $translated_id = pll_get_term($base_category->term_id, 'ar');
         if ($translated_id) {
             $target_category_id = $translated_id;
-        }
+                }
     }
     
     return get_category_link($target_category_id);
@@ -1325,32 +1325,108 @@ function handle_contact_form_submission() {
     }
 
     // Sanitize
-    $name = sanitize_text_field($_POST['name']);
-    $email = sanitize_email($_POST['email']);
-    $message = sanitize_textarea_field($_POST['message']);
+    $name    = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    $email   = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    $message = isset($_POST['message']) ? sanitize_textarea_field($_POST['message']) : '';
 
-    if (empty($name) || empty($email) || empty($message)) {
+    // Name and message are required; email is optional
+    if (empty($name) || empty($message)) {
         wp_send_json_error('Please fill all fields.');
     }
 
-    if (!is_email($email)) {
+    // If an email is provided, ensure it is valid
+    if (!empty($email) && !is_email($email)) {
         wp_send_json_error('Invalid email address.');
+    }
+
+    // Normalize optional email for display
+    $email_display = $email;
+    if (empty($email_display)) {
+        $email_display = 'N/A';
     }
 
     // Prepare email
     $to = get_option('admin_email');
     $subject = "New Contact Form Submission from $name";
+
     $headers = [
         'Content-Type: text/html; charset=UTF-8',
-        "Reply-To: $name <$email>"
     ];
 
-    $body = "
-        <h2>Contact Form Submission</h2>
-        <p><strong>Name:</strong> $name</p>
-        <p><strong>Email:</strong> $email</p>
-        <p><strong>Message:</strong><br>" . nl2br($message) . "</p>
-    ";
+    // Only set Reply-To header if we have a valid email from the user
+    if (!empty($email) && is_email($email)) {
+        $headers[] = "Reply-To: $name <$email>";
+    }
+
+    // Styled HTML email body to match the site's look & feel
+    $logo_url = get_template_directory_uri() . '/assets/images/DLC_logo.webp';
+    $primary   = '#1a3a5f';
+    $lightBlue = '#2a5a8a';
+    $bgLight   = '#f5f5f5';
+
+    $body = '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Contact Form Submission</title>
+</head>
+<body style="margin:0;padding:0;background-color:' . esc_attr($bgLight) . ';font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:' . esc_attr($bgLight) . ';padding:24px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+                    <tr>
+                        <td style="background:linear-gradient(135deg,' . esc_attr($primary) . ',' . esc_attr($lightBlue) . ');padding:20px 24px;color:#ffffff;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td style="vertical-align:middle;">
+                                        <h1 style="margin:0;font-size:22px;font-weight:600;">New Contact Form Submission</h1>
+                                        <p style="margin:4px 0 0 0;font-size:13px;opacity:0.9;">Sent from the Dag Law Firm website</p>
+                                    </td>
+                                    <td align="right" style="vertical-align:middle;">
+                                        <img src="' . esc_url($logo_url) . '" alt="Dag Law Firm" style="height:42px;width:auto;border-radius:6px;">
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:24px 24px 8px 24px;">
+                            <h2 style="margin:0 0 12px 0;font-size:16px;color:' . esc_attr($primary) . ';">Contact Details</h2>
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px;color:#333;">
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Name:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html($name) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Email:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html($email_display) . '</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 24px 20px 24px;">
+                            <h2 style="margin:16px 0 10px 0;font-size:16px;color:' . esc_attr($primary) . ';">Message</h2>
+                            <div style="margin-top:4px;padding:12px 14px;background-color:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;color:#333;line-height:1.6;">
+                                ' . nl2br(esc_html($message)) . '
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:12px 24px 18px 24px;border-top:1px solid #e5e7eb;background-color:#fafafa;">
+                            <p style="margin:0;font-size:11px;color:#9ca3af;">
+                                This email was generated automatically from the contact form. Please reply directly to the sender if an email address was provided.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>';
 
     // Send
     $sent = wp_mail($to, $subject, $body, $headers);
@@ -1536,23 +1612,33 @@ function handle_booking_form_submission() {
     $service_type    = sanitize_text_field($_POST['service_type']);
     $name            = sanitize_text_field($_POST['name']);
     $phone           = sanitize_text_field($_POST['phone']);
-    $email           = sanitize_email($_POST['email']);
+    $email           = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
     $city            = sanitize_text_field($_POST['city']);
     $service_id      = intval($_POST['service']); // This may be AR or EN
     $service_slug    = isset($_POST['service_slug']) ? sanitize_text_field($_POST['service_slug']) : '';
-    $case_brief      = sanitize_textarea_field($_POST['case_brief']);
+    $case_brief      = isset($_POST['case_brief']) ? sanitize_textarea_field($_POST['case_brief']) : '';
     $has_documents   = sanitize_text_field($_POST['has_documents']);
     $previous_lawyer = sanitize_text_field($_POST['previous_lawyer']);
     $meeting_type    = sanitize_text_field($_POST['meeting_type']);
 
     // Validate required fields
-    if (empty($name) || empty($phone) || empty($email) || empty($service_id) || empty($case_brief) || 
+    // Email and case_brief are optional for booking; everything else here must be present
+    if (empty($name) || empty($phone) || empty($service_id) || 
         empty($has_documents) || empty($previous_lawyer) || empty($meeting_type)) {
         wp_send_json_error('Please fill all required fields.');
     }
 
-    if (!is_email($email)) {
+    // If an email is provided, ensure it is valid
+    if (!empty($email) && !is_email($email)) {
         wp_send_json_error('Invalid email address.');
+    }
+
+    // Normalize optional fields for storage / email display
+    if (empty($email)) {
+        $email = 'N/A';
+    }
+    if (empty($case_brief)) {
+        $case_brief = 'N/A';
     }
 
     // Get service slug if not provided
@@ -1622,44 +1708,141 @@ function handle_booking_form_submission() {
         update_post_meta($booking_post_id, '_submitted_date', current_time('mysql'));
     }
 
-    // Prepare email
+    // Prepare email (best-effort; booking should still be considered successful
+    // even if email cannot be sent on this server/environment)
     $to = get_option('admin_email');
+    if (!$to || !is_email($to)) {
+        $to = $email; // fallback so wp_mail has a valid recipient
+    }
+
     $subject = "New Consultation Booking Request from $name";
     $headers = array(
         'Content-Type: text/html; charset=UTF-8',
         "Reply-To: $name <$email>"
     );
 
-    $body = "
-        <h2>New Consultation Booking Request</h2>
-        <h3>Service Type: " . ucfirst($service_type) . " Services</h3>
-        <h3>Personal Information</h3>
-        <p><strong>Name:</strong> $name</p>
-        <p><strong>Phone:</strong> $phone</p>
-        <p><strong>Email:</strong> $email</p>
-        <p><strong>City:</strong> $city</p>
-        
-        <h3>Consultation Information</h3>
-        <p><strong>Service:</strong> $service_display_title</p>
-        <p><strong>Case Brief:</strong><br>" . nl2br($case_brief) . "</p>
-        <p><strong>Has Documents:</strong> " . ucfirst($has_documents) . "</p>
-        <p><strong>Previous Lawyer:</strong> " . ucfirst($previous_lawyer) . "</p>
-        
-        <h3>Meeting Details</h3>
-        <p><strong>Meeting Type:</strong> " . ucfirst($meeting_type) . "</p>
-        
-        <hr>
-        <p><em>This booking was submitted through the website booking form.</em></p>
-    ";
+    // Build a styled HTML email that matches the site's visual language
+    $logo_url = get_template_directory_uri() . '/assets/images/DLC_logo.webp';
+    $primary   = '#1a3a5f';
+    $lightBlue = '#2a5a8a';
+    $bgLight   = '#f5f5f5';
 
-    // Send email
+    $body = '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Consultation Booking Request</title>
+</head>
+<body style="margin:0;padding:0;background-color:' . esc_attr($bgLight) . ';font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:' . esc_attr($bgLight) . ';padding:24px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+                    <tr>
+                        <td style="background:linear-gradient(135deg,' . esc_attr($primary) . ',' . esc_attr($lightBlue) . ');padding:20px 24px;color:#ffffff;">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td style="vertical-align:middle;">
+                                        <h1 style="margin:0;font-size:22px;font-weight:600;">New Consultation Booking Request</h1>
+                                        <p style="margin:4px 0 0 0;font-size:13px;opacity:0.9;">Submitted through the Dag Law Firm website</p>
+                                    </td>
+                                    <td align="right" style="vertical-align:middle;">
+                                        <img src="' . esc_url($logo_url) . '" alt="Dag Law Firm" style="height:42px;width:auto;border-radius:6px;">
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:24px 24px 8px 24px;">
+                            <h2 style="margin:0 0 16px 0;font-size:18px;color:' . esc_attr($primary) . ';">Summary</h2>
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+                                <tr>
+                                    <td style="padding:6px 0;font-size:14px;color:#444;"><strong>Service Type:</strong></td>
+                                    <td style="padding:6px 0;font-size:14px;color:#111;">' . esc_html(ucfirst($service_type)) . ' Services</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:6px 0;font-size:14px;color:#444;"><strong>Service:</strong></td>
+                                    <td style="padding:6px 0;font-size:14px;color:#111;">' . esc_html($service_display_title) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:6px 0;font-size:14px;color:#444;"><strong>Meeting Type:</strong></td>
+                                    <td style="padding:6px 0;font-size:14px;color:#111;">' . esc_html(ucfirst($meeting_type)) . '</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 24px 8px 24px;">
+                            <h2 style="margin:16px 0 10px 0;font-size:16px;color:' . esc_attr($primary) . ';">Personal Information</h2>
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px;color:#333;">
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Name:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html($name) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Phone:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html($phone) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Email:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html($email) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>City:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html($city) . '</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 24px 8px 24px;">
+                            <h2 style="margin:16px 0 10px 0;font-size:16px;color:' . esc_attr($primary) . ';">Consultation Details</h2>
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px;color:#333;">
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Has Documents:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html(ucfirst($has_documents)) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Previous Lawyer:</strong></td>
+                                    <td style="padding:4px 0;color:#111;">' . esc_html(ucfirst($previous_lawyer)) . '</td>
+                                </tr>
+                            </table>
+                            <div style="margin-top:10px;padding:12px 14px;background-color:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;">
+                                <div style="font-size:13px;font-weight:600;color:' . esc_attr($primary) . ';margin-bottom:6px;">Case Brief</div>
+                                <div style="font-size:14px;color:#333;line-height:1.6;">' . nl2br(esc_html($case_brief)) . '</div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:16px 24px 20px 24px;border-top:1px solid #e5e7eb;background-color:#fafafa;">
+                            <p style="margin:0 0 4px 0;font-size:12px;color:#6b7280;">
+                                This booking was submitted through the Dag Law Firm website booking form.
+                            </p>
+                            <p style="margin:0;font-size:11px;color:#9ca3af;">
+                                Please reply directly to this email or contact the client via the provided phone number to confirm and schedule the consultation.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>';
+
+    // Try to send, but don't treat failure as a user-facing error
     $sent = wp_mail($to, $subject, $body, $headers);
-
-    if ($sent) {
-        wp_send_json_success('Booking submitted successfully.');
-    } else {
-        wp_send_json_error('Failed to submit booking. Please try again later.');
+    if (!$sent) {
+        // Log for admins/developers; avoids blocking the UX if mail is not configured
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('Booking form: wp_mail failed for booking_request ID ' . (int) $booking_post_id);
+        }
     }
+
+    // Always respond with success once data is stored
+    wp_send_json_success('Booking submitted successfully.');
 }
 
 // Archive AJAX handler

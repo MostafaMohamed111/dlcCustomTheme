@@ -19,9 +19,13 @@
                     <label for="name" class="form-label">الاسم</label>
                     <input type="text" class="form-control" id="name" name="name" placeholder="اسمك" required>
                 </div>
+                <div class="phone mb-3">
+                    <label for="phone" class="form-label">رقم الهاتف</label>
+                    <input type="tel" class="form-control arabic-phone" id="phone" name="phone" placeholder="رقم هاتفك" required>
+                </div>
                 <div class=" email mb-3">
                     <label for="email" class="form-label">البريد الإلكتروني</label>
-                    <input type="email" class="form-control arabic-email" id="email" name="email" placeholder="بريدك الإلكتروني  " required>
+                    <input type="email" class="form-control arabic-email" id="email" name="email" placeholder="بريدك الإلكتروني  " >
                 </div> 
                 <div class=" message mb-3">
                     <label for="message" class="form-label">الرسالة</label>

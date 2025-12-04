@@ -58,32 +58,109 @@
                                         <?php endforeach; ?>
                                     </div>
                             <?php endif; ?>
+                            
+                            <?php
+                            $tags = get_the_tags();
+                            if ( ! empty( $tags ) ) :
+                                ?>
+                                <div class="post-tags-single-header">
+                                    <span class="tags-label">
+                                        <i class="fa-solid fa-hashtag"></i>
+                                        العلامات:
+                                    </span>
+                                    <div class="tags-list-inline">
+                                        <?php foreach($tags as $tag) : ?>
+                                            <a href="<?php echo get_tag_link($tag->term_id); ?>" class="tag-link-inline">
+                                                <?php echo esc_html( $tag->name ); ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </header>
                     
                     <!-- Post Content -->
                     <div class="post-content-single">
                         <?php the_content(); ?>
-                        
-                        <?php
-                        $tags = get_the_tags();
-                        if ( ! empty( $tags ) ) :
-                            ?>
-                            <div class="post-tags-inline">
-                                <span class="tags-label">
-                                    <i class="fa-solid fa-hashtag"></i>
-                                    Tags:
-                                </span>
-                                <div class="tags-list-inline">
-                                    <?php foreach($tags as $tag) : ?>
-                                        <a href="<?php echo get_tag_link($tag->term_id); ?>" class="tag-link-inline">
-                                            <?php echo esc_html( $tag->name ); ?>
-                                        </a>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
                     </div>
+
+                    <!-- Book Now CTA -->
+                    <div class="post-cta-section">
+                        <?php 
+                        // Get booking page URL using Polylang
+                        $booking_url = dlc_get_booking_page_url('ar');
+                        ?>
+                        <a href="<?php echo esc_url($booking_url); ?>" class="book-now-cta-btn">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            احجز استشارة
+                        </a>
+                    </div>
+
+                    <!-- Related Posts -->
+                    <?php
+                    $post_tags = wp_get_post_tags(get_the_ID(), array('fields' => 'ids'));
+                    if ( ! empty( $post_tags ) ) {
+                        // Get some tags (not all) - take first 3 tags
+                        $tags_to_match = array_slice($post_tags, 0, 3);
+                        
+                        // Get current language using Polylang
+                        $current_lang = 'ar';
+                        if (function_exists('pll_get_post_language')) {
+                            $current_lang = pll_get_post_language(get_the_ID()) ?: 'ar';
+                        }
+                        
+                        $related_query_args = array(
+                            'tag__in' => $tags_to_match,
+                            'post__not_in' => array(get_the_ID()),
+                            'posts_per_page' => 3,
+                            'orderby' => 'rand'
+                        );
+                        
+                        // Add Polylang language filter if available
+                        if (function_exists('pll_get_post_language')) {
+                            $related_query_args['lang'] = $current_lang;
+                        }
+                        
+                        $related_query = new WP_Query($related_query_args);
+                        
+                        if ( $related_query->have_posts() ) :
+                            ?>
+                            <section class="related-posts">
+                                <h3 class="related-posts-title">
+                                    <i class="fa-solid fa-book-open"></i>
+                                    منشورات ذات صلة
+                                </h3>
+                                <div class="related-posts-grid">
+                                    <?php
+                                    while ( $related_query->have_posts() ) : $related_query->the_post();
+                                        ?>
+                                        <a href="<?php the_permalink(); ?>" class="related-post-card">
+                                            <?php if ( has_post_thumbnail() ) : ?>
+                                                <div class="related-post-thumbnail">
+                                                    <?php the_post_thumbnail('medium', array('class' => 'related-post-image')); ?>
+                                                </div>
+                                            <?php endif; ?>
+                                            <div class="related-post-content">
+                                                <h4 class="related-post-title"><?php the_title(); ?></h4>
+                                                <div class="related-post-meta">
+                                                    <span class="related-post-date">
+                                                        <i class="fa-solid fa-calendar"></i>
+                                                        <?php echo get_the_date(); ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <?php
+                                    endwhile;
+                                    ?>
+                                </div>
+                            </section>
+                            <?php
+                            wp_reset_postdata();
+                        endif;
+                    }
+                    ?>
 
                     <?php 
                     // Comments are enabled for blog posts
@@ -231,71 +308,6 @@
                         </div>
                     </footer>
                 </article>
-                
-                <!-- Related Posts -->
-                <?php
-                $post_tags = wp_get_post_tags(get_the_ID(), array('fields' => 'ids'));
-                if ( ! empty( $post_tags ) ) {
-                    // Get some tags (not all) - take first 3 tags
-                    $tags_to_match = array_slice($post_tags, 0, 3);
-                    
-                    // Get current language using Polylang
-                    $current_lang = 'ar';
-                    if (function_exists('pll_get_post_language')) {
-                        $current_lang = pll_get_post_language(get_the_ID()) ?: 'ar';
-                    }
-                    
-                    $related_query_args = array(
-                        'tag__in' => $tags_to_match,
-                        'post__not_in' => array(get_the_ID()),
-                        'posts_per_page' => 3,
-                        'orderby' => 'rand'
-                    );
-                    
-                    // Add Polylang language filter if available
-                    if (function_exists('pll_get_post_language')) {
-                        $related_query_args['lang'] = $current_lang;
-                    }
-                    
-                    $related_query = new WP_Query($related_query_args);
-                    
-                    if ( $related_query->have_posts() ) :
-                        ?>
-                        <section class="related-posts">
-                            <h3 class="related-posts-title">
-                                <i class="fa-solid fa-book-open"></i>
-                                منشورات ذات صلة
-                            </h3>
-                            <div class="related-posts-grid">
-                                <?php
-                                while ( $related_query->have_posts() ) : $related_query->the_post();
-                                    ?>
-                                    <a href="<?php the_permalink(); ?>" class="related-post-card">
-                                        <?php if ( has_post_thumbnail() ) : ?>
-                                            <div class="related-post-thumbnail">
-                                                <?php the_post_thumbnail('medium', array('class' => 'related-post-image')); ?>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="related-post-content">
-                                            <h4 class="related-post-title"><?php the_title(); ?></h4>
-                                            <div class="related-post-meta">
-                                                <span class="related-post-date">
-                                                    <i class="fa-solid fa-calendar"></i>
-                                                    <?php echo get_the_date(); ?>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <?php
-                                endwhile;
-                                ?>
-                            </div>
-                        </section>
-                        <?php
-                        wp_reset_postdata();
-                    endif;
-                }
-                ?>
                 
                 <?php
             endwhile;

@@ -356,7 +356,7 @@
                 paged = parseInt(pageMatch[1]) || 1;
             } else {
                 // Fallback to query parameter
-                const urlParams = new URLSearchParams(url.split('?')[1] || '');
+        const urlParams = new URLSearchParams(url.split('?')[1] || '');
                 paged = parseInt(urlParams.get('paged')) || 1;
             }
         }
@@ -407,7 +407,7 @@
                             $paginationWrapper.html($paginationInResponse.html());
                         } else if (response.data.pagination_html) {
                             // Use separate pagination_html if available
-                            $paginationWrapper.html(response.data.pagination_html);
+                        $paginationWrapper.html(response.data.pagination_html);
                         }
                     }
                     
@@ -485,7 +485,7 @@
                 } else if (paginationCategoryId > 0) {
                     // For secure pages, use category_id as parent_category_id
                     parentCategoryId = paginationCategoryId;
-                }
+        }
             }
             
             // If still no parent, use categoryId as parent for secure pages

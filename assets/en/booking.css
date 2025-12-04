@@ -253,6 +253,7 @@
 
 /* Form Header */
 .form-header {
+    margin-top: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -627,7 +628,7 @@
         min-height: 100vh;
         overflow-y: auto;
     }
-
+   
     .image-sector {
         display: none;
     }
@@ -654,7 +655,7 @@
         flex-direction: column;
         align-items: center;
         gap: 15px;
-        margin-top: 10px;
+        margin-top: 30px;
     }
 
     .form-header h1 {
@@ -691,7 +692,7 @@
     }
 
     .form-header {
-        margin-top: 10px;
+        margin-top: 40px;
     }
 
     .form-header h1 {

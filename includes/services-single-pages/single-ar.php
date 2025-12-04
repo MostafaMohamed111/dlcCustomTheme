@@ -49,20 +49,8 @@
                         <?php the_content(); ?>
                     </div>
 
-                    
                     <!-- Post Footer -->
                     <footer class="post-footer-single">
-                        <div class="service-cta">
-                            <?php 
-                            // Get booking page URL using Polylang
-                            $booking_url = dlc_get_booking_page_url('ar');
-                            $booking_url = add_query_arg('service', get_the_ID(), $booking_url);
-                            ?>
-                            <a href="<?php echo esc_url($booking_url); ?>" class="service-cta-btn get-started-service-btn">
-                                احجز  الخدمة
-                                <i class="fa-solid fa-briefcase"></i>
-                            </a>
-                        </div>
                         <div class="post-navigation-inline">
                             <?php
                             // Get previous/next services filtered by Arabic language within same service type

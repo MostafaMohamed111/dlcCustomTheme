@@ -154,7 +154,7 @@ form .btn:hover {
 
 
 /* Fix Arabic placeholder alignment in email input */
-.contact-us-form input.arabic-email::placeholder {
+.contact-us-form input.arabic-email::placeholder, .contact-us-form input.arabic-phone::placeholder {
     text-align: right;
     direction: rtl;
 }

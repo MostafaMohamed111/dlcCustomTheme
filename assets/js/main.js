@@ -370,33 +370,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Define Presence Modal
+// WhatsApp Floating Action Button Toggle
 document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('definePresenceModal');
-    if (!modal) return;
+    const whatsappContainer = document.querySelector('.whatsapp-floating-container');
+    const whatsappMainBtn = document.querySelector('.whatsapp-main-btn');
     
-    const body = document.body;
-    const closeModal = () => {
-        modal.style.display = 'none';
-        body.style.overflow = '';
-    };
+    if (!whatsappContainer || !whatsappMainBtn) return;
     
-    const openModal = () => {
-        modal.style.display = 'flex';
-        body.style.overflow = 'hidden';
-        const mobileNav = document.querySelector('.mobile-nav');
-        if (mobileNav?.classList.contains('active')) closeMobileNav();
-    };
-    
-    // Open buttons
-    ['definePresenceBtn', 'definePresenceBtnMobile'].forEach(id => {
-        document.getElementById(id)?.addEventListener('click', openModal);
+    // Toggle active state on main button click
+    whatsappMainBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        whatsappContainer.classList.toggle('active');
+        const isActive = whatsappContainer.classList.contains('active');
+        whatsappMainBtn.setAttribute('aria-expanded', isActive);
     });
     
-    // Close handlers
-    document.getElementById('definePresenceClose')?.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!whatsappContainer.contains(e.target)) {
+            whatsappContainer.classList.remove('active');
+            whatsappMainBtn.setAttribute('aria-expanded', 'false');
+        }
+    });
+    
+    // Close when clicking on action buttons (they handle their own navigation)
+    const actionButtons = whatsappContainer.querySelectorAll('.whatsapp-action-btn');
+    actionButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Small delay to allow navigation, then close
+            setTimeout(() => {
+                whatsappContainer.classList.remove('active');
+                whatsappMainBtn.setAttribute('aria-expanded', 'false');
+            }, 300);
+        });
     });
 });

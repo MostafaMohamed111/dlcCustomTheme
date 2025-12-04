@@ -170,7 +170,7 @@
                     </div>
                     <div class="form-group">
                         <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" placeholder="Email" required>
+                        <input type="email" id="email" name="email" placeholder="Email">
                     </div>
                     <div class="form-group">
                         <label for="city">City</label>
@@ -192,7 +192,7 @@
                     </div>
                     <div class="form-group">
                         <label for="case_brief">Brief about your case *</label>
-                        <textarea id="case_brief" name="case_brief" rows="5" placeholder="Please provide a brief description of your case" required></textarea>
+                        <textarea id="case_brief" name="case_brief" rows="5" placeholder="Please provide a brief description of your case" ></textarea>
                     </div>
                     <div class="form-group">
                         <label>Do you have documents to support the issue? *</label>

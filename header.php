@@ -53,7 +53,50 @@
                 </div>
 
                 <div class="col-3 nav-right">
-                    <button class="btn nav-btn btn-define" id="definePresenceBtn" type="button">Define Presence <span class="fa-regular fa-flag mx-2"> </span></button>
+                    <?php
+                    // Check if we're on international category page or single post in international category
+                    $is_international = false;
+                    if (is_category() || is_archive()) {
+                        $queried_object = get_queried_object();
+                        $is_international = dlc_is_home_international_category($queried_object->term_id ?? 0);
+                    } elseif (is_single()) {
+                        // Check if current post belongs to international category
+                        $post_categories = wp_get_post_categories(get_the_ID());
+                        foreach ($post_categories as $cat_id) {
+                            if (dlc_is_home_international_category($cat_id)) {
+                                $is_international = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Get URLs
+                    $international_url = '#';
+                    $local_url = home_url();
+                    
+                    if ($is_international) {
+                        // On international page - show Local button
+                        if (function_exists('pll_home_url')) {
+                            $local_url = pll_home_url('en');
+                        }
+                        $button_text = 'Local';
+                        $button_url = $local_url;
+                        $button_icon = 'fa-solid fa-building';
+                    } else {
+                        // Not on international page - show International button
+                        $home_international_category = get_category_by_slug('home-international');
+                        if ($home_international_category) {
+                            $international_url = get_category_link($home_international_category->term_id);
+                        }
+                        $button_text = 'International';
+                        $button_url = $international_url;
+                        $button_icon = 'fa-solid fa-globe';
+                    }
+                    ?>
+                    <a href="<?php echo esc_url($button_url); ?>" class="btn nav-btn btn-define">
+                        <?php echo esc_html($button_text); ?>
+                        <span class="<?php echo esc_attr($button_icon); ?> mx-2"></span>
+                    </a>
                     <div class="sign-in-dropdown ms-2">
                         <button class="btn nav-btn sign-in sign-in-toggle" type="button">
                             Sign In
@@ -130,7 +173,50 @@
 
                     <div class="row align-items-center mobile-nav-bottom"  >
                         <div class="mobile-actions text-center d-flex align-items-center justify-content-center">
-                            <button class="btn nav-btn btn-define mx-4" id="definePresenceBtnMobile" type="button">Define Presence <span class="fa-regular fa-flag mx-2"> </span></button>
+                            <?php
+                            // Check if we're on international category page or single post in international category
+                            $is_international = false;
+                            if (is_category() || is_archive()) {
+                                $queried_object = get_queried_object();
+                                $is_international = dlc_is_home_international_category($queried_object->term_id ?? 0);
+                            } elseif (is_single()) {
+                                // Check if current post belongs to international category
+                                $post_categories = wp_get_post_categories(get_the_ID());
+                                foreach ($post_categories as $cat_id) {
+                                    if (dlc_is_home_international_category($cat_id)) {
+                                        $is_international = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // Get URLs
+                            $international_url = '#';
+                            $local_url = home_url();
+                            
+                            if ($is_international) {
+                                // On international page - show Local button
+                                if (function_exists('pll_home_url')) {
+                                    $local_url = pll_home_url('en');
+                                }
+                                $button_text = 'Local';
+                                $button_url = $local_url;
+                                $button_icon = 'fa-solid fa-building';
+                            } else {
+                                // Not on international page - show International button
+                                $home_international_category = get_category_by_slug('home-international');
+                                if ($home_international_category) {
+                                    $international_url = get_category_link($home_international_category->term_id);
+                                }
+                                $button_text = 'International';
+                                $button_url = $international_url;
+                                $button_icon = 'fa-solid fa-globe';
+                            }
+                            ?>
+                            <a href="<?php echo esc_url($button_url); ?>" class="btn nav-btn btn-define mx-4">
+                                <?php echo esc_html($button_text); ?>
+                                <span class="<?php echo esc_attr($button_icon); ?> mx-2"></span>
+                            </a>
                             <div class="sign-in-dropdown mx-4">
                                 <button class="btn nav-btn sign-in sign-in-toggle px-5" type="button">
                                     Sign In
@@ -161,66 +247,3 @@
       
 
     </nav>
-
-    <!-- Define Presence Modal -->
-    <div id="definePresenceModal" class="define-presence-modal">
-        <div class="define-presence-modal-content">
-            <div class="define-presence-modal-header">
-                <h3>Define Your Presence</h3>
-                <span class="define-presence-close" id="definePresenceClose">&times;</span>
-            </div>
-            <div class="define-presence-modal-body">
-                <?php
-                // Get English home-international category URL
-                $home_international_category = get_category_by_slug('home-international');
-                $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
-                
-                // Get Arabic home page URL using Polylang
-                $local_url = home_url();
-                if (function_exists('pll_home_url')) {
-                    $local_url = pll_home_url('ar');
-                } elseif (function_exists('pll_get_post')) {
-                    // Try to get Arabic version of home page
-                    $home_page_id = get_option('page_on_front');
-                    if ($home_page_id) {
-                        $arabic_home_id = pll_get_post($home_page_id, 'ar');
-                        if ($arabic_home_id) {
-                            $local_url = get_permalink($arabic_home_id);
-                        }
-                    }
-                }
-                
-                // Fallback: try to get by slug if Polylang not available
-                if ($local_url === home_url()) {
-                $arabic_front_page = get_page_by_path('front-page-ar');
-                    if ($arabic_front_page) {
-                        $local_url = get_permalink($arabic_front_page);
-                    } else {
-                        // Last fallback: construct Arabic home URL
-                        $local_url = home_url('/ar/');
-                    }
-                }
-                ?>
-                <div class="define-presence-options">
-                    <a href="<?php echo esc_url($international_url); ?>" class="define-presence-option">
-                        <div class="option-icon">
-                            <i class="fa-solid fa-globe"></i>
-                        </div>
-                        <div class="option-content">
-                            <h4>International</h4>
-                            <p>Access our international services</p>
-                        </div>
-                    </a>
-                    <a href="<?php echo esc_url($local_url); ?>" class="define-presence-option">
-                        <div class="option-icon">
-                            <i class="fa-solid fa-building"></i>
-                        </div>
-                        <div class="option-content">
-                            <h4>Local</h4>
-                            <p>Access our local services</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>

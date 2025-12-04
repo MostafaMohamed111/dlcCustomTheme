@@ -1,7 +1,6 @@
 .blog {
     margin-top: 120px;
     padding: 40px 0 80px;
-    overflow-x: hidden; /* Prevent horizontal scroll on small breakpoints */
 }
 
 .main-header{
@@ -73,6 +72,8 @@
 .blog-sidebar {
     position: sticky;
     top: 120px;
+    /* Ensure the sidebar is aligned to the top of its grid cell for proper sticky behavior */
+    align-self: flex-start;
 }
 
 .sidebar-widget {

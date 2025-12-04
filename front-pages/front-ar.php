@@ -89,7 +89,7 @@ $clients_count = (int) get_field('clients');
                         </div>
                         <h3>طلب استشارة</h3>
                         <p>احصل على نصائح قانونية من فريقنا المتمرس من المحامين. حدد موعدًا للاستشارة لمناقشة مسائل قانونية.</p>
-                        <a href="<?php echo esc_url(dlc_get_services_page_url('ar')); ?>" class="service-btn">اعرف أكثر</a>
+                        <a href="<?php echo esc_url(dlc_get_booking_page_url('ar')); ?>" class="service-btn">اعرف أكثر</a>
            
                     </div>
                          </div>

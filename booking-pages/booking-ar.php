@@ -175,7 +175,7 @@
                     </div>
                     <div class="form-group arabic-email">
                         <label for="email">البريد الإلكتروني *</label>
-                        <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" required>
+                        <input type="email" id="email" name="email" placeholder="البريد الإلكتروني" >
                     </div>
                     <div class="form-group">
                         <label for="city">المدينة</label>
@@ -197,7 +197,7 @@
                     </div>
                     <div class="form-group">
                         <label for="case_brief">نبذة عن قضيتك *</label>
-                        <textarea id="case_brief" name="case_brief" rows="5" placeholder="يرجى تقديم وصف موجز لقضيتك" required></textarea>
+                        <textarea id="case_brief" name="case_brief" rows="5" placeholder="يرجى تقديم وصف موجز لقضيتك" ></textarea>
                     </div>
                     <div class="form-group">
                         <label>هل لديك مستندات لدعم القضية؟ *</label>

@@ -62,7 +62,9 @@
     </div>
 </footer>
 
-<?php wp_footer(); ?>
+<?php 
+get_template_part('includes/whatsapp-floating-action');
+wp_footer(); ?>
 
 </body>
 </html>

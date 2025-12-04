@@ -85,7 +85,7 @@ $clients_count = (int) get_field('clients');
                         </div>
                             <h3>Request a Consultation</h3>
                             <p>Get expert legal advice from our experienced team of lawyers. Schedule a consultation to discuss your legal matters.</p>
-                            <a href="<?php echo home_url('/services'); ?>" class="service-btn">Learn More</a>  
+                            <a href="<?php echo home_url('/booking'); ?>" class="service-btn">Learn More</a>  
                     </div>
                     
                 </div>

@@ -1,5 +1,5 @@
 .single-post-container {
-    max-width: 900px;
+    max-width: 900px; /* Increased from 900px */
     margin: 0 auto;
     padding: 120px 0 80px;
 }
@@ -42,9 +42,30 @@
 .single-post {
     background-color: var(--white);
     border-radius: 12px;
-    overflow: hidden;
+    overflow: visible !important; /* Changed from hidden to visible so CTA can show */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     margin-bottom: 50px;
+    position: relative;
+}
+
+/* Ensure CTA section is always visible - now outside article */
+.post-cta-section {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 100px !important;
+    background-color: var(--white) !important;
+    margin: 20px 0 !important;
+}
+
+/* Force button visibility */
+.post-cta-section .book-now-cta-btn {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 100 !important;
 }
 
 /* Post Header */
@@ -107,6 +128,15 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
+    margin-bottom: 15px;
+}
+
+.post-tags-single-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 15px;
+    flex-wrap: wrap;
 }
 
 .taxonomy-label {
@@ -156,6 +186,7 @@
     font-size: 17px;
     color: var(--text-dark);
     position: relative;
+    margin-bottom: 0; /* Ensure no margin that could hide CTA */
 }
 
 .post-content-single p {
@@ -413,6 +444,7 @@
     font-size: 24px;
     font-weight: 600;
     color: var(--light-blue);
+    margin-top: 24px;
     margin-bottom: 25px;
     display: flex;
     align-items: center;
@@ -640,11 +672,47 @@
 
 
 
+/* Book Now CTA Section */
+.post-cta-section {
+    align-items: center;
+    text-align: center ;
+   
+   
+}
+
+.book-now-cta-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 32px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--white) ;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)) !important;
+    text-decoration: none ;
+    box-shadow: 0 10px 25px rgba(26, 58, 95, 0.25);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.book-now-cta-btn i {
+    font-size: 18px;
+}
+
+.book-now-cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(26, 58, 95, 0.35);
+    color: var(--white);
+    text-decoration: none;
+}
+
 /* Related Posts */
 .related-posts {
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 1px solid var(--light-gray);
+    margin-bottom: 40px; /* Added bottom margin */
+    padding-left: 50px;
+    padding-right: 50px;
 }
 
 .related-posts-title {
@@ -670,7 +738,7 @@
 
 .related-post-card {
     display: block;
-    background-color: var(--white);
+    background-color: var(--light-gray);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -737,6 +805,12 @@
 }
 
 /* Responsive */
+@media (max-width: 992px) {
+    .related-posts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .single-post-container {
         padding: 100px 15px 60px;
@@ -744,7 +818,9 @@
     
     .post-header-content,
     .post-content-single,
-    .post-footer-single {
+    .post-footer-single,
+    .post-cta-section,
+    .related-posts {
         padding-left: 25px;
         padding-right: 25px;
     }
