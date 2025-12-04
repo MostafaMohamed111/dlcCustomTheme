@@ -269,7 +269,7 @@
 /* Mission Section */
 .mission-section {
     width: 100%;
-    background-color: var(--primary-blue);
+    background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
     padding: 80px 0;
     margin-top: 60px;
 }
@@ -582,7 +582,7 @@
 /* Vision Section */
 .vision-section {
     width: 100%;
-    background-color: var(--primary-blue);
+    background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
     padding: 60px 0;
 }
 

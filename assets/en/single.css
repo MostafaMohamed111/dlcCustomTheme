@@ -129,11 +129,24 @@
     font-size: 13px;
     font-weight: 500;
     color: var(--primary-blue);
-    cursor: default;
-    user-select: none;
+    text-decoration: none;
+    cursor: pointer;
     background-color: rgba(26, 58, 95, 0.08);
     border-radius: 6px;
     margin-right: 6px;
+    transition: all 0.3s ease;
+}
+
+.category-badge-single:hover {
+    background-color: rgba(26, 58, 95, 0.15);
+    color: var(--primary-blue);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(26, 58, 95, 0.1);
+}
+
+.category-badge-single:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(26, 58, 95, 0.1);
 }
 
 /* Post Content */

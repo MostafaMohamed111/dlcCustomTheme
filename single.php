@@ -1,56 +1,49 @@
 <?php
-// Check the current post's language from post metadata
-$post_language = get_post_meta(get_the_ID(), '_post_language', true);
+/**
+ * Single Post Template Router
+ * Routes single posts to appropriate templates based on category type and language
+ */
 
-// Determine if this is an Arabic post
+$post_id = get_the_ID();
+$post_categories = wp_get_post_categories($post_id);
+
+// Detect post language using Polylang
+$is_arabic_post = false;
+if (function_exists('pll_get_post_language')) {
+    $post_language = pll_get_post_language($post_id);
 $is_arabic_post = ($post_language === 'ar');
+} else {
+    $is_arabic_post = dlc_is_arabic_page();
+}
 
-// Check if this post belongs to companies-services, individual-services, or home-international categories (English or Arabic)
-$is_service_post = false;
-$post_categories = get_the_category();
+$lang_suffix = $is_arabic_post ? 'ar' : 'en';
 
-foreach ($post_categories as $category) {
-    $slug = $category->slug;
-    // Check if the category is companies-services, companies-services-ar, individual-services, individual-services-ar, home-international, home-international-ar, or their children
-    if (strpos($slug, 'companies-services') !== false || 
-        strpos($slug, 'individual-services') !== false ||
-        strpos($slug, 'home-international') !== false) {
-        $is_service_post = true;
-        break;
-    }
-    
-    // Also check if it's a child of companies-services, companies-services-ar, individual-services, individual-services-ar, home-international, or home-international-ar
-    $companies_cat = get_category_by_slug('companies-services');
-    $companies_ar_cat = get_category_by_slug('companies-services-ar');
-    $individual_cat = get_category_by_slug('individual-services');
-    $individual_ar_cat = get_category_by_slug('individual-services-ar');
-    $home_international_cat = get_category_by_slug('home-international');
-    $home_international_ar_cat = get_category_by_slug('home-international-ar');
-    
-    if (($companies_cat && cat_is_ancestor_of($companies_cat->term_id, $category->term_id)) ||
-        ($companies_ar_cat && cat_is_ancestor_of($companies_ar_cat->term_id, $category->term_id)) ||
-        ($individual_cat && cat_is_ancestor_of($individual_cat->term_id, $category->term_id)) ||
-        ($individual_ar_cat && cat_is_ancestor_of($individual_ar_cat->term_id, $category->term_id)) ||
-        ($home_international_cat && cat_is_ancestor_of($home_international_cat->term_id, $category->term_id)) ||
-        ($home_international_ar_cat && cat_is_ancestor_of($home_international_ar_cat->term_id, $category->term_id))) {
-        $is_service_post = true;
+// Detect post category type using generic function
+$category_type = null;
+foreach ($post_categories as $cat_id) {
+    $category_type = dlc_get_category_type_slug($cat_id);
+    if ($category_type) {
         break;
     }
 }
 
-// Load the appropriate single post template based on category and language
-if ($is_service_post) {
-    // Service post
-    if ($is_arabic_post) {
-        get_template_part('includes/arabic-service-single');
-    } else {
-        get_template_part('includes/english-service-single');
-    }
-} else {
-    // Regular blog/news post
-    if ($is_arabic_post) {
-        get_template_part('includes/arabic-single');
-    } else {
-        get_template_part('includes/english-single');
-    }
+// Route to appropriate template based on category type slug
+switch ($category_type) {
+    case 'news':
+        get_template_part('includes/news-single-pages/single-' . $lang_suffix);
+        break;
+    
+    case 'companies-services':
+    case 'individual-services':
+    case 'home-international':
+        get_template_part('includes/services-single-pages/single-' . $lang_suffix);
+        break;
+    
+    case 'blog':
+        get_template_part('includes/blog-single-pages/single-' . $lang_suffix);
+        break;
+
+    default:
+        get_template_part('includes/general-single-pages/single-' . $lang_suffix);
+        break;
 }

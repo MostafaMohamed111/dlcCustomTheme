@@ -178,30 +178,46 @@
 
 
 .page-content {
-    padding: 150px 0 100px 0;
+    padding: 0 0 100px 0;
     background-image: url('../images/geometricPattern.png');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    position: relative;
+}
+/* 
+.page-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 0;
+} */
 
+.services-landing {
+    position: relative;
+    z-index: 1;
 }
 
-.services-landing .header {
-    background-color: var(--primary-blue);
+    .header {
+    background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
     text-align: center;
-    padding: 40px 0;
+    padding: 70px 0;
     margin-bottom: 90px;
 
 }
 
-.services-landing .header h2 {
+ .header h2 {
     color:  var(--white);
     font-size: 36px;
     margin-bottom: 20px;
     scroll-margin-top: 100px;
 }
-.services-landing .header p {
+ .header p {
     font-size: 20px;
     max-width: 1000px;
     margin: 0 auto;
@@ -502,6 +518,7 @@
 .pagination-wrapper {
     margin-top: 60px;
     text-align: center;
+    direction: ltr !important; /* Force LTR for pagination regardless of page language */
 }
 
 .pagination-simple {

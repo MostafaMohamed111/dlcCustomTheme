@@ -1,7 +1,4 @@
 <?php
-/*
-Template Name: 404 Error
-*/
 
 ?>
 <!DOCTYPE html>
