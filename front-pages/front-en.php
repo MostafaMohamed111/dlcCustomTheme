@@ -115,7 +115,9 @@ $clients_count = (int) get_field('clients');
         </div>
     </section>
 
-
+    <!-- Certificates Section -->
+    <?php get_template_part('includes/certificates'); ?>
+    <?php get_template_part('includes/clients'); ?>
 
 </main>
 <?php

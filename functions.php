@@ -211,6 +211,9 @@ function enqueue_theme_css() {
         case is_front_page():
             wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('front-page');
+            // Certificates and clients carousel
+            wp_register_style('clients-certificates', get_template_directory_uri() . '/assets/en/clients-certificates.css', array('main'), '1.0.0', 'all');
+            wp_enqueue_style('clients-certificates');
             break;
             
         case is_page_template('services.php'):
@@ -435,6 +438,12 @@ function enqueue_theme_scripts() {
     if ( is_post_type_archive('team') ) {
         wp_register_script( 'team-carousel', get_template_directory_uri() . '/assets/js/team.js', array(), '1.0.0', true );
         wp_enqueue_script( 'team-carousel' );
+    }
+
+    // Certificates and clients carousel (on front page)
+    if ( is_front_page() ) {
+        wp_register_script( 'clients-certificates-carousel', get_template_directory_uri() . '/assets/js/clients-certificates.js', array(), '1.0.0', true );
+        wp_enqueue_script( 'clients-certificates-carousel' );
     }
 }
 
@@ -2246,4 +2255,318 @@ function dlc_register_team_cpt() {
     register_post_type( 'team', $args );
 }
 add_action( 'init', 'dlc_register_team_cpt' );
+
+
+
+
+add_action('admin_menu', function () {
+    add_menu_page(
+        'Home Logos',
+        'Home Logos',
+        'manage_options',
+        'home-logos',
+        'dlc_home_logos_page',
+        'dashicons-images-alt2',
+        30
+    );
+});
+
+// Enqueue media scripts for the admin page
+add_action('admin_enqueue_scripts', function($hook) {
+    if ($hook !== 'toplevel_page_home-logos') {
+        return;
+    }
+    wp_enqueue_media();
+});
+
+
+function dlc_home_logos_page() {
+
+    // Save function with nonce verification
+    if (isset($_POST['dlc_save']) && check_admin_referer('dlc_home_logos_save', 'dlc_home_logos_nonce')) {
+        // Process certificates with URLs
+        $certificates = [];
+        if (isset($_POST['certificates']) && is_array($_POST['certificates'])) {
+            foreach ($_POST['certificates'] as $cert) {
+                if (isset($cert['image']) && !empty($cert['image'])) {
+                    $certificates[] = array(
+                        'image' => esc_url_raw($cert['image']),
+                        'link' => isset($cert['link']) && !empty($cert['link']) ? esc_url_raw($cert['link']) : ''
+                    );
+                }
+            }
+        }
+        
+        // Process clients with URLs
+        $clients = [];
+        if (isset($_POST['clients']) && is_array($_POST['clients'])) {
+            foreach ($_POST['clients'] as $client) {
+                if (isset($client['image']) && !empty($client['image'])) {
+                    $clients[] = array(
+                        'image' => esc_url_raw($client['image']),
+                        'link' => isset($client['link']) && !empty($client['link']) ? esc_url_raw($client['link']) : ''
+                    );
+                }
+            }
+        }
+        
+        update_option('dlc_certificates', $certificates);
+        update_option('dlc_clients', $clients);
+        
+        echo '<div class="notice notice-success is-dismissible"><p>Settings saved successfully!</p></div>';
+    }
+
+    $certs = get_option('dlc_certificates', []);
+    $clients = get_option('dlc_clients', []);
+    
+    // Backward compatibility: convert old format (just URLs) to new format (array with image and link)
+    if (!empty($certs) && isset($certs[0]) && is_string($certs[0])) {
+        $certs = array_map(function($url) {
+            return array('image' => $url, 'link' => '');
+        }, $certs);
+        update_option('dlc_certificates', $certs);
+    }
+    if (!empty($clients) && isset($clients[0]) && is_string($clients[0])) {
+        $clients = array_map(function($url) {
+            return array('image' => $url, 'link' => '');
+        }, $clients);
+        update_option('dlc_clients', $clients);
+    }
+
+    ?>
+    <div class="wrap">
+        <h1>Home Logos Settings</h1>
+
+        <form method="post">
+            <?php wp_nonce_field('dlc_home_logos_save', 'dlc_home_logos_nonce'); ?>
+
+            <style>
+                .dlc-box {
+                    border: 2px dashed #ccc;
+                    padding: 15px;
+                    min-height: 120px;
+                    display: flex;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                }
+                .dlc-item {
+                    width: 120px;
+                    min-height: 140px;
+                    border: 1px solid #ddd;
+                    position: relative;
+                    cursor: move;
+                    background: #fff;
+                    border-radius: 4px;
+                    padding: 5px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .dlc-item.dragging {
+                    opacity: 0.5;
+                }
+                .dlc-item.drag-over {
+                    border: 2px dashed #0073aa;
+                }
+                .dlc-item img {
+                    width: 100px;
+                    height: 100px;
+                    object-fit: contain;
+                    display: block;
+                }
+                .dlc-remove {
+                    position: absolute;
+                    top: -8px;
+                    right: -8px;
+                    background: #dc3232;
+                    color: #fff;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 14px;
+                    font-weight: bold;
+                    line-height: 1;
+                    z-index: 10;
+                }
+                .dlc-remove:hover {
+                    background: #a00;
+                }
+                .dlc-item-url {
+                    margin-top: 5px;
+                    width: 100%;
+                    padding: 5px;
+                    font-size: 11px;
+                    border: 1px solid #ddd;
+                    border-radius: 3px;
+                }
+                .dlc-item-url:focus {
+                    border-color: #0073aa;
+                    outline: none;
+                }
+            </style>
+
+            <!-- Certificates Section -->
+            <h2>Certificates Logos</h2>
+            <button class="button dlc-add" data-target="certificates">Add Image</button>
+            <div id="certificates" class="dlc-box">
+                <?php foreach ($certs as $index => $cert): 
+                    $image_url = is_array($cert) ? $cert['image'] : $cert;
+                    $link_url = is_array($cert) && isset($cert['link']) ? $cert['link'] : '';
+                ?>
+                    <div class="dlc-item" draggable="true">
+                        <span class="dlc-remove">×</span>
+                        <img src="<?php echo esc_url($image_url); ?>">
+                        <input type="hidden" name="certificates[<?php echo $index; ?>][image]" value="<?php echo esc_url($image_url); ?>">
+                        <input type="url" name="certificates[<?php echo $index; ?>][link]" 
+                               value="<?php echo esc_url($link_url); ?>" 
+                               placeholder="Link URL (optional)" 
+                               class="dlc-item-url">
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <br><br>
+
+            <!-- Clients Section -->
+            <h2>Clients Logos</h2>
+            <button class="button dlc-add" data-target="clients">Add Image</button>
+            <div id="clients" class="dlc-box">
+                <?php foreach ($clients as $index => $client): 
+                    $image_url = is_array($client) ? $client['image'] : $client;
+                    $link_url = is_array($client) && isset($client['link']) ? $client['link'] : '';
+                ?>
+                    <div class="dlc-item" draggable="true">
+                        <span class="dlc-remove">×</span>
+                        <img src="<?php echo esc_url($image_url); ?>">
+                        <input type="hidden" name="clients[<?php echo $index; ?>][image]" value="<?php echo esc_url($image_url); ?>">
+                        <input type="url" name="clients[<?php echo $index; ?>][link]" 
+                               value="<?php echo esc_url($link_url); ?>" 
+                               placeholder="Link URL (optional)" 
+                               class="dlc-item-url">
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <br><br>
+            <button class="button button-primary" name="dlc_save">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        jQuery(function($){
+            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
+                console.error('WordPress media library is not loaded');
+                return;
+            }
+
+            // Media uploader
+            $('.dlc-add').on('click', function(e){
+                e.preventDefault();
+                var target = $(this).data('target');
+                var $container = $('#' + target);
+
+                var frame = wp.media({
+                    title: 'Select Images',
+                    button: {
+                        text: 'Add Images'
+                    },
+                    multiple: true,
+                    library: { 
+                        type: 'image' 
+                    }
+                });
+
+                frame.on('select', function(){
+                    var selection = frame.state().get('selection');
+                    var index = $container.find('.dlc-item').length;
+                    selection.each(function(attachment) {
+                        var url = attachment.attributes.url;
+                        var item = $('<div class="dlc-item" draggable="true">' +
+                            '<span class="dlc-remove">×</span>' +
+                            '<img src="' + url + '" alt="">' +
+                            '<input type="hidden" name="' + target + '[' + index + '][image]" value="' + url + '">' +
+                            '<input type="url" name="' + target + '[' + index + '][link]" value="" placeholder="Link URL (optional)" class="dlc-item-url">' +
+                            '</div>');
+                        $container.append(item);
+                        index++;
+                    });
+                });
+
+                frame.open();
+            });
+
+            // Remove image
+            $(document).on('click', '.dlc-remove', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).closest('.dlc-item').remove();
+            });
+
+            // Drag and drop sorting
+            var draggedElement = null;
+
+            $(document).on('dragstart', '.dlc-item', function(e){
+                draggedElement = this;
+                $(this).addClass('dragging');
+                e.originalEvent.dataTransfer.effectAllowed = 'move';
+                e.originalEvent.dataTransfer.setData('text/html', this.innerHTML);
+            });
+
+            $(document).on('dragend', '.dlc-item', function(){
+                $(this).removeClass('dragging');
+                $('.dlc-item').removeClass('drag-over');
+                draggedElement = null;
+            });
+
+            $(document).on('dragover', '.dlc-box', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                e.originalEvent.dataTransfer.dropEffect = 'move';
+            });
+
+            $(document).on('dragover', '.dlc-item', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (this !== draggedElement && draggedElement !== null) {
+                    $(this).addClass('drag-over');
+                    
+                    var $this = $(this);
+                    var $parent = $this.parent();
+                    var thisIndex = $this.index();
+                    var draggedIndex = $(draggedElement).index();
+                    
+                    if (thisIndex > draggedIndex) {
+                        $this.after(draggedElement);
+                    } else {
+                        $this.before(draggedElement);
+                    }
+                }
+            });
+
+            $(document).on('dragleave', '.dlc-item', function(){
+                $(this).removeClass('drag-over');
+            });
+
+            $(document).on('drop', '.dlc-box', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                $('.dlc-item').removeClass('drag-over');
+            });
+
+            $(document).on('drop', '.dlc-item', function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('drag-over');
+            });
+
+        });
+    </script>
+
+    <?php
+}
 

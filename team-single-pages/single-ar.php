@@ -1,5 +1,5 @@
 <?php
-get_header();
+get_header('ar');
 ?>
 
 <div class="main">
@@ -115,4 +115,4 @@ get_header();
 </div>
 
 <?php
-get_footer();
+get_footer('ar');
