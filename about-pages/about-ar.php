@@ -123,11 +123,29 @@ get_header('ar'); ?>
 
 
 
-
-
-
-
-
+<!-- CTA to Our Team Section -->
+<section class="team-cta-section">
+    <div class="container">
+        <div class="team-cta-wrapper">
+            <div class="team-cta-content">
+                <div class="team-cta-icon">
+                    <i class="fa-solid fa-users-line"></i>
+                </div>
+                <h2 class="team-cta-title">تعرف على فريقنا القانوني الخبير</h2>
+                <p class="team-cta-description">
+                    اكتشف المحترفين المتفانين وراء مكتب داغ للمحاماة. محامونا ومستشارونا ذوو الخبرة مستعدون لتزويدك بخدمات قانونية استثنائية.
+                </p>
+                <a href="<?php echo esc_url(get_post_type_archive_link('team')); ?>" class="team-cta-button">
+                    <span>اعرض فريقنا</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="team-cta-visual">
+                <div class="team-cta-decoration"></div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="mission-section">
     <div class="container">

@@ -13,19 +13,15 @@ function dlc_is_arabic_page() {
         return $is_arabic_page;
     }
     
-    $is_arabic_page = false;
-    
     // Use Polylang to detect current language
     if (function_exists('pll_current_language')) {
-    $current_lang = pll_current_language();
+        $current_lang = pll_current_language();
         $is_arabic_page = ($current_lang === 'ar');
         return $is_arabic_page;
     }
     
     // Fallback: Check RTL setting if Polylang is not available
-    if (is_rtl()) {
-        $is_arabic_page = true;
-    }
+    $is_arabic_page = is_rtl();
     
     return $is_arabic_page;
 }
@@ -213,38 +209,32 @@ function enqueue_theme_css() {
     // Enqueue page-specific CSS
     switch (true) {
         case is_front_page():
-        case is_page_template('front-page-ar.php'):
             wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('front-page');
             break;
             
         case is_page_template('services.php'):
-        case is_page_template('services-ar.php'):
             wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('services-page');
             break;
             
         case is_page_template('contact-us.php'):
-        case is_page_template('contact-us-ar.php'):
             wp_register_style('contact-us-page', get_template_directory_uri() . '/assets/en/contact-us.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('contact-us-page');
             break;
             
         case is_page_template('about-us.php'):
-        case is_page_template('about-us-ar.php'):
             wp_register_style('about-us-page', get_template_directory_uri() . '/assets/en/about-us.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('about-us-page');
             break;
             
         case is_page_template('privacy-policy.php'):
-        case is_page_template('privacy-policy-ar.php'):
         case is_page(get_option('wp_page_for_privacy_policy')):
             wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('privacy-policy-page');
             break;
 
         case is_page_template('booking.php'):
-        case is_page_template('booking-ar.php'):
             wp_register_style('booking-page', get_template_directory_uri() . '/assets/en/booking.css', array('main'), '1.0.0', 'all');
             wp_enqueue_style('booking-page');
             break;
@@ -312,22 +302,27 @@ function enqueue_theme_css() {
         wp_enqueue_style('single-page');
     }
 
+    // Team archive page
+    if (is_post_type_archive('team')) {
+        wp_register_style('team-page', get_template_directory_uri() . '/assets/en/team.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('team-page');
+    }
+
+    // Team single page
+    if (is_singular('team')) {
+        wp_register_style('team-single-page', get_template_directory_uri() . '/assets/en/team-single.css', array('main'), '1.0.0', 'all');
+        wp_enqueue_style('team-single-page');
+    }
+
     // Generic page layout (fallback for normal pages that are not using a special template)
     if (is_page()
         && !is_front_page()
-        && !is_page_template('front-page-ar.php')
         && !is_page_template('services.php')
-        && !is_page_template('services-ar.php')
         && !is_page_template('secure-yourself.php')
-        && !is_page_template('secure-yourself-ar.php')
         && !is_page_template('contact-us.php')
-        && !is_page_template('contact-us-ar.php')
         && !is_page_template('about-us.php')
-        && !is_page_template('about-us-ar.php')
         && !is_page_template('privacy-policy.php')
-        && !is_page_template('privacy-policy-ar.php')
         && !is_page_template('booking.php')
-        && !is_page_template('booking-ar.php')
     ) {
         wp_register_style('generic-page', get_template_directory_uri() . '/assets/en/page.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('generic-page');
@@ -418,13 +413,13 @@ function enqueue_theme_scripts() {
     wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
     wp_enqueue_script( 'scroll-animations' );
 
-    if ( is_page_template('contact-us.php') || is_page_template('contact-us-ar.php') ) {
+    if ( is_page_template('contact-us.php')  ) {
         wp_register_script( 'contact-us', get_template_directory_uri() . '/assets/js/contact-us.js', array(), '1.0.0', true );
         wp_enqueue_script( 'contact-us' );
         dlc_localize_ajax_script('contact-us');
     }
 
-    if ( is_page_template('booking.php') || is_page_template('booking-ar.php') ) {
+    if ( is_page_template('booking.php') ) {
         wp_register_script( 'booking', get_template_directory_uri() . '/assets/js/booking.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'booking' );
         dlc_localize_ajax_script('booking');
@@ -434,6 +429,12 @@ function enqueue_theme_scripts() {
         wp_register_script( 'archive-ajax', get_template_directory_uri() . '/assets/js/archive.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'archive-ajax' );
         dlc_localize_ajax_script('archive-ajax', 'archive_ajax_nonce');
+    }
+
+    // Team archive page carousel
+    if ( is_post_type_archive('team') ) {
+        wp_register_script( 'team-carousel', get_template_directory_uri() . '/assets/js/team.js', array(), '1.0.0', true );
+        wp_enqueue_script( 'team-carousel' );
     }
 }
 
@@ -780,13 +781,23 @@ function dlc_get_category_tree_ids($category_slug) {
 // Show Blog category posts on main archive/blog page and set posts per page
 function show_blog_category_posts($query) {
     if (!is_admin() && $query->is_main_query()) {
+        // Don't modify custom post type archives (like team)
+        if (is_post_type_archive()) {
+            $post_type = get_query_var('post_type');
+            if ($post_type && $post_type !== 'post') {
+                // Set posts per page for custom post type archives
+                $query->set('posts_per_page', DLC_POSTS_PER_PAGE);
+                return;
+            }
+        }
+        
         // Set posts per page for all archive pages
         if (is_archive() || is_category() || is_tag()) {
             $query->set('posts_per_page', DLC_POSTS_PER_PAGE);
         }
         
         // If on archive page (blog home) and not viewing a specific category
-        if (is_archive() && !is_category() && !is_tag() && !is_author()) {
+        if (is_archive() && !is_category() && !is_tag() && !is_author() && !is_post_type_archive()) {
             $blog_category = get_category_by_slug('blog');
             if (!$blog_category) {
                 $blog_category = get_term_by('name', 'Blog', 'category');
@@ -801,36 +812,6 @@ function show_blog_category_posts($query) {
 }
 add_action('pre_get_posts', 'show_blog_category_posts');
 
-
-function add_language_metabox() {
-    add_meta_box(
-        'post_language_box',
-        'Post Language',
-        'render_language_metabox',
-        'post',
-        'side',
-        'high'
-    );
-}
-add_action('add_meta_boxes', 'add_language_metabox');
-
-function render_language_metabox($post) {
-    $value = get_post_meta($post->ID, '_post_language', true);
-    ?>
-    <label for="post_language">Language:</label>
-    <select name="post_language" id="post_language" style="width:100%;">
-        <option value="en" <?php selected($value, 'en'); ?>>English</option>
-        <option value="ar" <?php selected($value, 'ar'); ?>>Arabic</option>
-    </select>
-    <?php
-}
-
-function save_language_metabox($post_id) {
-    if (isset($_POST['post_language'])) {
-        update_post_meta($post_id, '_post_language', sanitize_text_field($_POST['post_language']));
-    }
-}
-add_action('save_post', 'save_language_metabox');
 
 // Generic helper function to detect if a post is in a news category
 function dlc_is_news_post($post_id = null) {
@@ -853,42 +834,27 @@ function dlc_is_news_post($post_id = null) {
 function dlc_get_category_ids_by_type($category_type = 'blog', $include_children = true) {
     $category_ids = array();
     
-    if ($category_type === 'news') {
-        // Base English news category
-        $news_category = get_category_by_slug('news');
-        if (!$news_category) {
-            $news_category = get_term_by('name', 'News', 'category');
-        }
+    // Get base category slug and fallback name
+    $category_slug = ($category_type === 'news') ? 'news' : 'blog';
+    $fallback_name = ($category_type === 'news') ? 'News' : 'Blog';
+    
+    // Base English category
+    $base_category = get_category_by_slug($category_slug);
+    if (!$base_category) {
+        $base_category = get_term_by('name', $fallback_name, 'category');
+    }
 
-        if ($news_category) {
-            $category_ids[] = $news_category->term_id;
+    if ($base_category) {
+        $category_ids[] = $base_category->term_id;
 
-            // Add translated equivalents via Polylang
-            if (function_exists('pll_get_term')) {
-                $news_ar_id = pll_get_term($news_category->term_id, 'ar');
-                if ($news_ar_id) {
-                    $category_ids[] = $news_ar_id;
-                }
+        // Add translated equivalents via Polylang
+        if (function_exists('pll_get_term')) {
+            $translated_id = pll_get_term($base_category->term_id, 'ar');
+            if ($translated_id) {
+                $category_ids[] = $translated_id;
             }
         }
-    } else {
-        // Base English blog category
-        $blog_category = get_category_by_slug('blog');
-        if (!$blog_category) {
-            $blog_category = get_term_by('name', 'Blog', 'category');
-        }
-
-            if ($blog_category) {
-            $category_ids[] = $blog_category->term_id;
-
-            // Add translated equivalents via Polylang
-            if (function_exists('pll_get_term')) {
-                $blog_ar_id = pll_get_term($blog_category->term_id, 'ar');
-                if ($blog_ar_id) {
-                    $category_ids[] = $blog_ar_id;
-                }
-            }
-        }
+    }
         
         // Get all children of blog categories if requested
         if ($include_children) {
@@ -899,10 +865,10 @@ function dlc_get_category_ids_by_type($category_type = 'blog', $include_children
                 }
             }
         }
-    }
+    
     
     return array_unique($category_ids);
-}
+    }
 
 // Helper to determine service type (companies, individual, or home-international) for a given post
 function dlc_get_service_type($post_id = null) {
@@ -948,11 +914,12 @@ function dlc_get_service_category_ids($service_type = 'companies', $language = '
     // Start from the English parent category and translate via Polylang for the target language
     $parent_category = get_category_by_slug($base_slug);
     if (!$parent_category) {
+        // Try by name as fallback
         $parent_category = get_term_by('name', ucwords(str_replace('-', ' ', $base_slug)), 'category');
-    }
-
-    if (!$parent_category) {
-        return array();
+        
+        if (!$parent_category) {
+            return array();
+        }
     }
 
     $parent_id = $parent_category->term_id;
@@ -986,10 +953,9 @@ function dlc_get_service_archive_url($post_id = null) {
     }
     
     // Get post language; Polylang is now the source of truth
+    $language = 'en';
     if (function_exists('pll_get_post_language')) {
-    $language = pll_get_post_language($post_id) ?: 'en';
-    } else {
-        $language = 'en';
+        $language = pll_get_post_language($post_id) ?: 'en';
     }
 
     // Map service type to its English parent slug
@@ -1040,9 +1006,10 @@ function dlc_get_page_url_by_template($template_name, $language = null, $fallbac
     ));
     
     if (!empty($pages)) {
+        $en_page_id = $pages[0]->ID;
+        
         // If Polylang is active, get the translated page
         if (function_exists('pll_get_post') && $language !== 'en') {
-            $en_page_id = $pages[0]->ID;
             $translated_page_id = pll_get_post($en_page_id, $language);
             if ($translated_page_id) {
                 return get_permalink($translated_page_id);
@@ -1050,8 +1017,8 @@ function dlc_get_page_url_by_template($template_name, $language = null, $fallbac
         }
         
         // Return English page or fallback
-        return get_permalink($pages[0]->ID);
-                }
+        return get_permalink($en_page_id);
+    }
     
     // Fallback URLs if provided
     if (!empty($fallback_urls)) {
@@ -1061,8 +1028,8 @@ function dlc_get_page_url_by_template($template_name, $language = null, $fallbac
         // Default to English fallback if language-specific not found
         if (isset($fallback_urls['en'])) {
             return $fallback_urls['en'];
-            }
         }
+    }
     
     // Ultimate fallback
     return home_url('/');
@@ -1191,10 +1158,9 @@ function dlc_get_post_archive_url($post_id = null, $language = null) {
     
     // Determine language using Polylang where possible
     if (!$language) {
+        $language = 'en';
         if (function_exists('pll_get_post_language')) {
-        $language = pll_get_post_language($post_id) ?: 'en';
-        } else {
-            $language = 'en';
+            $language = pll_get_post_language($post_id) ?: 'en';
         }
     }
     
@@ -1220,7 +1186,7 @@ function dlc_get_post_archive_url($post_id = null, $language = null) {
         $translated_id = pll_get_term($base_category->term_id, 'ar');
         if ($translated_id) {
             $target_category_id = $translated_id;
-                }
+        }
     }
     
     return get_category_link($target_category_id);
@@ -1519,8 +1485,8 @@ function get_booking_services() {
         if (!$en_category) {
             // Try by name as fallback
             $en_category = get_term_by('name', ucfirst(str_replace('-', ' ', $base_category_slug)), 'category');
-    }
-    
+        }
+        
         if ($en_category) {
             if ($language === 'ar') {
                 $ar_category_id = pll_get_term($en_category->term_id, 'ar');
@@ -1943,7 +1909,9 @@ function load_archive_posts_ajax() {
         } else {
             // All services - get all posts from parent category and children
             $query_args['category__in'] = $all_category_ids;
-            $category_title = $is_arabic_category ? 'جميع الخدمات' : 'All Services';
+            // Determine language for category title
+            $current_lang = function_exists('pll_current_language') ? pll_current_language() : 'en';
+            $category_title = ($current_lang === 'ar') ? 'جميع الخدمات' : 'All Services';
         }
     } else {
         // Blog archive page or general archive logic
@@ -2228,3 +2196,54 @@ function load_archive_posts_ajax() {
         'category_title' => $category_title
     ));
 }
+
+
+
+
+// 1. Register "Team" Custom Post Type
+function dlc_register_team_cpt() {
+
+    $labels = array(
+        'name'               => 'Team',
+        'singular_name'      => 'Team Member',
+        'menu_name'          => 'Our Team',
+        'name_admin_bar'     => 'Team Member',
+        'add_new'            => 'Add New',
+        'add_new_item'       => 'Add New Team Member',
+        'edit_item'          => 'Edit Team Member',
+        'new_item'           => 'New Team Member',
+        'view_item'          => 'View Team Member',
+        'search_items'       => 'Search Team',
+        'not_found'          => 'No team members found',
+        'not_found_in_trash' => 'No team members found in Trash',
+        'all_items'          => 'All Team Members',
+    );
+
+    $args = array(
+        'labels'             => $labels,
+        'public'             => true,                 // visible on front & admin
+        'publicly_queryable' => true,
+        'show_ui'            => true,                 // show in dashboard
+        'show_in_menu'       => true,
+        'query_var'          => true,
+        'rewrite'            => array(
+            'slug' => 'team',                         // URL base: /team/name/
+        ),
+        'capability_type'    => 'post',
+        'has_archive'        => true,                 // /team/ archive page
+        'hierarchical'       => false,
+        'menu_position'      => 20,
+        'menu_icon'          => 'dashicons-groups',   // WordPress icon
+        'supports'           => array(
+            'title',           // Employee name
+            'editor',          // Main bio/content
+            'thumbnail',       // Photo (featured image)
+            'excerpt',         // Short intro
+        ),
+        'show_in_rest'       => true, // Enables block editor (Gutenberg)
+    );
+
+    register_post_type( 'team', $args );
+}
+add_action( 'init', 'dlc_register_team_cpt' );
+

@@ -111,20 +111,29 @@ get_header(); ?>
 
 </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- CTA to Our Team Section -->
+<section class="team-cta-section">
+    <div class="container">
+        <div class="team-cta-wrapper">
+            <div class="team-cta-content">
+                <div class="team-cta-icon">
+                    <i class="fa-solid fa-users-line"></i>
+                </div>
+                <h2 class="team-cta-title">Meet Our Expert Legal Team</h2>
+                <p class="team-cta-description">
+                    Discover the dedicated professionals behind DAG Law Firm. Our experienced lawyers and consultants are ready to provide you with exceptional legal services.
+                </p>
+                <a href="<?php echo esc_url(get_post_type_archive_link('team')); ?>" class="team-cta-button">
+                    <span>View Our Team</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="team-cta-visual">
+                <div class="team-cta-decoration"></div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="mission-section">
     <div class="container">
