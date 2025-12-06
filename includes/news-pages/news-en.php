@@ -3,9 +3,10 @@
 
 <div class="news-hero"> 
     <div class="hero-content">
-        <h4>latest News</h4>
-        <h1>Dag's <span>News</span></h1>
-        <p class="lead">Stay updated with the latest news and articles from Dag Law Firm & Consultation.</p>
+        <h4>Stay Tuned</h4>
+        <h1>Latest <span>News</span> From DAG Law Firm </h1>
+        <p class="lead">At DAG Law Firm, we keep you informed about the latest legal news and events in Saudi Arabia and beyond.
+ Through this section, you can stay updated on new laws and regulations, professional activities, legal achievements, and insights</p>
     </div>
     <div class="row hero-pics">
         <div class="first-pic col-lg-4">
@@ -27,7 +28,8 @@
 <div class="news ">
     <div class="header">
         <h2 id="news-title" class="news-title">Recent News<li class="fa-regular fa-newspaper ps-2"></li></h2>
-        <p class="news-subtitle lead">Explore our latest insights and updates on legal matters.</p>
+        <p class="news-subtitle lead">Stay informed with the latest legal updates, analytical articles, and expert reports that help you understand recent regulatory changes in the Kingdom and make sound legal decisions with confidence.
+</p>
     </div>
         
     <div class="news-grid">

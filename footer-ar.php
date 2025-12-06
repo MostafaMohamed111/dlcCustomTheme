@@ -1,4 +1,5 @@
 
+<?php get_template_part('includes/map-section'); ?>
 <footer class="site-footer">
     <div class="container">
         <div class="row footer-top  gy-4">

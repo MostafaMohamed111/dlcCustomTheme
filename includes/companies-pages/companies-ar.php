@@ -6,8 +6,9 @@
     </div>
     <div class="content">
         <h4>افضل <span>اختيار</span></h4>
-        <h1><span>شركة داغ</span> خدمات شركات مكتب المحاماة</h1>
-        <p class="lead">اكتشف مجموعتنا الشاملة من الخدمات القانونية المصممة لتلبية احتياجات شركتك.</p>
+        <h1>خدماتنا القانونية<span> للشركات</span>  
+</h1>
+        <p class="lead">تقدّم شركة داغ للمحاماة والاستشارات القانونية حلولًا متكاملة لدعم المنشآت التجارية في جميع مراحلها — من التأسيس إلى التوسع، ومن التنظيم الداخلي إلى إدارة المخاطر القانونية</p>
     </div>
 </div>
 
@@ -298,6 +299,84 @@
             ?>
         </div>
     </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2 class="faq-title"> الأسئلة الشائعة – خدمات الشركات</h2>
+            <p class="faq-subtitle">اطّلع على إجابات الأسئلة الشائعة حول خدماتنا القانونية للشركات</p>
+            
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">هل تقدم شركة داغ خدمات تأسيس الشركات الأجنبية داخل السعودية؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">نعم، نقدم خدمات تأسيس الشركات الأجنبية وإصدار التراخيص بالتنسيق مع الجهات المختصة.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">هل تشمل خدماتكم صياغة العقود التجارية الدولية؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">نعم، يمكننا صياغة العقود وفق القوانين المحلية أو الاتفاقيات الدولية حسب النشاط التجاري.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">كيف تساعد الشركة في تقليل المخاطر القانونية؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">من خلال مراجعة الأنظمة الداخلية والعقود وتقديم تقارير امتثال دورية.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">هل يمكن تمثيل الشركة في قضايا التحكيم التجاري؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">نعم، لدينا محامون مختصون بالتحكيم وذوو خبرة في تمثيل الشركات محليًا ودوليًا.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+<!-- Book Consultation Section -->
+<section class="consultation-cta-section">
+    <div class="container">
+        <div class="consultation-cta-wrapper">
+            <div class="consultation-cta-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <h2 class="consultation-cta-title">احجز استشارتك القانونية</h2>
+            <p class="consultation-cta-description">
+                تتيح شركة داغ للمحاماة والاستشارات القانونية حجز الاستشارات القانونية عبر قنوات متعددة، وذلك لتقديم الدعم النظامي في الوقت المناسب وبما يتوافق مع طبيعة كل حالة.
+            </p>
+            <a href="<?php echo esc_url(home_url('/booking')); ?>" class="consultation-cta-button">
+                <span>طلب استشارة قانونية</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
 </div>
 
 

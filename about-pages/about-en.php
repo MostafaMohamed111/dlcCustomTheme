@@ -156,44 +156,9 @@ Founded in 2000, Dag Legal Firm reflects the vision of Mohammed Dagistani, who a
 <section class="mission-section">
     <div class="container">
         <h2 class="mission-title">Our Mission</h2>
-        <div class="mission-grid">
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-laptop-code"></i>
-                </div>
-                <p class="mission-text">Implementing digital transformation in alignment with Saudi Arabia's Vision 2030.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-scale-balanced"></i>
-                </div>
-                <p class="mission-text">Utilizing all our legal knowledge and tools to achieve justice and restore rights.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-handshake"></i>
-                </div>
-                <p class="mission-text">Becoming the trusted legal partner for our clients, always striving to provide them with the best services.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <p class="mission-text">Protecting and safeguarding our clients' legal interests.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-gavel"></i>
-                </div>
-                <p class="mission-text">Ensuring the preservation and restoration of rights to their rightful owners while efficiently seizing opportunities.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-file-contract"></i>
-                </div>
-                <p class="mission-text">Legally documenting our clients' rights in accordance with local and applicable laws.</p>
-            </div>
-        </div>
+        <p class="mission-description">
+            To provide precise, efficient, and transparent legal solutions rooted in a deep understanding of Saudi laws and ongoing regulatory updates — enabling our clients to operate confidently and remain fully compliant with national legislation.
+        </p>
     </div>
 </section>
 
@@ -313,6 +278,65 @@ Since its establishment, Dag Legal Firm has built a strong professional track re
         <p class="achievements-conclusion">
             We are proud of what we have accomplished since the beginning of our journey.
         </p>
+    </div>
+</section>
+
+<!-- Our Objectives Section -->
+<section class="objectives-section">
+    <div class="container">
+        <h2 class="objectives-title">Our Objectives</h2>
+        <div class="objectives-list">
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <p class="objective-text">Supporting digital transformation in the legal sector under Saudi Vision 2030.</p>
+            </div>
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fa-solid fa-user-graduate"></i>
+                </div>
+                <p class="objective-text">Empowering individuals and businesses to understand their legal rights and obligations.</p>
+            </div>
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <p class="objective-text">Protecting clients' interests and minimizing risks and disputes.</p>
+            </div>
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fa-solid fa-file-signature"></i>
+                </div>
+                <p class="objective-text">Documenting and securing rights in full compliance with local laws.</p>
+            </div>
+            <div class="objective-item">
+                <div class="objective-icon">
+                    <i class="fa-solid fa-hands-helping"></i>
+                </div>
+                <p class="objective-text">Providing integrated legal advisory services with precision and reliability.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Book Consultation Section -->
+<section class="consultation-cta-section">
+    <div class="container">
+        <div class="consultation-cta-wrapper">
+            <div class="consultation-cta-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <h2 class="consultation-cta-title">Book a Legal Consultation</h2>
+            <p class="consultation-cta-description">
+                Dag Legal Firm offers flexible consultation options, ensuring clients receive timely and tailored legal assistance based on their needs.
+            </p>
+            <a href="<?php echo esc_url(home_url('/booking')); ?>" class="consultation-cta-button">
+                <span>Request Legal Consultation</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
     </div>
 </section>
 

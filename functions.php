@@ -433,15 +433,21 @@ function enqueue_theme_scripts() {
         wp_enqueue_script( 'archive-ajax' );
         dlc_localize_ajax_script('archive-ajax', 'archive_ajax_nonce');
         
-        // Enqueue international page script
+        // Enqueue FAQ script for international, individual, and companies services pages
         $queried_object = get_queried_object();
         $is_international = false;
+        $is_individual = false;
+        $is_companies = false;
+        
         if (isset($queried_object->term_id)) {
             $is_international = dlc_is_home_international_category($queried_object->term_id);
+            $is_individual = dlc_is_individual_services_category($queried_object->term_id);
+            $is_companies = dlc_is_companies_services_category($queried_object->term_id);
         }
-        if ($is_international) {
-            wp_register_script( 'international', get_template_directory_uri() . '/assets/js/international.js', array(), '1.0.0', true );
-            wp_enqueue_script( 'international' );
+        
+        if ($is_international || $is_individual || $is_companies) {
+            wp_register_script( 'services-faq', get_template_directory_uri() . '/assets/js/services-faq.js', array(), '1.0.0', true );
+            wp_enqueue_script( 'services-faq' );
         }
     }
 
@@ -455,6 +461,14 @@ function enqueue_theme_scripts() {
     if ( is_front_page() ) {
         wp_register_script( 'clients-certificates-carousel', get_template_directory_uri() . '/assets/js/clients-certificates.js', array(), '1.0.0', true );
         wp_enqueue_script( 'clients-certificates-carousel' );
+    }
+
+    // Services FAQ toggle for services page template
+    if ( is_page_template('services.php') ) {
+        if (!wp_script_is('services-faq', 'enqueued')) {
+            wp_register_script( 'services-faq', get_template_directory_uri() . '/assets/js/services-faq.js', array(), '1.0.0', true );
+            wp_enqueue_script( 'services-faq' );
+        }
     }
 }
 

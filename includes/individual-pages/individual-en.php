@@ -6,8 +6,9 @@
     </div>
     <div class="content">
         <h4>We Got Your Back </h4>
-        <h1><span>Dag</span> Law Firm Individuals Services</h1>
-        <p class="lead">Discover our comprehensive range of legal services tailored to meet your individual needs.</p>
+        <h1><span>Dag</span> Individual Legal Services</h1>
+        <p class="lead">DAG Law Firm offers a comprehensive range of legal services tailored to meet the needs of individuals across various legal matters — ensuring rights protection and fair outcomes in accordance with Saudi laws and regulations.
+</p>
     </div>
 </div>
 
@@ -216,6 +217,84 @@
             ?>
         </div>
     </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2 class="faq-title">FAQs – Individual Legal Services</h2>
+            <p class="faq-subtitle">Find answers to common questions about our individual legal services</p>
+            
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">Can DAG represent clients in family law cases?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">Yes, our lawyers handle family law matters before Saudi personal status courts in full compliance with local regulations.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">Do you review personal contracts before signing?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">Yes, we provide detailed contract reviews and highlight potential legal risks before signing.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">How long does the inheritance settlement process usually take?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">It varies depending on the size of the estate and number of heirs, but our team manages the process from documentation to final distribution.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">Do your services include individual labor disputes?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">Yes, our individual legal services cover employment-related cases, including termination and unpaid entitlements.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+  
+<!-- Book Consultation Section -->
+<section class="consultation-cta-section">
+    <div class="container">
+        <div class="consultation-cta-wrapper">
+            <div class="consultation-cta-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <h2 class="consultation-cta-title">Book a Legal Consultation</h2>
+            <p class="consultation-cta-description">
+                Dag Legal Firm offers flexible consultation options, ensuring clients receive timely and tailored legal assistance based on their needs.
+            </p>
+            <a href="<?php echo esc_url(home_url('/booking')); ?>" class="consultation-cta-button">
+                <span>Request Legal Consultation</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
 
 </div>
 

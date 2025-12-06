@@ -6,8 +6,10 @@
     </div>
     <div class="content">
         <h4>نحن هنا لدعمك</h4>
-        <h1><span>شركة داغ</span> خدمات الأفراد لمكتب المحاماة</h1>
-        <p class="lead">اكتشف مجموعتنا الشاملة من الخدمات القانونية المصممة لتلبية احتياجاتك الفردية.</p>
+        <h1>خدماتنا القانونية <span> للأفراد</span> 
+   </h1>
+        <p class="lead">تقدّم شركة داغ للمحاماة والاستشارات القانونية مجموعة من الخدمات المصممة خصيصًا لتلبية احتياجات الأفراد في مختلف الجوانب القانونية، بما يضمن حماية الحقوق وتحقيق العدالة وفق الأنظمة السعودية.
+</p>
     </div>
 </div>
 
@@ -292,6 +294,83 @@
             ?>
         </div>
     </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2 class="faq-title"> الأسئلة الشائعة – خدمات الأفراد</h2>
+            <p class="faq-subtitle">اطّلع على إجابات الأسئلة الشائعة حول خدماتنا القانونية للأفراد</p>
+            
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text"> هل يمكن توكيل شركة داغ للترافع في قضايا الأحوال الشخصية؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">نعم، يتولى محامو داغ تمثيل الأفراد أمام محاكم الأحوال الشخصية وفق الأنظمة السعودية.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text"> هل تقدّم الشركة خدمة مراجعة العقود الفردية قبل التوقيع؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">نعم، نقدم مراجعة دقيقة لبنود العقد وتوضيح المخاطر القانونية المحتملة قبل الإبرام.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text"> ما المدة المعتادة لتصفية التركات؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">تختلف بحسب طبيعة التركة وعدد الورثة، لكن الفريق يتولى المتابعة حتى استكمال الإجراءات النظامية.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text"> هل تشمل الخدمات القانونية القضايا العمالية الفردية؟</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">نعم، تغطي خدمات الأفراد القضايا المتعلقة بالعلاقة العمالية وإنهاء الخدمة والمستحقات المالية.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+<!-- Book Consultation Section -->
+<section class="consultation-cta-section">
+    <div class="container">
+        <div class="consultation-cta-wrapper">
+            <div class="consultation-cta-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <h2 class="consultation-cta-title">احجز استشارتك القانونية</h2>
+            <p class="consultation-cta-description">
+                تتيح شركة داغ للمحاماة والاستشارات القانونية حجز الاستشارات القانونية عبر قنوات متعددة، وذلك لتقديم الدعم النظامي في الوقت المناسب وبما يتوافق مع طبيعة كل حالة.
+            </p>
+            <a href="<?php echo esc_url(home_url('/booking')); ?>" class="consultation-cta-button">
+                <span>طلب استشارة قانونية</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+</section>
 
 </div>
 

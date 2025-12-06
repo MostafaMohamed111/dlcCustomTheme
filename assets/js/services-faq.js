@@ -1,5 +1,5 @@
 /**
- * International Page JavaScript
+ * Services FAQ JavaScript
  * Handles interactive elements like FAQ accordion
  */
 
@@ -77,4 +77,3 @@
     });
 
 })();
-

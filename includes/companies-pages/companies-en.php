@@ -5,9 +5,11 @@
 
     </div>
     <div class="content">
-        <h4>Your best <span>Choice</span></h4>
-        <h1><span>Dag</span> Law Firm Companies Services</h1>
-        <p class="lead">Discover our comprehensive range of legal services tailored to meet your company needs.</p>
+        <h4>Legal Services for Businesses
+</h4>
+        <h1><span>Dag</span> Corporate Legal Services</h1>
+        <p class="lead">DAG Law Firm provides integrated legal solutions to support businesses at every stage — from company formation and regulatory compliance to contract management and dispute resolution.
+</p>
     </div>
 </div>
 
@@ -213,6 +215,84 @@
             ?>
         </div>
     </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <h2 class="faq-title">   FAQs – Corporate Legal Services</h2>
+            <p class="faq-subtitle">Find answers to common questions about our corporate legal services</p>
+            
+            <ul class="faq-list">
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">Does DAG assist with setting up foreign companies in Saudi Arabia?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">Yes, we handle the establishment of foreign entities and coordinate with the relevant Saudi authorities to issue licenses.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">Can you draft international commercial contracts?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">Yes, our team can draft contracts under Saudi law or international conventions, depending on the nature of your business.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">How does DAG help reduce legal risks?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">We regularly review internal policies, contracts, and provide compliance reports tailored to your company's operations.</p>
+                    </div>
+                </li>
+                
+                <li class="faq-item">
+                    <div class="faq-question" role="button" aria-expanded="false">
+                        <span class="faq-question-text">Can you represent companies in arbitration cases?</span>
+                        <span class="faq-question-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="faq-answer">
+                        <p class="faq-answer-text">Yes, our lawyers have extensive experience in local and international arbitration proceedings.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    
+<!-- Book Consultation Section -->
+<section class="consultation-cta-section">
+    <div class="container">
+        <div class="consultation-cta-wrapper">
+            <div class="consultation-cta-icon">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+            <h2 class="consultation-cta-title">Book a Legal Consultation</h2>
+            <p class="consultation-cta-description">
+                Dag Legal Firm offers flexible consultation options, ensuring clients receive timely and tailored legal assistance based on their needs.
+            </p>
+            <a href="<?php echo esc_url(home_url('/booking')); ?>" class="consultation-cta-button">
+                <span>Request Legal Consultation</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
 
 </div>
 

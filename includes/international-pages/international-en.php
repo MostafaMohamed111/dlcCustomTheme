@@ -11,7 +11,7 @@
 
         <div class="actions-international">
             <a href="<?php echo home_url('/booking/'); ?>" class="btn hero-btn-international get-appointment-international">Get Appointment</a>
-            <a href="<?php echo home_url('/contact/'); ?>" class="btn hero-btn-international contact-us-international" >Contact Us</a>
+            <a href="<?php echo home_url('/contact-us/'); ?>" class="btn hero-btn-international contact-us-international" >Contact Us</a>
         </div>
 
     </div>

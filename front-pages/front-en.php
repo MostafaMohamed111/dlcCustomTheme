@@ -10,7 +10,7 @@ $clients_count = (int) get_field('clients');
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-background" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Riydah.jpg');"></div>
+        <div class="hero-background" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Dag-team.webp');"></div>
         <div class="hero-content">
             <h1 class="hero-company">Dag</h1>
             <h2 class="hero-title">Law Firm & Legal Consultations</h2>
@@ -25,9 +25,11 @@ $clients_count = (int) get_field('clients');
     <!-- About Section -->
     <section id="about" class="about-section">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Who We Are</h2>
-                <p class="section-subtitle">A Riyadh-based legal collective delivering measurable impact across the Kingdom.</p>
+            <div class="section-header no-bg">
+                <h2 class="section-title"> About DAG Law Firm</h2>
+                <p class="section-subtitle">A Saudi law firm led by Attorney Mohammed Dagistani, based in Riyadh.
+ We provide professional legal services in corporate law, endowments, capital markets, and the industrial sector — with a commitment to integrity and precision.
+</p>
             </div>
             <div class="row about-content align-items-center overflow-hidden ">
                 <div class="col-lg-6 col-md-12  about-text">
@@ -74,46 +76,93 @@ $clients_count = (int) get_field('clients');
     <section id="services" class="services-section">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Our Services</h2>
-                <p class="section-subtitle"></p>
+                <h2 class="section-title">Start Your Legal Services Easily</h2>
+                <p class="section-subtitle">We provide smart tools that help you access tailored legal solutions efficiently, under the supervision of licensed lawyers in each field.</p>
             </div>
             <div class="row services-grid justify-content-center ">
-                <div class="col-lg-4 col-md-6 col-sm-12  service-card">
-                    <div class="card-content">
-                        <div class="service-icon">  
-                            <i class="fas fa-comments"></i>
-                        </div>
-                            <h3>Request a Consultation</h3>
-                            <p>Get expert legal advice from our experienced team of lawyers. Schedule a consultation to discuss your legal matters.</p>
-                            <a href="<?php echo home_url('/booking'); ?>" class="service-btn">Learn More</a>  
-                    </div>
-                    
-                </div>
-                
                 <div class="col-lg-4 col-md-6 col-sm-12  service-card">
                     <div class="card-content">
                         <div class="service-icon">
                             <i class="fas fa-calculator"></i>
                         </div>
-                        <h3>Calculate End of Service Gratuity</h3>
-                        <p>Calculate your end of service gratuity according to Saudi labor law using our advanced calculator with Dag.</p>
+                        <h3>Labor Calculator</h3>
+                        <p> A precise digital tool that helps businesses calculate employee entitlements under Saudi Labor Law.</p>
                         <a href="<?php echo home_url('/services'); ?>" class="service-btn">Learn More</a>
            
                     </div>
-                         </div>
+                </div>
+            
+                <div class="col-lg-4 col-md-6 col-sm-12  service-card">
+                    <div class="card-content">
+                        <div class="service-icon">  
+                            <i class="fas fa-comments"></i>
+                        </div>
+                            <h3>Request a Legal Consultation</h3>
+                            <p> Speak directly with a licensed lawyer to evaluate your legal situation and determine the best course of action.</p>
+                            <a href="<?php echo home_url('/booking'); ?>" class="service-btn">Learn More</a>  
+                    </div>
+                    
+                </div>
+                
+                
                 
                 <div class="col-lg-4 col-md-6 col-sm-12  service-card">
                     <div class="card-content">
                         <div class="service-icon">
                             <i class="fas fa-balance-scale"></i>
                         </div>
-                        <h3>Calculate Your Inheritance</h3>
-                        <p>Calculate inheritance shares according to Islamic Sharia law and Saudi regulations with our specialized tool.</p>
+                        <h3>Inheritance Calculator</h3>
+                        <p> An online service that calculates inheritance shares in accordance with Sharia and Saudi regulations.</p>
                     <a href="<?php echo home_url('/services'); ?>" class="service-btn">Learn More</a>
                 </div>
             </div>
         </div>
     </section>
+
+
+    
+    <!-- Accreditations Section -->
+    <section id="accreditations" class="accreditations-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Officially Accredited</h2>
+                <p class="section-subtitle">DAG Law Firm is proud to be a registered and licensed legal entity recognized by multiple Saudi legal and governmental authorities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Legal Services Section -->
+    <section id="legal-services" class="legal-services-section">
+        <div class="container">
+            <div class="section-header no-bg">
+                <h2 class="section-title">Legal Services for Individuals and Companies</h2>
+                <p class="section-subtitle">We offer over 80 specialized legal services across commercial, financial, and social sectors, with close and professional case follow-up.</p>
+            </div>
+            <div class="legal-services-grid">
+                <div class="legal-service-card">
+                    <div class="legal-card-content">
+                        <div class="legal-service-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Services for Individuals</h3>
+                        <p>Comprehensive legal assistance covering family cases, real estate matters, and personal documentation.</p>
+                        <a href="<?php echo esc_url(home_url('/category/individual-services')); ?>" class="legal-service-link">Explore Services <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="legal-service-card">
+                    <div class="legal-card-content">
+                        <div class="legal-service-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3>Services for Companies</h3>
+                        <p>From company formation to commercial contract drafting and corporate governance — we help ensure your business complies with Saudi regulations.</p>
+                        <a href="<?php echo esc_url(home_url('/category/companies-services')); ?>" class="legal-service-link">Explore Services <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Certificates Section -->
     <?php get_template_part('includes/certificates'); ?>
