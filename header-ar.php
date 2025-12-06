@@ -81,7 +81,7 @@
                         }
                         $button_text = 'محلي';
                         $button_url = $local_url;
-                        $button_icon = 'fa-solid fa-building';
+                        $button_icon = 'fa-regular fa-flag';
                     } else {
                         // Not on international page - show International button
                         // Get Arabic international category using Polylang
@@ -215,7 +215,7 @@
                                 }
                                 $button_text = 'محلي';
                                 $button_url = $local_url;
-                                $button_icon = 'fa-solid fa-building';
+                                $button_icon = 'fa-regular fa-flag';
                             } else {
                                 // Not on international page - show International button
                                 // Get Arabic international category using Polylang

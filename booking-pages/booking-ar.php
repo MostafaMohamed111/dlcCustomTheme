@@ -31,7 +31,14 @@
         ?>
         
         <div class="logo">
-            <a href="<?php echo home_url('front-page-ar'); ?>">
+            <a href="<?php 
+                // Get Arabic home URL using Polylang if available
+                if (function_exists('pll_home_url')) {
+                    echo esc_url(pll_home_url('ar'));
+                } else {
+                    echo esc_url(home_url('/'));
+                }
+            ?>">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking-logo.png" alt="Dag Law Firm Logo">
             </a>
         </div>
@@ -42,7 +49,7 @@
 
         <div class="phone">
             <h2>Call Us Now</h2>
-            <div class="phone-number">
+            <div class="phone-number arabic-phone">
                 <?php if ($phone) : 
                     $phone_clean = preg_replace('/[^0-9+]/', '', $phone);
                 ?>

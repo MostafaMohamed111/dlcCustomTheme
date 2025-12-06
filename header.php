@@ -81,7 +81,7 @@
                         }
                         $button_text = 'Local';
                         $button_url = $local_url;
-                        $button_icon = 'fa-solid fa-building';
+                        $button_icon = 'fa-regular fa-flag';
                     } else {
                         // Not on international page - show International button
                         $home_international_category = get_category_by_slug('home-international');
@@ -201,7 +201,7 @@
                                 }
                                 $button_text = 'Local';
                                 $button_url = $local_url;
-                                $button_icon = 'fa-solid fa-building';
+                                $button_icon = 'fa-regular fa-flag';
                             } else {
                                 // Not on international page - show International button
                                 $home_international_category = get_category_by_slug('home-international');

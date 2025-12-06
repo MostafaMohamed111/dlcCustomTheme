@@ -323,6 +323,313 @@
     }
 }
 
+/* FAQ Section */
+.faq-section {
+    margin-top: 60px;
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    width: 100%;
+}
 
+.faq-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
+.faq-title {
+    text-align: center;
+    color: var(--primary-blue);
+    font-size: 38px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.faq-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+    margin: 20px auto 0;
+    border-radius: 2px;
+}
+
+.faq-subtitle {
+    text-align: center;
+    color: var(--dark-gray);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 50px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.faq-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.faq-item {
+    background: var(--white);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(26, 58, 95, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.faq-question {
+    padding: 25px 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+    background-color: rgba(26, 58, 95, 0.02);
+}
+
+.faq-question-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    line-height: 1.5;
+    flex: 1;
+    padding-right: 20px;
+}
+
+.faq-question-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+    border-radius: 50%;
+    color: var(--white);
+    font-size: 14px;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.faq-item.active .faq-question-icon {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 30px;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding: 0 30px 25px 30px;
+}
+
+.faq-answer-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--dark-gray);
+    margin: 0;
+    padding-top: 15px;
+}
+
+/* About Dag Law Firm Section */
+.about-dag-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-dag-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.about-dag-section::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: -10%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.about-dag-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.about-dag-title {
+    text-align: center;
+    color: var(--white);
+    font-size: 38px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.about-dag-content {
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 30px;
+}
+
+.about-dag-text {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--white);
+    margin: 0;
+    text-align: center;
+}
+
+.about-dag-cta {
+    text-align: center;
+}
+
+.about-dag-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 16px 32px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.about-dag-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.about-dag-btn i {
+    transition: transform 0.3s ease;
+}
+
+.about-dag-btn:hover i {
+    transform: translateX(5px);
+}
+
+/* Responsive Design for FAQ and About */
+@media (max-width: 768px) {
+    .faq-section,
+    .about-dag-section {
+        padding: 60px 0;
+    }
+    
+    .faq-title,
+    .about-dag-title {
+        font-size: 32px;
+    }
+    
+    .faq-subtitle {
+        font-size: 16px;
+        margin-bottom: 40px;
+    }
+    
+    .faq-question {
+        padding: 20px 20px;
+    }
+    
+    .faq-question-text {
+        font-size: 16px;
+        padding-right: 15px;
+    }
+    
+    .faq-item.active .faq-answer {
+        padding: 0 20px 20px 20px;
+    }
+    
+    .faq-answer-text {
+        font-size: 15px;
+    }
+    
+    .about-dag-content {
+        padding: 30px 20px;
+    }
+    
+    .about-dag-text {
+        font-size: 16px;
+    }
+    
+    .about-dag-btn {
+        font-size: 16px;
+        padding: 14px 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .faq-section,
+    .about-dag-section {
+        padding: 50px 0;
+    }
+    
+    .faq-title,
+    .about-dag-title {
+        font-size: 28px;
+    }
+    
+    .faq-question {
+        padding: 18px 15px;
+    }
+    
+    .faq-question-text {
+        font-size: 15px;
+    }
+    
+    .faq-question-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .faq-item.active .faq-answer {
+        padding: 0 15px 18px 15px;
+    }
+    
+    .about-dag-content {
+        padding: 25px 15px;
+    }
+    
+    .about-dag-text {
+        font-size: 15px;
+    }
+    
+    .about-dag-btn {
+        font-size: 15px;
+        padding: 12px 24px;
+    }
+}
 

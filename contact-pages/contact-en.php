@@ -9,11 +9,15 @@
     <section class="contact-us">
         <div class="contact-us-content">
             <h1>Contact Us</h1>
-            <p class="lead" >If you have any questions or need further information, please feel free to reach out to us through the following contact details:</p>
+            <p class="lead" >At Dag Legal Firm, we're always ready to assist you with professional legal support in all matters related to consultations, contract drafting and commercial disputes</p>
+            <p class="lead" >Your message is the first step toward the right legal solution for your needs.</p>
+
         </div>
 
         <div class="contact-us-body row d-flex gx-5 justify-content-space-between">
             <form id="contact-form" class="contact-us-form col-lg-6 col-md-12">
+                <h2 class="contact-form-title">Contact Form</h2>
+                <p class="contact-form-description">Please fill out the form below, and one of our legal advisors will get back to you promptly to discuss your request and provide the appropriate assistance.</p>
                 <div id="form-status-message"></div>
 
                 <div class=" name mb-3">
@@ -42,6 +46,11 @@
 
             <div class="form-image col-lg-6 col-md-12 ">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services.jpg" alt="Contact Us">
+
+                 <a class="quick-link calendar" href="<?php echo esc_url(dlc_get_booking_page_url('en')); ?>">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Book a Consultation</span>
+                </a>
             </div>
         </div>
             
@@ -124,26 +133,45 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="contact-quick row gx-3 gy-3 my-5 align-items-stretch">
-            <div class="col-md-6 col-sm-12">
-                <a class="quick-link whatsapp" href="https://wa.me/966123456789" target="_blank" rel="noopener">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>Chat on WhatsApp</span>
-                </a>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <a class="quick-link calendar" href="<?php echo esc_url(dlc_get_booking_page_url('en')); ?>">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Book a Consultation</span>
-                </a>
-            </div>
-        </div>
-
-
     </section>
 
+</div>
 
+<!-- Success Modal -->
+<div id="contact-success-modal" class="contact-modal" style="display: none;">
+    <div class="contact-modal-overlay"></div>
+    <div class="contact-modal-content">
+        <div class="contact-modal-header">
+            <h2 class="contact-modal-title">Your Request Has Been Sent Successfully <i class="fa-regular fa-circle-check success text-success"></i></h2>
+            <button class="contact-modal-close" aria-label="Close modal">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="contact-modal-body">
+            <p class="contact-modal-message">
+                Thank you for contacting Dag Legal Firm.<
+            </p>
+            <p class="contact-modal-message">
+                Your message has been successfully received, and one of our legal consultants will reach out to you shortly to review your inquiry and provide suitable legal assistance.
+            </p>
+            <p class="contact-modal-message">
+                We truly appreciate your interest and look forward to serving you soon.
+            </p>
+            <p class="contact-modal-message">
+                Stay connected with us through our official channels for the latest updates and legal insights.
+            </p>
+        </div>
+        <div class="contact-modal-footer">
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="contact-modal-link">
+                <i class="fa-solid fa-home"></i>
+                Back to Home Page
+            </a>
+            <a href="<?php echo esc_url(dlc_get_services_page_url('en')); ?>" class="contact-modal-link">
+                <i class="fa-solid fa-briefcase"></i>
+                Explore Our Services
+            </a>
+        </div>
+    </div>
 </div>
 
 

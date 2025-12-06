@@ -47,10 +47,13 @@ get_header(); ?>
         <div class="about-dag" id="about-dag">
             <h2>About Dag</h2>
             <p class="lead">
-                Dag Law Firm for Legal Consultancy, owned by Attorney Mohammed Dagestani and headquartered in Riyadh, Saudi Arabia, specializes in providing over 80 specialized legal services to individuals and businesses across various legal fields.
+                Learn more about Dag Legal Firm, founded by attorney Mohammed Dagistani in Riyadh, Saudi Arabia. A trusted Saudi law firm offering over 80 legal and consultancy services for individuals and companies with professional excellence and deep legal expertise.
             </p>
 
             <div class="paragraph">
+                <p>Dag Legal Firm, founded by attorney Mohammed Dagistani and based in Riyadh, Saudi Arabia, is a licensed law firm specializing in providing comprehensive legal and consultancy services for individuals and businesses across the Kingdom.
+                    The firm’s foundation is built on professional integrity, accuracy, and strict compliance with Saudi legal systems and regulations.
+                </p>
                 <p>
                     With his extensive experience in the legal profession, <span class="highlight">Mr. Mohammed Daghistani</span> has specialized in multiple business sectors, including the <span class="highlight">commercial sector</span>, the <span class="highlight">industrial and agricultural sectors</span>, and the <span class="highlight">Capital Market Authority</span>.   
                 </p>
@@ -89,10 +92,12 @@ get_header(); ?>
                 </h2>
 
                 <p>
-                    In the ever-evolving business world, having a reliable legal partner is no longer a luxury but a necessity to ensure legal protection and regulatory compliance. With this vision in mind, Consultant <span class="highlight">Mohammed Daghistani</span> founded <span class="highlight">DLC</span> in <span class="highlight">2000</span>, with a clear goal: to provide comprehensive legal solutions that support both businesses and individuals while safeguarding their rights with the highest professional standards.
+Founded in 2000, Dag Legal Firm reflects the vision of Mohammed Dagistani, who aimed to establish a practice built on professionalism, consistency, and trust.
+ Throughout his career, he has gained extensive experience across commercial, industrial, and agricultural sectors, and provided advisory services to entities connected with the Capital Market Authority.
+ His expertise has positioned Dag Legal Firm as a recognized and reliable legal partner for numerous local and international clients.
                 </p>
                 <p>
-                    With over two decades of experience, Consultant <span class="highlight">Mohammed Daghistani</span> has earned numerous specialized certifications in law and legal consultancy, making him one of the leading experts in the field. His strategic vision and innovative legal approach have enabled him to build a distinguished management team capable of delivering integrated legal support to clients, whether in business sectors or within the regulations of the <span class="highlight">Capital Market Authority</span>.
+                    With over two decades of experience, Consultant Mohammed Daghistani has earned numerous specialized certifications in law and legal consultancy, making him one of the leading experts in the field. His strategic vision and innovative legal approach have enabled him to build a distinguished management team capable of delivering integrated legal support to clients, whether in business sectors or within the regulations of the Capital Market Authority</span>.
 
                 </p>
             </div>
@@ -107,8 +112,21 @@ get_header(); ?>
     </div>
 
 
+</section>
 
-
+<!-- Who We Are Section -->
+<section class="who-we-are-section">
+    <div class="container">
+        <div class="who-we-are-content">
+            <div class="who-we-are-header">
+                <h2 class="who-we-are-title">Who We Are</h2>
+                <div class="title-underline"></div>
+            </div>
+            <p class="who-we-are-text">
+                Dag Legal Firm delivers full-spectrum legal services led by Attorney Mohammed Dagistani, who brings over 20 years of professional experience in legal consultation, litigation, arbitration, and contract drafting. Our firm offers more than 80 specialized legal services tailored to meet the diverse needs of clients, ensuring clarity, compliance, and effective legal solutions.
+            </p>
+        </div>
+    </div>
 </section>
 
 <!-- CTA to Our Team Section -->
@@ -174,18 +192,6 @@ get_header(); ?>
                     <i class="fa-solid fa-file-contract"></i>
                 </div>
                 <p class="mission-text">Legally documenting our clients' rights in accordance with local and applicable laws.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-ban"></i>
-                </div>
-                <p class="mission-text">Shielding our clients from penalties and legal disputes.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-lightbulb"></i>
-                </div>
-                <p class="mission-text">Enhancing legal awareness among our clients to help them avoid legal challenges.</p>
             </div>
         </div>
     </div>
@@ -264,7 +270,7 @@ get_header(); ?>
         <div class="vision-content">
             <h2 class="vision-title">Our Vision</h2>
             <p class="vision-text">
-                Leaving our unique mark in the legal field in Saudi Arabia and becoming one of the most prominent legal entities that everyone turns to with confidence in our professionalism, expertise, and commitment to Saudi Vision 2030.
+To be recognized as a trusted and leading Saudi law firm, advancing the practice of law through digital transformation in line with Saudi Vision 2030 and setting new standards in professional legal service delivery.
             </p>
         </div>
     </div>
@@ -281,7 +287,8 @@ $intellectual_properties_count = (int) get_field('intellectual_properties');
     <div class="container">
         <h2 class="achievements-title">Achievements</h2>
         <p class="achievements-intro">
-            Since the inception of Dag Law Firm, providing legal advice, client satisfaction, and meeting their needs has been our compass and our constant goal. Through our work, we have been pleased to be successful partners for a group of prestigious institutions and organizations, and their expression of satisfaction with this distinguished partnership is what we have.
+Since its establishment, Dag Legal Firm has built a strong professional track record based on quality, trust, and performance.
+ The firm has successfully represented hundreds of clients across Saudi Arabia and the Gulf, providing exceptional services in contract drafting, litigation, and intellectual property protection.
         </p>
         
         <div class="achievements-grid">

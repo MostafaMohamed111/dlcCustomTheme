@@ -423,8 +423,94 @@ $intellectual_properties_count = (int) get_field('intellectual_properties');
     </div>
 </section>
 
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="faq-container">
+        <h2 class="faq-title">الأسئلة الشائعة (FAQ)</h2>
+        <p class="faq-subtitle">ابحث عن إجابات للأسئلة الشائعة حول خدماتنا القانونية الدولية</p>
+        
+        <ul class="faq-list">
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">كيف يبدأ العميل الدولي إجراءاته القانونية في السعودية؟</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">يتم ذلك عبر مراجعة المتطلبات النظامية وإعداد الوثائق، ثم متابعة الإجراء لدى الجهة المختصة.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">هل يمكن تنفيذ الخدمات عن بُعد؟</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">نعم، يمكن تنفيذ معظم الخدمات دون الحضور للمملكة إلا في الحالات التي يشترط فيها النظام حضور الموكل.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">ما هي متطلبات الترخيص الاستثماري؟</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">تختلف حسب النشاط، وتشمل عادة السجل التجاري الأجنبي، القوائم المالية، وبيانات المالك أو الشركاء.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">ما مدة تسجيل العلامة التجارية؟</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">تتراوح بين 4 إلى 8 أشهر حسب الفحص والإعلان والإجراءات.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">هل يمكن تسجيل براءة الاختراع دوليًا؟</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">تتم عملية الإيداع المحلي داخل المملكة، مع إمكانية تقديم الإرشادات اللازمة للخيارات الدولية.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- About Dag Law Firm Section -->
+<section class="about-dag-section">
+    <div class="about-dag-container">
+        <h2 class="about-dag-title">عن داغ</h2>
+        <div class="about-dag-content">
+            <p class="about-dag-text">
+                داغ للمحاماة والاستشارات القانونية، بإدارة المحامي محمد داغستاني، يقدم أكثر من 80 خدمة قانونية تغطي القطاعات التجارية والصناعية والزراعية وقطاع السوق المالية، من خلال خبرة متخصصة في الأنظمة السعودية.
+            </p>
+        </div>
+        <div class="about-dag-cta">
+            <a href="<?php echo esc_url(dlc_get_about_us_page_url('ar')); ?>" class="about-dag-btn">
+                اعرف المزيد عنا
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
 </div>
-
-
 
 <?php get_footer('ar'); ?>

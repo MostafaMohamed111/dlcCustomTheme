@@ -20,10 +20,11 @@
 </div>
 
 
+
 <div class="page-content">
 <div class="services-landing companies-services-page">
     <div class="header">
-        <h2 class="services-title">International Services<li class="fa-solid fa-globe ps-2"></li></h2>
+        <h2 class="services-title">Our International Services<li class="fa-solid fa-globe ps-2"></li></h2>
         <?php
         // Get the home-international category for default description
         $display_category = null;
@@ -281,21 +282,31 @@ $intellectual_properties_count = (int) get_field('intellectual_properties');
         <div class="why-choose-us-grid">
             <div class="why-choose-us-card">
                 <div class="why-choose-us-icon">
-                    <i class="fa-solid fa-gavel"></i>
+                    <i class="fa-solid fa-scale-balanced"></i>
                 </div>
-                <h3 class="why-choose-us-card-title">Expert Legal Team</h3>
+                <h3 class="why-choose-us-card-title">Accurate Legal Procedures</h3>
                 <p class="why-choose-us-card-description">
-                    Our experienced attorneys specialize in Saudi Arabian law and international business regulations, providing you with comprehensive legal guidance.
+                    We ensure precision and accuracy in every legal procedure, following strict compliance with Saudi Arabian law and international standards to protect your interests.
                 </p>
             </div>
             
             <div class="why-choose-us-card">
                 <div class="why-choose-us-icon">
-                    <i class="fa-solid fa-handshake"></i>
+                    <i class="fa-solid fa-clipboard-check"></i>
                 </div>
-                <h3 class="why-choose-us-card-title">Trusted Partnership</h3>
+                <h3 class="why-choose-us-card-title">Consistent Follow-Up on All Cases</h3>
                 <p class="why-choose-us-card-description">
-                    We build long-term relationships with our clients, understanding their business needs and providing personalized legal solutions.
+                    Our dedicated team provides continuous monitoring and regular updates on your case, ensuring you stay informed at every stage of the legal process.
+                </p>
+            </div>
+            
+            <div class="why-choose-us-card">
+                <div class="why-choose-us-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="why-choose-us-card-title">Strict Confidentiality of Client Information</h3>
+                <p class="why-choose-us-card-description">
+                    We maintain the highest standards of confidentiality and data protection, ensuring all your sensitive information remains secure and private.
                 </p>
             </div>
             
@@ -303,25 +314,102 @@ $intellectual_properties_count = (int) get_field('intellectual_properties');
                 <div class="why-choose-us-icon">
                     <i class="fa-solid fa-globe"></i>
                 </div>
-                <h3 class="why-choose-us-card-title">International Expertise</h3>
+                <h3 class="why-choose-us-card-title">Extensive Experience with International Matters</h3>
                 <p class="why-choose-us-card-description">
-                    With deep knowledge of both local and international legal frameworks, we help businesses navigate complex cross-border regulations.
-                </p>
-            </div>
-            
-            <div class="why-choose-us-card">
-                <div class="why-choose-us-icon">
-                    <i class="fa-solid fa-clock"></i>
-                </div>
-                <h3 class="why-choose-us-card-title">Timely Solutions</h3>
-                <p class="why-choose-us-card-description">
-                    We understand the importance of time in business. Our team delivers efficient, responsive legal services when you need them most.
+                    With deep knowledge of both local and international legal frameworks, we expertly handle cross-border transactions and complex international legal matters.
                 </p>
             </div>
         </div>
     </div>
 </section>
 
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="faq-container">
+        <h2 class="faq-title">FAQ – Frequently Asked Questions</h2>
+        <p class="faq-subtitle">Find answers to common questions about our international legal services</p>
+        
+        <ul class="faq-list">
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">How can international clients start legal procedures in Saudi Arabia?</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">By submitting the required documents for review, upon which we handle the full legal process with the competent authority.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">Can services be completed remotely?</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">Yes, most services can be conducted remotely unless specific procedures require in-person presence by law.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">What documents are required for foreign investment licensing?</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">Requirements vary by activity but usually include the foreign commercial registration, financial statements, and ownership details.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">How long does trademark registration take in Saudi Arabia?</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">Typically 4–8 months depending on the examination and publication stages.</p>
+                </div>
+            </li>
+            
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text">Is international patent protection available?</span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">Local filing is handled in Saudi Arabia, while international protection can be guided through relevant global treaties and mechanisms.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- About Dag Law Firm Section -->
+<section class="about-dag-section">
+    <div class="about-dag-container">
+        <h2 class="about-dag-title">About Dag Law Firm</h2>
+        <div class="about-dag-content">
+            <p class="about-dag-text">
+                Dag Law Firm, led by Attorney Mohammed Dagistani, offers over 80 legal services across commercial, industrial, agricultural, and financial sectors — supported by extensive experience in Saudi law and regulatory practices.
+            </p>
+        </div>
+        <div class="about-dag-cta">
+            <a href="<?php echo esc_url(dlc_get_about_us_page_url('en')); ?>" class="about-dag-btn">
+                Learn More About Us
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
 
 </div>
 

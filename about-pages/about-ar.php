@@ -114,14 +114,20 @@ get_header('ar'); ?>
 
 </section>
 
-
-
-
-
-
-
-
-
+<!-- Who We Are Section -->
+<section class="who-we-are-section">
+    <div class="container">
+        <div class="who-we-are-content">
+            <div class="who-we-are-header">
+                <h2 class="who-we-are-title">من نحن</h2>
+                <div class="title-underline"></div>
+            </div>
+            <p class="who-we-are-text">
+                تقدم شركة داغ للمحاماة خدمات قانونية شاملة بقيادة المحامي محمد داغستاني، الذي يتمتع بأكثر من 20 عامًا من الخبرة المهنية في الاستشارات القانونية والتقاضي والتحكيم وصياغة العقود. تقدم شركتنا أكثر من 80 خدمة قانونية متخصصة مصممة لتلبية الاحتياجات المتنوعة للعملاء، مما يضمن الوضوح والامتثال والحلول القانونية الفعالة.
+            </p>
+        </div>
+    </div>
+</section>
 
 <!-- CTA to Our Team Section -->
 <section class="team-cta-section">
@@ -186,18 +192,6 @@ get_header('ar'); ?>
                     <i class="fa-solid fa-file-contract"></i>
                 </div>
                 <p class="mission-text">توثيق حقوق عملائنا قانونيًا وفقًا للقوانين المحلية والتطبيقية.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-ban"></i>
-                </div>
-                <p class="mission-text">حماية عملائنا من العقوبات والنزاعات القانونية.</p>
-            </div>
-            <div class="mission-card">
-                <div class="mission-icon">
-                    <i class="fa-solid fa-lightbulb"></i>
-                </div>
-                <p class="mission-text">تعزيز الوعي القانوني بين عملائنا لمساعدتهم على تجنب التحديات القانونية.</p>
             </div>
         </div>
     </div>

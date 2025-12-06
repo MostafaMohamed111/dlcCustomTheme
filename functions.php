@@ -432,6 +432,17 @@ function enqueue_theme_scripts() {
         wp_register_script( 'archive-ajax', get_template_directory_uri() . '/assets/js/archive.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'archive-ajax' );
         dlc_localize_ajax_script('archive-ajax', 'archive_ajax_nonce');
+        
+        // Enqueue international page script
+        $queried_object = get_queried_object();
+        $is_international = false;
+        if (isset($queried_object->term_id)) {
+            $is_international = dlc_is_home_international_category($queried_object->term_id);
+        }
+        if ($is_international) {
+            wp_register_script( 'international', get_template_directory_uri() . '/assets/js/international.js', array(), '1.0.0', true );
+            wp_enqueue_script( 'international' );
+        }
     }
 
     // Team archive page carousel

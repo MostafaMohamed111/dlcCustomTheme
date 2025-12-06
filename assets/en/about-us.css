@@ -266,12 +266,67 @@
     
 }
 
+/* Who We Are Section */
+.who-we-are-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.who-we-are-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.who-we-are-header {
+    margin-bottom: 30px;
+}
+
+.who-we-are-title {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 15px;
+}
+
+.title-underline {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color), var(--primary-blue));
+    margin: 0 auto;
+    border-radius: 2px;
+}
+
+.who-we-are-text {
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--dark-gray);
+    margin-bottom: 0;
+    padding: 0 20px;
+}
+
+@media (max-width: 767.98px) {
+    .who-we-are-section {
+        padding: 60px 0;
+    }
+    
+    .who-we-are-title {
+        font-size: 32px;
+    }
+    
+    .who-we-are-text {
+        font-size: 16px;
+    }
+}
+
 /* Team CTA Section */
 .team-cta-section {
     width: 100%;
     padding: 80px 0;
     margin-top: 60px;
-    background: linear-gradient(135deg, #1a3a5f 0%, #2a5a8a 100%);
+    background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
     position: relative;
     overflow: hidden;
 }
@@ -310,6 +365,7 @@
 }
 
 .team-cta-wrapper {
+    
     display: flex;
     align-items: center;
     gap: 60px;

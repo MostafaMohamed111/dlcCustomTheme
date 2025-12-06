@@ -8,11 +8,15 @@
     <section class="contact-us">
         <div class="contact-us-content">
             <h1>اتصل بنا</h1>
-            <p class="lead" >إذا كان لديك أي أسئلة أو تحتاج إلى مزيد من المعلومات، فلا تتردد في التواصل معنا من خلال تفاصيل الاتصال التالية:</p>
+            <p class="lead">نحن في شركة داغ للمحاماة والاستشارات القانونية نسعد بخدمتك في كل ما يتعلق بالاستشارات القانونية، إعداد العقود، القضايا التجارية، والتحكيم.
+                 تواصلك معنا هو الخطوة الأولى نحو الحل القانوني المناسب لك.
+            </p>
         </div>
 
         <div class="contact-us-body row d-flex gx-5 justify-content-space-between">
             <form id="contact-form" class="contact-us-form col-lg-6 col-md-12">
+                <h2 class="contact-form-title">نموذج الاتصال</h2>
+                <p class="contact-form-description">يرجى ملء النموذج أدناه، وسيتواصل معك أحد مستشارينا القانونيين في أقرب وقت لمناقشة طلبك وتقديم المساعدة المناسبة.</p>
                 <div id="form-status-message"></div>
 
                 <div class=" name mb-3">
@@ -38,6 +42,10 @@
 
             <div class="form-image col-lg-6 col-md-12 ">
                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services.jpg" alt="Contact Us">
+                   <a class="quick-link calendar" href="<?php echo esc_url(dlc_get_booking_page_url('ar')); ?>">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>حجز استشارة</span>
+                </a>
             </div>
         </div>
             
@@ -80,7 +88,7 @@
                         <i class="fas fa-phone-alt"></i>
                     </div>
                     <h3>الهاتف</h3>
-                    <p><?php echo $phone ? esc_html($phone) : '+966 12 345 6789'; ?></p>
+                    <p class = 'arabic-phone'><?php echo $phone ? esc_html($phone) : '+966 12 345 6789'; ?></p>
                     <?php if ($phone) : ?>
                         <a class="contact-action" href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $phone)); ?>">اتصل الآن</a>
                     <?php else : ?>
@@ -120,26 +128,46 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="contact-quick row gx-3 gy-3 my-5 align-items-stretch">
-            <div class="col-md-6 col-sm-12">
-                <a class="quick-link whatsapp" href="https://wa.me/966123456789" target="_blank" rel="noopener">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>الدردشة على واتساب</span>
-                </a>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <a class="quick-link calendar" href="<?php echo esc_url(dlc_get_booking_page_url('ar')); ?>">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>حجز استشارة</span>
-                </a>
-            </div>
-        </div>
-
+    
 
     </section>
 
+</div>
 
+<!-- Success Modal -->
+<div id="contact-success-modal" class="contact-modal" style="display: none;">
+    <div class="contact-modal-overlay"></div>
+    <div class="contact-modal-content">
+        <div class="contact-modal-header">
+            <h2 class="contact-modal-title">تم إرسال طلبك بنجاح <i class="fa-regular fa-circle-check success text-success"></i></h2>
+            <button class="contact-modal-close" aria-label="إغلاق النافذة">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="contact-modal-body">
+            <p class="contact-modal-message">
+شكرًا لتواصلك مع شركة داغ للمحاماة والاستشارات القانونية.            </p>
+            <p class="contact-modal-message">
+ تم استلام رسالتك بنجاح، وسيتواصل معك أحد مستشارينا القانونيين في أقرب وقت ممكن لمراجعة طلبك وتقديم المساعدة المناسبة.
+            </p>
+            <p class="contact-modal-message">
+                نحن نقدر اهتمامك حقاً ونتطلع إلى خدمتك قريباً.
+            </p>
+            <p class="contact-modal-message">
+يمكنك أيضًا متابعتنا على قنواتنا الرسمية لمعرفة آخر الأخبار والخدمات القانونية.
+            </p>
+        </div>
+        <div class="contact-modal-footer">
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="contact-modal-link">
+                <i class="fa-solid fa-home"></i>
+                العودة إلى الصفحة الرئيسية
+            </a>
+            <a href="<?php echo esc_url(dlc_get_services_page_url('ar')); ?>" class="contact-modal-link">
+                <i class="fa-solid fa-briefcase"></i>
+                استكشف خدماتنا
+            </a>
+        </div>
+    </div>
 </div>
 
 

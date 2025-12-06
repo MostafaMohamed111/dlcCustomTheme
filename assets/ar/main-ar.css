@@ -57,3 +57,10 @@ body {
 .mobile-nav.active {
     right: 0; /* Slide in from right */
 }
+
+
+
+.arabic-phone {
+    direction: ltr;
+    text-align: left;
+}
