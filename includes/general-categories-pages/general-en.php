@@ -63,7 +63,7 @@
                 $category = $queried_object;
                 $archive_type = 'category';
                 $badge_icon = 'fa-folder-open';
-                $badge_text = 'Category Archive';
+                $badge_text = 'Archive';
                 $archive_title = single_cat_title('', false);
                 $archive_subtitle = category_description() ?: 'Exploring posts in "' . $archive_title . '"';
                 $post_count = $category->count;
@@ -71,14 +71,14 @@
                 $tag = $queried_object;
                 $archive_type = 'tag';
                 $badge_icon = 'fa-tag';
-                $badge_text = 'Tag Archive';
+                $badge_text = 'Archive';
                 $archive_title = single_tag_title('', false);
                 $archive_subtitle = 'Exploring content tagged with "' . $archive_title . '"';
                 $post_count = $tag->count;
             } elseif (is_date()) {
                 $archive_type = 'date';
                 $badge_icon = 'fa-calendar-days';
-                $badge_text = 'Date Archive';
+                $badge_text = 'Archive';
                 if (is_year()) {
                     $archive_title = get_the_date('Y');
                     $archive_subtitle = 'Posts published in ' . $archive_title;
@@ -93,7 +93,7 @@
                 $author = $queried_object;
                 $archive_type = 'author';
                 $badge_icon = 'fa-user-pen';
-                $badge_text = 'Author Archive';
+                $badge_text = 'Archive';
                 $archive_title = get_the_author();
                 $archive_subtitle = 'Articles written by ' . $archive_title;
                 $post_count = count_user_posts($author->ID);
@@ -115,12 +115,12 @@
                     
                     <h1 class="archive-main-title"><?php echo esc_html($archive_title); ?></h1>
                     
-                    <p class="archive-subtitle"><?php echo esc_html($archive_subtitle); ?></p>
-                    
                     <?php if (is_category() && category_description()) : ?>
                         <div class="archive-description">
-                            <?php echo wpautop(category_description()); ?>
+                            <?php echo category_description(); ?>
                         </div>
+                    <?php else : ?>
+                        <p class="archive-subtitle"><?php echo esc_html($archive_subtitle); ?></p>
                     <?php endif; ?>
                     
                     <?php

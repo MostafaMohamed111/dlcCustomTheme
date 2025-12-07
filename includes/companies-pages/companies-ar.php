@@ -128,8 +128,11 @@
                 $current_category = 0;
                 if (is_category()) {
                     $queried_category = get_queried_object();
-                    // Check if this is a child of the parent category
-                    if ($queried_category->parent == $parent_category->term_id || $queried_category->term_id == $parent_category->term_id) {
+                    // Parent category archive → treat as "All Company Services"
+                    if ($queried_category->term_id == $parent_category->term_id) {
+                        $current_category = 0;
+                    } elseif ($queried_category->parent == $parent_category->term_id) {
+                        // Direct child of parent → specific sub-category
                         $current_category = $queried_category->term_id;
                     }
                 } else {
@@ -143,17 +146,13 @@
                     $all_category_ids = array_merge($all_category_ids, $all_children);
                 }
                 
-                // Setup query arguments
-                $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-                $posts_per_page = 6; // 3 columns × 2 rows
-                
+                // Setup query arguments (load all matching services, no pagination)
                 $query_args = array(
-                    'post_type' => 'post',
-                    'post_status' => 'publish',
-                    'posts_per_page' => $posts_per_page,
-                    'paged' => $paged,
-                    'orderby' => 'date',
-                    'order' => 'DESC'
+                    'post_type'      => 'post',
+                    'post_status'    => 'publish',
+                    'posts_per_page' => -1,
+                    'orderby'        => 'date',
+                    'order'          => 'DESC',
                 );
                 
                 // Add Polylang language filter if available
@@ -188,7 +187,8 @@
                         <div class="sidebar-widget categories-widget">
                             <?php
                             // Determine current category name for display
-                            $current_category_name = 'جميع الخدمات';
+                            // Default label represents the parent companies services group
+                            $current_category_name = 'خدمات الشركات';
                             if ($current_category > 0) {
                                 $selected_category = get_category($current_category);
                                 if ($selected_category) {
@@ -206,11 +206,11 @@
                             <ul class="categories-list">
                                 <li>
                                     <?php
-                                    // Get post count for "All Services" (all posts in companies-services and children, filtered by language)
+                                    // Get post count for all company services (parent + children, filtered by language)
                                     $all_services_query_args = array(
-                                        'category__in' => $all_category_ids,
+                                        'category__in'   => $all_category_ids,
                                         'posts_per_page' => -1,
-                                        'post_status' => 'publish'
+                                        'post_status'    => 'publish',
                                     );
                                     
                                     // Add Polylang language filter if available
@@ -226,7 +226,7 @@
                                     class="category-link <?php echo $current_category == 0 ? 'active' : ''; ?>"
                                     data-category-id="0"
                                     data-parent-category-id="<?php echo $parent_category->term_id; ?>">
-                                        <span class="category-name">جميع الخدمات</span>
+                                        <span class="category-name">خدمات الشركات</span>
                                         <span class="category-count"><?php echo $all_services_count; ?></span>
                                     </a>
                                 </li>
@@ -258,22 +258,7 @@
                             wp_reset_postdata();
                             ?>
                             </div>
-                            
-                            <?php
-                            // Pagination
-                            $base_url = $current_category > 0 
-                                ? get_category_link($current_category)
-                                : get_category_link($parent_category->term_id);
-                            
-                            get_template_part('includes/pagination', null, array(
-                                'paged' => $paged,
-                                'total_pages' => $services_query->max_num_pages,
-                                'base_url' => $base_url,
-                                'anchor_id' => '#services-title',
-                                'page_text' => 'صفحة %s من %s',
-                                'category_id' => $current_category,
-                                'parent_category_id' => $parent_category->term_id
-                            ));
+                        <?php
                         else :
                             ?>
                             <div class="no-services">

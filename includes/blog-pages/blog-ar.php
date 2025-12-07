@@ -47,7 +47,8 @@
                 <div class="sidebar-widget categories-widget">
                     <?php
                     // Determine current category name for display
-                    $current_category_name = 'جميع المنشورات';
+                    // Default label represents the main blog
+                    $current_category_name = 'المدونة';
                     if (is_category()) {
                         $current_category = get_queried_object();
                         if ($current_category) {
@@ -143,7 +144,7 @@
                             <a href="<?php echo esc_url($blog_url . '#category-title'); ?>" 
                                class="category-link <?php echo $is_blog_active ? 'active' : ''; ?>"
                                data-category-id="<?php echo $blog_category ? $blog_category->term_id : 0; ?>">
-                                <span class="category-name">جميع المنشورات</span>
+                                <span class="category-name">المدونة</span>
                                 <span class="category-count"><?php echo $blog_count; ?></span>
                             </a>
                         </li>
@@ -219,31 +220,6 @@
                         endwhile;
                         ?>
                     </div>
-                    
-                    <?php
-                    // Pagination
-                    global $wp_query;
-                    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-                    
-                    // Get base URL and category context
-                    $category_id = 0;
-                    if (is_category()) {
-                        $category_id = get_queried_object_id();
-                        $base_url = get_category_link($category_id);
-                    } else {
-                        $base_url = get_pagenum_link(1);
-                    }
-                    
-                    get_template_part('includes/pagination', null, array(
-                        'paged' => $paged,
-                        'total_pages' => $wp_query->max_num_pages,
-                        'base_url' => $base_url,
-                        'anchor_id' => '#category-title',
-                        'page_text' => 'صفحة %s من %s',
-                        'category_id' => $category_id,
-                        'parent_category_id' => 0
-                    ));
-                    ?>
                 <?php else : ?>
                     <div class="no-posts">
                         <i class="fa-solid fa-file-circle-question"></i>

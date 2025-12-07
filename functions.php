@@ -827,7 +827,15 @@ function show_blog_category_posts($query) {
         
         // Set posts per page for all archive pages
         if (is_archive() || is_category() || is_tag()) {
-            $query->set('posts_per_page', DLC_POSTS_PER_PAGE);
+            $posts_per_page = DLC_POSTS_PER_PAGE;
+
+            // For blog archives (Blog parent category and its children), load all posts (no pagination)
+            $category_type = dlc_get_category_type_slug();
+            if ($category_type === 'blog') {
+                $posts_per_page = -1;
+            }
+
+            $query->set('posts_per_page', $posts_per_page);
         }
         
         // If on archive page (blog home) and not viewing a specific category
@@ -1144,15 +1152,13 @@ function dlc_get_adjacent_service_post($direction = 'next', $language = 'en') {
                 'operator' => 'IN',
             ),
         ),
-        'meta_query' => array(
-            array(
-                'key' => '_post_language',
-                'value' => $language,
-                'compare' => '=',
-            ),
-        ),
         'post__not_in' => array($post->ID),
     );
+    
+    // Use Polylang language filter if available
+    if (function_exists('pll_current_language')) {
+        $query_args['lang'] = $language;
+    }
 
     $query = new WP_Query($query_args);
     if ($query->have_posts()) {
@@ -1862,6 +1868,13 @@ function load_archive_posts_ajax() {
         }
     }
 
+    // For services pages (companies / individual / international / secure-yourself),
+    // always load ALL matching services in one request (no pagination).
+    if ($is_services_page) {
+        $posts_per_page = -1;
+        $paged = 1;
+    }
+
     // Setup query arguments
     $query_args = array(
         'post_type' => 'post',
@@ -1931,6 +1944,22 @@ function load_archive_posts_ajax() {
         }
     } else {
         // Blog archive page or general archive logic
+        // Detect if this is a blog archive (Blog parent category or its children)
+        $is_blog_archive = false;
+
+        if ($category_id > 0) {
+            $is_blog_archive = dlc_is_blog_category($category_id);
+        } else {
+            // When category_id is 0 (All Posts), treat it as blog archive if the Blog parent exists
+            $blog_category = get_category_by_slug('blog');
+            if (!$blog_category) {
+                $blog_category = get_term_by('name', 'Blog', 'category');
+            }
+            if ($blog_category) {
+                $is_blog_archive = true;
+            }
+        }
+
         if ($category_id > 0) {
             // Get specific category
             $category = get_category($category_id);
@@ -1968,6 +1997,12 @@ function load_archive_posts_ajax() {
         // Add Polylang language filter
         if (function_exists('pll_current_language')) {
             $query_args['lang'] = pll_current_language();
+        }
+
+        // For blog archives, always load all posts (no pagination)
+        if ($is_blog_archive) {
+            $query_args['posts_per_page'] = -1;
+            $paged = 1;
         }
     }
 

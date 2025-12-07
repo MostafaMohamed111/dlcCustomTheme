@@ -63,7 +63,7 @@
             $category = $queried_object;
             $archive_type = 'category';
             $badge_icon = 'fa-folder-open';
-            $badge_text = 'أرشيف الفئة';
+            $badge_text = 'أرشيف';
             $archive_title = single_cat_title('', false);
             $archive_subtitle = category_description() ?: 'استكشف المنشورات في "' . $archive_title . '"';
             $post_count = $category->count;
@@ -71,14 +71,14 @@
             $tag = $queried_object;
             $archive_type = 'tag';
             $badge_icon = 'fa-tag';
-            $badge_text = 'أرشيف الوسم';
+            $badge_text = 'أرشيف';
             $archive_title = single_tag_title('', false);
             $archive_subtitle = 'استكشف المحتوى المميز بـ "' . $archive_title . '"';
             $post_count = $tag->count;
         } elseif (is_date()) {
             $archive_type = 'date';
             $badge_icon = 'fa-calendar-days';
-            $badge_text = 'أرشيف التاريخ';
+            $badge_text = 'أرشيف';
             if (is_year()) {
                 $archive_title = get_the_date('Y');
                 $archive_subtitle = 'المنشورات المنشورة في ' . $archive_title;
@@ -93,7 +93,7 @@
             $author = $queried_object;
             $archive_type = 'author';
             $badge_icon = 'fa-user-pen';
-            $badge_text = 'أرشيف المؤلف';
+            $badge_text = 'أرشيف';
             $archive_title = get_the_author();
             $archive_subtitle = 'المقالات المكتوبة بواسطة ' . $archive_title;
             $post_count = count_user_posts($author->ID);
@@ -115,15 +115,13 @@
                 
                 <h1 id="category-title" class="archive-main-title"><?php echo esc_html($archive_title); ?></h1>
                 
-                <p class="archive-subtitle"><?php echo esc_html($archive_subtitle); ?></p>
-                
-                <?php if (is_category() && category_description()) : ?>
-                    <div class="archive-description">
-                        <?php echo wpautop(category_description()); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <?php
+                    <?php if (is_category() && category_description()) : ?>
+                        <div class="archive-description">
+                            <?php echo category_description(); ?>
+                        </div>
+                    <?php else : ?>
+                        <p class="archive-subtitle"><?php echo esc_html($archive_subtitle); ?></p>
+                    <?php endif; ?>                <?php
                 // Setup query with Polylang language filter
                 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
                 
