@@ -79,6 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalSlides = carousel.children.length;
     const isRTL = document.documentElement.dir === 'rtl';
 
+    // Reset transform to show first slide initially
+    carousel.style.transform = 'translateX(0)';
+
     function showSlide(index) {
         const direction = isRTL ? '' : '-';
         carousel.style.transform = `translateX(${direction}${index * 100}%)`;
@@ -100,7 +103,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function startCarousel() {
         stopCarousel();
-        carouselInterval = setInterval(nextSlide, 3000);
+        // For RTL, auto-slide should go backwards (prevSlide)
+        if (isRTL) {
+            carouselInterval = setInterval(prevSlide, 3000);
+        } else {
+            carouselInterval = setInterval(nextSlide, 3000);
+        }
     }
 
     function stopCarousel() {
@@ -110,11 +118,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Navigation arrows
+    // Navigation arrows (reversed for RTL)
     if (nextBtn) {
         nextBtn.addEventListener('click', function() {
             stopCarousel();
-            nextSlide();
+            if (isRTL) {
+                prevSlide();
+            } else {
+                nextSlide();
+            }
             startCarousel();
         });
     }
@@ -122,7 +134,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (prevBtn) {
         prevBtn.addEventListener('click', function() {
             stopCarousel();
-            prevSlide();
+            if (isRTL) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
             startCarousel();
         });
     }

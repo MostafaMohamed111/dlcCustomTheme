@@ -1371,28 +1371,19 @@ function handle_contact_form_submission() {
     <meta charset="UTF-8">
     <title>New Contact Form Submission</title>
 </head>
-<body style="margin:0;padding:0;background-color:' . esc_attr($bgLight) . ';font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:' . esc_attr($bgLight) . ';padding:24px 0;">
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
         <tr>
-            <td align="center">
-                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+            <td>
+                <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;">
                     <tr>
-                        <td style="background:linear-gradient(135deg,' . esc_attr($primary) . ',' . esc_attr($lightBlue) . ');padding:20px 24px;color:#ffffff;">
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                    <td style="vertical-align:middle;">
-                                        <h1 style="margin:0;font-size:22px;font-weight:600;">New Contact Form Submission</h1>
-                                        <p style="margin:4px 0 0 0;font-size:13px;opacity:0.9;">Sent from the Dag Law Firm website</p>
-                                    </td>
-                                    <td align="right" style="vertical-align:middle;">
-                                        <img src="' . esc_url($logo_url) . '" alt="Dag Law Firm" style="height:42px;width:auto;border-radius:6px;">
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="background:linear-gradient(135deg,' . esc_attr($primary) . ',' . esc_attr($lightBlue) . ');padding:30px 40px;color:#ffffff;">
+                            <h1 style="margin:0;font-size:24px;font-weight:600;">New Contact Form Submission</h1>
+                            <p style="margin:8px 0 0 0;font-size:14px;opacity:0.9;">Sent from the Dag Law Firm website</p>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:24px 24px 8px 24px;">
+                        <td style="padding:30px 40px 15px 40px;">
                             <h2 style="margin:0 0 12px 0;font-size:16px;color:' . esc_attr($primary) . ';">Contact Details</h2>
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px;color:#333;">
                                 <tr>
@@ -1407,15 +1398,15 @@ function handle_contact_form_submission() {
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:8px 24px 20px 24px;">
+                        <td style="padding:15px 40px 30px 40px;">
                             <h2 style="margin:16px 0 10px 0;font-size:16px;color:' . esc_attr($primary) . ';">Message</h2>
-                            <div style="margin-top:4px;padding:12px 14px;background-color:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;color:#333;line-height:1.6;">
+                            <div style="margin-top:4px;padding:12px 14px;background-color:#f9fafb;border:1px solid #e5e7eb;font-size:14px;color:#333;line-height:1.6;">
                                 ' . nl2br(esc_html($message)) . '
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:12px 24px 18px 24px;border-top:1px solid #e5e7eb;background-color:#fafafa;">
+                        <td style="padding:20px 40px;border-top:1px solid #e5e7eb;background-color:#fafafa;">
                             <p style="margin:0;font-size:11px;color:#9ca3af;">
                                 This email was generated automatically from the contact form. Please reply directly to the sender if an email address was provided.
                             </p>
@@ -1734,28 +1725,19 @@ function handle_booking_form_submission() {
     <meta charset="UTF-8">
     <title>New Consultation Booking Request</title>
 </head>
-<body style="margin:0;padding:0;background-color:' . esc_attr($bgLight) . ';font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:' . esc_attr($bgLight) . ';padding:24px 0;">
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
         <tr>
-            <td align="center">
-                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+            <td>
+                <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#ffffff;">
                     <tr>
-                        <td style="background:linear-gradient(135deg,' . esc_attr($primary) . ',' . esc_attr($lightBlue) . ');padding:20px 24px;color:#ffffff;">
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                <tr>
-                                    <td style="vertical-align:middle;">
-                                        <h1 style="margin:0;font-size:22px;font-weight:600;">New Consultation Booking Request</h1>
-                                        <p style="margin:4px 0 0 0;font-size:13px;opacity:0.9;">Submitted through the Dag Law Firm website</p>
-                                    </td>
-                                    <td align="right" style="vertical-align:middle;">
-                                        <img src="' . esc_url($logo_url) . '" alt="Dag Law Firm" style="height:42px;width:auto;border-radius:6px;">
-                                    </td>
-                                </tr>
-                            </table>
+                        <td style="background:linear-gradient(135deg,' . esc_attr($primary) . ',' . esc_attr($lightBlue) . ');padding:30px 40px;color:#ffffff;">
+                            <h1 style="margin:0;font-size:24px;font-weight:600;">New Consultation Booking Request</h1>
+                            <p style="margin:8px 0 0 0;font-size:14px;opacity:0.9;">Submitted through the Dag Law Firm website</p>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:24px 24px 8px 24px;">
+                        <td style="padding:30px 40px 15px 40px;">
                             <h2 style="margin:0 0 16px 0;font-size:18px;color:' . esc_attr($primary) . ';">Summary</h2>
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
                                 <tr>
@@ -1774,7 +1756,7 @@ function handle_booking_form_submission() {
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:8px 24px 8px 24px;">
+                        <td style="padding:15px 40px;">
                             <h2 style="margin:16px 0 10px 0;font-size:16px;color:' . esc_attr($primary) . ';">Personal Information</h2>
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px;color:#333;">
                                 <tr>
@@ -1797,7 +1779,7 @@ function handle_booking_form_submission() {
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:8px 24px 8px 24px;">
+                        <td style="padding:15px 40px 30px 40px;">
                             <h2 style="margin:16px 0 10px 0;font-size:16px;color:' . esc_attr($primary) . ';">Consultation Details</h2>
                             <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-size:14px;color:#333;">
                                 <tr>
@@ -1809,14 +1791,14 @@ function handle_booking_form_submission() {
                                     <td style="padding:4px 0;color:#111;">' . esc_html(ucfirst($previous_lawyer)) . '</td>
                                 </tr>
                             </table>
-                            <div style="margin-top:10px;padding:12px 14px;background-color:#f9fafb;border-radius:8px;border:1px solid #e5e7eb;">
+                            <div style="margin-top:10px;padding:12px 14px;background-color:#f9fafb;border:1px solid #e5e7eb;">
                                 <div style="font-size:13px;font-weight:600;color:' . esc_attr($primary) . ';margin-bottom:6px;">Case Brief</div>
                                 <div style="font-size:14px;color:#333;line-height:1.6;">' . nl2br(esc_html($case_brief)) . '</div>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:16px 24px 20px 24px;border-top:1px solid #e5e7eb;background-color:#fafafa;">
+                        <td style="padding:20px 40px;border-top:1px solid #e5e7eb;background-color:#fafafa;">
                             <p style="margin:0 0 4px 0;font-size:12px;color:#6b7280;">
                                 This booking was submitted through the Dag Law Firm website booking form.
                             </p>

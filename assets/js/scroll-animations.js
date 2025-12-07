@@ -24,8 +24,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Select all elements to animate
     const animatedElements = document.querySelectorAll(
-        '.section-header, .about-text, .about-image, .stat-item, .parallax-divider, .service-card, .services-head, .services img, .companies, .individuals'
+        '.section-header, .about-text, .about-image, .stat-item, .parallax-divider, .service-card, .services-head, .services img, .companies, .individuals, .about-dag, .paragraph, .about-mr-dag-row, .who-we-are-content, .team-cta-wrapper, .mission-description, .vision-content, .achievements-grid, .achievement-card, .objective-item, .consultation-cta-wrapper'
     );
+
+    // Add stagger delays for cards and items
+    document.querySelectorAll('.achievement-card').forEach((card, index) => {
+        card.style.setProperty('--card-index', index);
+    });
+    
+    document.querySelectorAll('.objective-item').forEach((item, index) => {
+        item.style.setProperty('--item-index', index);
+    });
 
     // Observe each element
     animatedElements.forEach(element => {

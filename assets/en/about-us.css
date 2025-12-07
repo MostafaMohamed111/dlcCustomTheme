@@ -1333,4 +1333,46 @@
     }
 }
 
+/* Scroll Animations */
+.about-dag,
+.paragraph,
+.about-mr-dag-row,
+.who-we-are-content,
+.team-cta-wrapper,
+.mission-description,
+.vision-content,
+.achievements-grid,
+.achievement-card,
+.objective-item,
+.consultation-cta-wrapper {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.about-dag.animate,
+.paragraph.animate,
+.about-mr-dag-row.animate,
+.who-we-are-content.animate,
+.team-cta-wrapper.animate,
+.mission-description.animate,
+.vision-content.animate,
+.achievements-grid.animate,
+.achievement-card.animate,
+.objective-item.animate,
+.consultation-cta-wrapper.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger animation for cards */
+.achievement-card {
+    transition-delay: calc(var(--card-index, 0) * 0.15s);
+}
+
+.objective-item {
+    transition-delay: calc(var(--item-index, 0) * 0.1s);
+}
+
+
 
