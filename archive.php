@@ -26,9 +26,9 @@ switch ($category_type) {
         get_template_part('categories/news');
         break;
         
-    case 'secure-yourself':
-        get_template_part('categories/secure-yourself');
-        break;
+    // case 'secure-yourself':
+    //     get_template_part('categories/secure-yourself');
+    //     break;
 
     case 'companies-services':
         get_template_part('categories/companies-services');

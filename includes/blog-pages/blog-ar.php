@@ -16,7 +16,7 @@
            </div>
            <div class="main-header-image col-lg-5 col-md-12">
                 <div class="image-container">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/write-2.jpg" alt="Blog Header Image" class="blog-header-img">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/SecureYourself.webp" alt="Blog Header Image" class="blog-header-img">
                 </div>
                
 

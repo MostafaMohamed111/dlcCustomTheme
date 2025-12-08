@@ -51,6 +51,17 @@
 
                     <!-- Post Footer -->
                     <footer class="post-footer-single">
+                        <div class="service-cta">
+                            <?php 
+                            // Get booking page URL using Polylang
+                            $booking_url = dlc_get_booking_page_url('ar');
+                            $booking_url = add_query_arg('service', get_the_ID(), $booking_url);
+                            ?>
+                            <a href="<?php echo esc_url($booking_url); ?>" class="service-cta-btn get-started-service-btn">
+                                احجز هذه الخدمة
+                                <i class="fa-solid fa-briefcase"></i>
+                            </a>
+                        </div>
                         <div class="post-navigation-inline">
                             <?php
                             // Get previous/next services filtered by Arabic language within same service type
@@ -143,8 +154,43 @@
             endwhile;
         endif;
         ?>
+    </div>
+</div>
+
+<?php
+// Get FAQ data from CMB2
+$faq_items = get_post_meta(get_the_ID(), 'post_faq_group', true);
+
+if (!empty($faq_items) && is_array($faq_items)) :
+?>
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="faq-container">
+        <h2 class="faq-title">الأسئلة الشائعة</h2>
+        <p class="faq-subtitle">اعثر على إجابات للأسئلة الشائعة حول هذه الخدمة</p>
         
-        <div class="back-to-posts">
+        <ul class="faq-list">
+            <?php foreach ($faq_items as $faq) : 
+                if (empty($faq['question']) || empty($faq['answer'])) continue;
+            ?>
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text"><?php echo esc_html($faq['question']); ?></span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text"><?php echo esc_html($faq['answer']); ?></p>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>
+<?php endif; ?>
+
+<div class="back-to-posts">
                     <?php 
                     // Get the first category of the post for the back link
                     $categories = get_the_category();

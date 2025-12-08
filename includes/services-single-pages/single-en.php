@@ -152,8 +152,43 @@
             endwhile;
         endif;
         ?>
+    </div>
+</div>
+
+<?php
+// Get FAQ data from CMB2
+$faq_items = get_post_meta(get_the_ID(), 'post_faq_group', true);
+
+if (!empty($faq_items) && is_array($faq_items)) :
+?>
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="faq-container">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+        <p class="faq-subtitle">Find answers to common questions about this service</p>
         
-        <div class="back-to-posts">
+        <ul class="faq-list">
+            <?php foreach ($faq_items as $faq) : 
+                if (empty($faq['question']) || empty($faq['answer'])) continue;
+            ?>
+            <li class="faq-item">
+                <div class="faq-question" role="button" aria-expanded="false">
+                    <span class="faq-question-text"><?php echo esc_html($faq['question']); ?></span>
+                    <span class="faq-question-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text"><?php echo esc_html($faq['answer']); ?></p>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>
+<?php endif; ?>
+
+<div class="back-to-posts">
             <?php 
             // Get the correct archive URL based on service type
             $back_url = dlc_get_service_archive_url(get_the_ID());
@@ -163,8 +198,6 @@
                 Back to Services
             </a>
         </div>
-    </div>
-</div>
 
 <?php get_footer(); ?>
 

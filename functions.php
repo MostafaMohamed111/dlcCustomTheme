@@ -303,6 +303,8 @@ function enqueue_theme_css() {
         // Single post page
         wp_register_style('single-page', get_template_directory_uri() . '/assets/en/single.css', array('main'), '1.0.0', 'all');
         wp_enqueue_style('single-page');
+        
+     
     }
 
     // Team archive page
@@ -466,6 +468,15 @@ function enqueue_theme_scripts() {
     // Services FAQ toggle for services page template
     if ( is_page_template('services.php') ) {
         if (!wp_script_is('services-faq', 'enqueued')) {
+            wp_register_script( 'services-faq', get_template_directory_uri() . '/assets/js/services-faq.js', array(), '1.0.0', true );
+            wp_enqueue_script( 'services-faq' );
+        }
+    }
+    
+    // Services FAQ toggle for single service posts
+    if ( is_single() && get_post_type() == 'post' ) {
+        $service_type = dlc_get_service_type(get_the_ID());
+        if ($service_type && !wp_script_is('services-faq', 'enqueued')) {
             wp_register_script( 'services-faq', get_template_directory_uri() . '/assets/js/services-faq.js', array(), '1.0.0', true );
             wp_enqueue_script( 'services-faq' );
         }
@@ -1332,12 +1343,13 @@ function handle_contact_form_submission() {
 
     // Sanitize
     $name    = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    $phone   = isset($_POST['phone']) ? sanitize_text_field($_POST['phone']) : '';
     $email   = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
     $message = isset($_POST['message']) ? sanitize_textarea_field($_POST['message']) : '';
 
-    // Name and message are required; email is optional
-    if (empty($name) || empty($message)) {
-        wp_send_json_error('Please fill all fields.');
+    // Name, phone and message are required; email is optional
+    if (empty($name) || empty($phone) || empty($message)) {
+        wp_send_json_error('Please fill all required fields.');
     }
 
     // If an email is provided, ensure it is valid
@@ -1395,6 +1407,10 @@ function handle_contact_form_submission() {
                                 <tr>
                                     <td style="padding:4px 0;width:160px;color:#555;"><strong>Name:</strong></td>
                                     <td style="padding:4px 0;color:#111;">' . esc_html($name) . '</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:4px 0;width:160px;color:#555;"><strong>Phone:</strong></td>
+                                    <td style="padding:4px 0;color:#111;"><a href="tel:' . esc_attr($phone) . '" style="color:#111;text-decoration:none;">' . esc_html($phone) . '</a></td>
                                 </tr>
                                 <tr>
                                     <td style="padding:4px 0;width:160px;color:#555;"><strong>Email:</strong></td>
@@ -2610,5 +2626,61 @@ function dlc_home_logos_page() {
     </script>
 
     <?php
+}
+
+add_action('cmb2_admin_init', 'post_faq_metabox');
+
+function post_faq_metabox() {
+
+    $faq_box = new_cmb2_box([
+        'id'            => 'post_faq_box',
+        'title'         => 'FAQ Section',
+        'object_types'  => ['post'],
+        'context'       => 'normal',
+        'priority'      => 'default',
+        'show_on_cb'    => 'show_faq_if_in_category', // Conditional!
+    ]);
+
+    $group_field_id = $faq_box->add_field([
+        'id'          => 'post_faq_group',
+        'type'        => 'group',
+        'description' => 'Add FAQs for this post',
+        'options'     => [
+            'group_title'   => 'FAQ #{#}',
+            'add_button'    => 'Add Question',
+            'remove_button' => 'Remove Question',
+            'sortable'      => true,
+        ],
+    ]);
+
+    $faq_box->add_group_field($group_field_id, [
+        'name' => 'Question',
+        'id'   => 'question',
+        'type' => 'text',
+    ]);
+
+    $faq_box->add_group_field($group_field_id, [
+        'name' => 'Answer',
+        'id'   => 'answer',
+        'type' => 'textarea',
+    ]);
+}
+
+
+
+function show_faq_if_in_category($cmb) {
+
+    $post_id = isset($_GET['post']) ? $_GET['post'] : (isset($_POST['post_ID']) ? $_POST['post_ID'] : 0);
+
+    if (!$post_id) {
+        return false;
+    }
+
+    // Check if post belongs to one of the service categories:
+    // companies-services, individual-services, or home-international
+    // Works for both Arabic and English posts via Polylang
+    $service_type = dlc_get_service_type($post_id);
+    
+    return !empty($service_type);
 }
 

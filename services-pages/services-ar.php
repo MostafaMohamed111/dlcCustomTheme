@@ -28,7 +28,7 @@
             </div>
             <div class="services-grid">
                 <div class="service-card companies">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies.png" alt="Corporate Law">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies-services-ar.webp" alt="Corporate Law">
                     <h2 class="text-center">خدمات الشركات </h2>
                     <p>نوفّر للشركات والمؤسسات حلولًا قانونية شاملة تدعم استمرارية الأعمال وتحميها من المخاطر النظامية.
 </p>
@@ -57,7 +57,7 @@
                     <a class="service-btn btn" href="<?php echo esc_url($companies_ar_url); ?>"> استعرض خدمات الشركات</a>
                 </div>
                 <div class="service-card individuals">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individuals.webp" alt="Individual Law">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individual-services-ar.webp" alt="Individual Law">
                     <h2 class="text-center">خدمات الأفراد</h2>
                     <p>تهدف خدماتنا للأفراد إلى توفير الحماية القانونية وضمان الحقوق في مختلف الجوانب الشخصية والمالية.</p>
                 <?php
