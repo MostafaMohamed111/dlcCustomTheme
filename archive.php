@@ -54,5 +54,4 @@ switch ($category_type) {
         get_template_part('categories/general');
 }
 
-
 ?>

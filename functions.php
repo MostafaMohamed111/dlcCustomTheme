@@ -2684,3 +2684,16 @@ function show_faq_if_in_category($cmb) {
     return !empty($service_type);
 }
 
+
+add_filter( 'pll_get_post_types', function( $post_types ) {
+    $post_types['post'] = 'post';
+    return $post_types;
+});
+
+add_filter( 'pll_get_taxonomies', function( $taxonomies ) {
+    $taxonomies['category'] = 'category';
+    $taxonomies['post_tag'] = 'post_tag';
+    return $taxonomies;
+});
+
+
