@@ -300,6 +300,64 @@
     color: var(--dark-gray);
 }
 
+/* Pagination */
+.pagination-wrapper {
+    margin-top: 60px;
+    text-align: center;
+    direction: ltr;
+}
+
+.pagination-simple {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    direction: ltr;
+}
+
+.pagination-arrow {
+    display: inline-block;
+}
+
+.pagination-arrow a,
+.pagination-arrow span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.pagination-arrow a:hover {
+    background-color: var(--light-blue);
+    transform: scale(1.1);
+}
+
+.pagination-arrow.disabled span {
+    background-color: var(--light-gray);
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.pagination-info .page-numbers {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--light-blue);
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .news-grid {

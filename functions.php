@@ -1876,6 +1876,12 @@ function load_archive_posts_ajax() {
             $is_services_page = true;
         }
     }
+    
+    // Check if this is a news page
+    $is_news_page = false;
+    if ($category_id > 0) {
+        $is_news_page = dlc_is_news_category($category_id);
+    }
 
     // Check if this is a paginated service type (companies, individual, or international)
     $is_paginated_service = false;
@@ -1963,6 +1969,46 @@ function load_archive_posts_ajax() {
             // Determine language for category title
             $current_lang = function_exists('pll_current_language') ? pll_current_language() : 'en';
             $category_title = ($current_lang === 'ar') ? 'جميع الخدمات' : 'All Services';
+        }
+    } elseif ($is_news_page) {
+        // News archive page logic
+        if ($category_id > 0) {
+            // Get specific news category
+            $category = get_category($category_id);
+            if ($category) {
+                // Get category and its children
+                $category_ids = array($category_id);
+                $children = get_term_children($category_id, 'category');
+                if (!is_wp_error($children)) {
+                    $category_ids = array_merge($category_ids, $children);
+                }
+                $query_args['category__in'] = $category_ids;
+                $category_title = $category->name;
+            } else {
+                wp_send_json_error('News category not found.');
+                return;
+            }
+        } else {
+            // All news posts
+            $news_category = get_category_by_slug('news');
+            if (!$news_category) {
+                $news_category = get_term_by('name', 'News', 'category');
+            }
+            
+            if ($news_category) {
+                $category_ids = array($news_category->term_id);
+                $children = get_term_children($news_category->term_id, 'category');
+                if (!is_wp_error($children)) {
+                    $category_ids = array_merge($category_ids, $children);
+                }
+                $query_args['category__in'] = $category_ids;
+            }
+            $category_title = ($current_lang === 'ar') ? 'الأخبار' : 'News';
+        }
+        
+        // Add Polylang language filter
+        if (function_exists('pll_current_language')) {
+            $query_args['lang'] = pll_current_language();
         }
     } else {
         // Blog archive page or general archive logic
@@ -2077,6 +2123,48 @@ function load_archive_posts_ajax() {
         endif;
         
         wp_reset_postdata();
+        elseif ($is_news_page) :
+            // News posts structure - use news-card template
+            $news_badge_text = ($current_lang === 'ar') ? 'أخبار' : 'News';
+            ?>
+            <div class="news-grid">
+                <?php
+                while ($archive_query->have_posts()) : $archive_query->the_post();
+                    get_template_part('includes/news-card', null, array(
+                        'badge_text' => $news_badge_text,
+                        'button_text' => $read_more_text
+                    ));
+                endwhile;
+                ?>
+            </div>
+            
+            <?php
+            // Pagination
+            $total_pages = $archive_query->max_num_pages;
+            if ($total_pages > 1) :
+                $base_url = '';
+                if ($category_id > 0) {
+                    $base_url = get_category_link($category_id);
+                } else {
+                    $news_category = get_category_by_slug('news');
+                    if (!$news_category) {
+                        $news_category = get_term_by('name', 'News', 'category');
+                    }
+                    $base_url = $news_category ? get_category_link($news_category->term_id) : home_url();
+                }
+                
+                get_template_part('includes/pagination', null, array(
+                    'paged' => $paged,
+                    'total_pages' => $total_pages,
+                    'base_url' => trailingslashit($base_url),
+                    'anchor_id' => '#news-title',
+                    'page_text' => $page_text,
+                    'category_id' => $category_id,
+                    'parent_category_id' => 0
+                ));
+            endif;
+            
+            wp_reset_postdata();
         elseif ($is_general_archive) :
             // General archive posts structure - use same pattern as blog
             ?>

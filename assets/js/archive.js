@@ -320,18 +320,24 @@
         // Get containers - check for all possible container IDs
         let $mainContainer = $('#posts-container');
         let $gridContainer = $('#posts-grid');
+        let isNewsPage = false;
         
         if (isServicesPage) {
             $mainContainer = $('#services-main');
             $gridContainer = $('#services-grid');
+        } else if ($('#news-container').length) {
+            // News page
+            $mainContainer = $('#news-container');
+            $gridContainer = $('.news-grid');
+            isNewsPage = true;
         }
         
         // Fallback: if containers not found, try to find them
         if (!$mainContainer.length) {
-            $mainContainer = $('.posts-container, .services-main').first();
+            $mainContainer = $('.posts-container, .services-main, #news-container').first();
         }
         if (!$gridContainer.length) {
-            $gridContainer = $('.posts-grid, .services-grid').first();
+            $gridContainer = $('.posts-grid, .services-grid, .news-grid').first();
         }
         
         const $paginationWrapper = $('.pagination-wrapper, .archive-pagination');
@@ -382,7 +388,12 @@
                     const $paginationInResponse = $tempDiv.find('.pagination-wrapper');
                     
                     if ($gridContainer.length) {
-                        const gridClass = isServicesPage ? '.services-grid' : '.posts-grid';
+                        let gridClass = '.posts-grid';
+                        if (isServicesPage) {
+                            gridClass = '.services-grid';
+                        } else if (isNewsPage) {
+                            gridClass = '.news-grid';
+                        }
                         const $gridContent = $tempDiv.find(gridClass);
                         
                         if ($gridContent.length) {
@@ -419,7 +430,12 @@
                     }
                     
                     // Update and scroll to title
-                    const titleSelector = isServicesPage ? '#services-title' : '#category-title, .archive-main-title';
+                    let titleSelector = '#category-title, .archive-main-title';
+                    if (isServicesPage) {
+                        titleSelector = '#services-title';
+                    } else if (isNewsPage) {
+                        titleSelector = '#news-title';
+                    }
                     const $title = $(titleSelector).first();
                     if (response.data.category_title && $title.length) {
                         $title.text(response.data.category_title);
