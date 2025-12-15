@@ -113,7 +113,7 @@
                         <div class="sidebar-widget categories-widget">
                             <?php
                             // Determine current category name for display
-                            $current_category_name = 'All Services';
+                            $current_category_name = 'Individual Services';
                             if ($current_category > 0) {
                                 $selected_category = get_category($current_category);
                                 if ($selected_category) {
@@ -144,7 +144,7 @@
                                     class="category-link <?php echo $current_category == 0 ? 'active' : ''; ?>"
                                     data-category-id="0"
                                     data-parent-category-id="<?php echo $parent_category->term_id; ?>">
-                                        <span class="category-name">All Services</span>
+                                        <span class="category-name">Individual Services</span>
                                         <span class="category-count"><?php echo $all_services_count; ?></span>
                                     </a>
                                 </li>

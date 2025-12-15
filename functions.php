@@ -836,17 +836,9 @@ function show_blog_category_posts($query) {
             }
         }
         
-        // Set posts per page for all archive pages
+        // Set posts per page for all archive pages (including blog)
         if (is_archive() || is_category() || is_tag()) {
-            $posts_per_page = DLC_POSTS_PER_PAGE;
-
-            // For blog archives (Blog parent category and its children), load all posts (no pagination)
-            $category_type = dlc_get_category_type_slug();
-            if ($category_type === 'blog') {
-                $posts_per_page = -1;
-            }
-
-            $query->set('posts_per_page', $posts_per_page);
+            $query->set('posts_per_page', DLC_POSTS_PER_PAGE);
         }
         
         // If on archive page (blog home) and not viewing a specific category
@@ -1508,7 +1500,7 @@ function get_booking_services() {
     $service_type = sanitize_text_field($_POST['service_type']);
     $language = isset($_POST['language']) ? sanitize_text_field($_POST['language']) : 'en';
     
-    // Map service type to English category slug
+    // Map service type to category slug
     $base_category_slug = '';
     switch ($service_type) {
         case 'companies':
@@ -1525,31 +1517,29 @@ function get_booking_services() {
             return;
     }
 
-    // Get the parent category using Polylang
+    // Get the parent category with robust detection
     $parent_category = null;
-    if (function_exists('pll_get_term')) {
-        $en_category = get_category_by_slug($base_category_slug);
-        if (!$en_category) {
-            // Try by name as fallback
-            $en_category = get_term_by('name', ucfirst(str_replace('-', ' ', $base_category_slug)), 'category');
-        }
+    
+    if ($language === 'ar') {
+        // Three-tier approach for Arabic categories
         
-        if ($en_category) {
-            if ($language === 'ar') {
+        // 1. Try with -ar suffix
+        $ar_slug = $base_category_slug . '-ar';
+        $parent_category = get_category_by_slug($ar_slug);
+        
+        // 2. Try Polylang translation
+        if (!$parent_category && function_exists('pll_get_term')) {
+            $en_category = get_category_by_slug($base_category_slug);
+            if ($en_category) {
                 $ar_category_id = pll_get_term($en_category->term_id, 'ar');
                 if ($ar_category_id) {
                     $parent_category = get_category($ar_category_id);
                 }
-            } else {
-                $parent_category = $en_category;
             }
         }
-    }
-    
-    // Fallback: try to get by name if Polylang translation not found
-    if (!$parent_category) {
-        if ($language === 'ar') {
-            // Try by Arabic name
+        
+        // 3. Try by Arabic name
+        if (!$parent_category) {
             $ar_names = array(
                 'companies-services'   => 'خدمات الشركات',
                 'individual-services'  => 'خدمات الأفراد',
@@ -1559,11 +1549,14 @@ function get_booking_services() {
             if ($ar_name) {
                 $parent_category = get_term_by('name', $ar_name, 'category');
             }
-        } else {
-            $parent_category = get_category_by_slug($base_category_slug);
-            if (!$parent_category) {
-                $parent_category = get_term_by('name', ucfirst(str_replace('-', ' ', $base_category_slug)), 'category');
-            }
+        }
+    } else {
+        // For English, try direct slug lookup
+        $parent_category = get_category_by_slug($base_category_slug);
+        
+        // Fallback to name lookup
+        if (!$parent_category) {
+            $parent_category = get_term_by('name', ucfirst(str_replace('-', ' ', $base_category_slug)), 'category');
         }
     }
     
@@ -1884,9 +1877,22 @@ function load_archive_posts_ajax() {
         }
     }
 
-    // For services pages (companies / individual / international / secure-yourself),
-    // always load ALL matching services in one request (no pagination).
+    // Check if this is a paginated service type (companies, individual, or international)
+    $is_paginated_service = false;
     if ($is_services_page) {
+        $check_id = $parent_category_id > 0 ? $parent_category_id : $category_id;
+        if ($check_id > 0) {
+            $cat_type = dlc_get_category_type_slug($check_id);
+            if (in_array($cat_type, ['companies-services', 'individual-services', 'home-international'])) {
+                $is_paginated_service = true;
+            }
+        }
+    }
+
+    // For services pages (secure-yourself),
+    // always load ALL matching services in one request (no pagination).
+    // BUT: companies-services, individual-services, and home-international get pagination
+    if ($is_services_page && !$is_paginated_service) {
         $posts_per_page = -1;
         $paged = 1;
     }
@@ -2013,12 +2019,6 @@ function load_archive_posts_ajax() {
         // Add Polylang language filter
         if (function_exists('pll_current_language')) {
             $query_args['lang'] = pll_current_language();
-        }
-
-        // For blog archives, always load all posts (no pagination)
-        if ($is_blog_archive) {
-            $query_args['posts_per_page'] = -1;
-            $paged = 1;
         }
     }
 

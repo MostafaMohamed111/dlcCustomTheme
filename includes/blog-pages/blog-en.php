@@ -156,6 +156,40 @@
                         endwhile;
                         ?>
                     </div>
+                    
+                    <?php
+                    // Pagination
+                    global $wp_query;
+                    $total_pages = $wp_query->max_num_pages;
+                    if ($total_pages > 1) :
+                        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+                        
+                        // Determine base URL
+                        if (is_category()) {
+                            $current_cat = get_queried_object();
+                            $base_url = get_category_link($current_cat->term_id);
+                            $category_id = $current_cat->term_id;
+                        } else {
+                            // Blog home
+                            $blog_category = get_category_by_slug('blog');
+                            if (!$blog_category) {
+                                $blog_category = get_term_by('name', 'Blog', 'category');
+                            }
+                            $base_url = $blog_category ? get_category_link($blog_category->term_id) : home_url();
+                            $category_id = $blog_category ? $blog_category->term_id : 0;
+                        }
+                        
+                        get_template_part('includes/pagination', null, array(
+                            'paged' => $paged,
+                            'total_pages' => $total_pages,
+                            'base_url' => trailingslashit($base_url),
+                            'anchor_id' => '#category-title',
+                            'page_text' => 'Page %s of %s',
+                            'category_id' => $category_id,
+                            'parent_category_id' => 0
+                        ));
+                    endif;
+                    ?>
                 <?php else : ?>
                     <div class="no-posts">
                         <i class="fa-solid fa-file-circle-question"></i>

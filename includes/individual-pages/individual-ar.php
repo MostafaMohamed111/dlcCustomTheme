@@ -183,7 +183,7 @@
                         <div class="sidebar-widget categories-widget">
                             <?php
                             // Determine current category name for display
-                            $current_category_name = 'جميع الخدمات';
+                            $current_category_name = 'خدمات الأفراد';
                             if ($current_category > 0) {
                                 $selected_category = get_category($current_category);
                                 if ($selected_category) {
@@ -221,7 +221,7 @@
                                     class="category-link <?php echo $current_category == 0 ? 'active' : ''; ?>"
                                     data-category-id="0"
                                     data-parent-category-id="<?php echo $parent_category->term_id; ?>">
-                                        <span class="category-name">جميع الخدمات</span>
+                                        <span class="category-name">خدمات الأفراد</span>
                                         <span class="category-count"><?php echo $all_services_count; ?></span>
                                     </a>
                                 </li>

@@ -220,6 +220,59 @@
                         endwhile;
                         ?>
                     </div>
+                    
+                    <?php
+                    // Pagination
+                    global $wp_query;
+                    $total_pages = $wp_query->max_num_pages;
+                    if ($total_pages > 1) :
+                        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+                        
+                        // Determine base URL
+                        if (is_category()) {
+                            $current_cat = get_queried_object();
+                            $base_url = get_category_link($current_cat->term_id);
+                            $category_id = $current_cat->term_id;
+                        } else {
+                            // Blog home - get Arabic blog category
+                            $current_lang = function_exists('pll_current_language') ? pll_current_language() : 'ar';
+                            $blog_category = null;
+                            
+                            if (function_exists('pll_get_term')) {
+                                $blog_category_en = get_category_by_slug('blog');
+                                if (!$blog_category_en) {
+                                    $blog_category_en = get_term_by('name', 'Blog', 'category');
+                                }
+                                if ($blog_category_en && $current_lang === 'ar') {
+                                    $blog_category_id = pll_get_term($blog_category_en->term_id, 'ar');
+                                    if ($blog_category_id) {
+                                        $blog_category = get_category($blog_category_id);
+                                    }
+                                }
+                            }
+                            
+                            if (!$blog_category) {
+                                $blog_category = get_category_by_slug('blog-ar');
+                                if (!$blog_category) {
+                                    $blog_category = get_term_by('name', 'المدونة', 'category');
+                                }
+                            }
+                            
+                            $base_url = $blog_category ? get_category_link($blog_category->term_id) : home_url();
+                            $category_id = $blog_category ? $blog_category->term_id : 0;
+                        }
+                        
+                        get_template_part('includes/pagination', null, array(
+                            'paged' => $paged,
+                            'total_pages' => $total_pages,
+                            'base_url' => trailingslashit($base_url),
+                            'anchor_id' => '#category-title',
+                            'page_text' => 'صفحة %s من %s',
+                            'category_id' => $category_id,
+                            'parent_category_id' => 0
+                        ));
+                    endif;
+                    ?>
                 <?php else : ?>
                     <div class="no-posts">
                         <i class="fa-solid fa-file-circle-question"></i>

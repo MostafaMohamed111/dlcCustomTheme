@@ -152,7 +152,27 @@ $clients_count = (int) get_field('clients');
                         <h3>خدمات الأفراد</h3>
                         <p>نقدّم حلولًا قانونية متكاملة للأفراد تشمل القضايا الأسرية، العقارية، والإقرارات الرسمية.
 </p>
-                        <a href="<?php echo esc_url(home_url('/category/individual-services')); ?>" class="legal-service-link">استكشف الخدمات <i class="fas fa-arrow-left"></i></a>
+                        <?php
+                        // Get individual-services Arabic category
+                        $individual_ar_category = get_category_by_slug('individual-services-ar');
+                        if (!$individual_ar_category) {
+                            $individual_en_category = get_category_by_slug('individual-services');
+                            if (!$individual_en_category) {
+                                $individual_en_category = get_term_by('name', 'Individual Services', 'category');
+                            }
+                            if ($individual_en_category && function_exists('pll_get_term')) {
+                                $individual_ar_id = pll_get_term($individual_en_category->term_id, 'ar');
+                                if ($individual_ar_id) {
+                                    $individual_ar_category = get_category($individual_ar_id);
+                                }
+                            }
+                        }
+                        if (!$individual_ar_category) {
+                            $individual_ar_category = get_term_by('name', 'خدمات الأفراد', 'category');
+                        }
+                        $individual_ar_url = $individual_ar_category ? get_category_link($individual_ar_category->term_id) : home_url('/category/individual-services');
+                        ?>
+                        <a href="<?php echo esc_url($individual_ar_url); ?>" class="legal-service-link">استكشف الخدمات <i class="fas fa-arrow-left"></i></a>
                     </div>
                 </div>
                 <div class="legal-service-card">
@@ -162,7 +182,27 @@ $clients_count = (int) get_field('clients');
                         </div>
                         <h3>خدمات الشركات</h3>
                     <p>من تأسيس الكيانات إلى صياغة العقود التجارية وحوكمة الشركات — نقدم استشارات تضمن التزام شركتك بالقوانين السعودية.</p>
-                        <a href="<?php echo esc_url(home_url('/category/companies-services')); ?>" class="legal-service-link">استكشف الخدمات <i class="fas fa-arrow-left"></i></a>
+                        <?php
+                        // Get companies-services Arabic category
+                        $companies_ar_category = get_category_by_slug('companies-services-ar');
+                        if (!$companies_ar_category) {
+                            $companies_en_category = get_category_by_slug('companies-services');
+                            if (!$companies_en_category) {
+                                $companies_en_category = get_term_by('name', 'Companies Services', 'category');
+                            }
+                            if ($companies_en_category && function_exists('pll_get_term')) {
+                                $companies_ar_id = pll_get_term($companies_en_category->term_id, 'ar');
+                                if ($companies_ar_id) {
+                                    $companies_ar_category = get_category($companies_ar_id);
+                                }
+                            }
+                        }
+                        if (!$companies_ar_category) {
+                            $companies_ar_category = get_term_by('name', 'خدمات الشركات', 'category');
+                        }
+                        $companies_ar_url = $companies_ar_category ? get_category_link($companies_ar_category->term_id) : home_url('/category/companies-services');
+                        ?>
+                        <a href="<?php echo esc_url($companies_ar_url); ?>" class="legal-service-link">استكشف الخدمات <i class="fas fa-arrow-left"></i></a>
                     </div>
                 </div>
             </div>

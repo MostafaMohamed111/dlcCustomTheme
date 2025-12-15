@@ -396,6 +396,7 @@
 .pagination-wrapper {
     margin-top: 60px;
     text-align: center;
+    direction: ltr;
 }
 
 .pagination-simple {
@@ -403,6 +404,7 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
+    direction: ltr;
 }
 
 .pagination-arrow {

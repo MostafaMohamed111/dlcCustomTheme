@@ -146,11 +146,15 @@
                     $all_category_ids = array_merge($all_category_ids, $all_children);
                 }
                 
-                // Setup query arguments (load all matching services, no pagination)
+                // Get current page number for pagination
+                $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+                
+                // Setup query arguments with pagination enabled
                 $query_args = array(
                     'post_type'      => 'post',
                     'post_status'    => 'publish',
-                    'posts_per_page' => -1,
+                    'posts_per_page' => DLC_POSTS_PER_PAGE,
+                    'paged'          => $paged,
                     'orderby'        => 'date',
                     'order'          => 'DESC',
                 );
@@ -255,9 +259,34 @@
                         while ($services_query->have_posts()) : $services_query->the_post();
                             get_template_part('includes/service-card', null, array('button_text' => 'اقرأ المزيد'));
                         endwhile;
-                            wp_reset_postdata();
                             ?>
                             </div>
+                            
+                            <?php
+                            // Add pagination
+                            $total_pages = $services_query->max_num_pages;
+                            if ($total_pages > 1) :
+                                // Build base URL for pagination
+                                $base_url = '';
+                                if ($current_category > 0) {
+                                    $base_url = get_category_link($current_category);
+                                } else {
+                                    $base_url = get_category_link($parent_category->term_id);
+                                }
+                                
+                                get_template_part('includes/pagination', null, array(
+                                    'paged' => $paged,
+                                    'total_pages' => $total_pages,
+                                    'base_url' => trailingslashit($base_url),
+                                    'anchor_id' => '#services-title',
+                                    'page_text' => 'صفحة %s من %s',
+                                    'category_id' => $current_category,
+                                    'parent_category_id' => $parent_category->term_id
+                                ));
+                            endif;
+                            
+                            wp_reset_postdata();
+                            ?>
                         <?php
                         else :
                             ?>

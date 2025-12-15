@@ -33,21 +33,28 @@
                     <p>نوفّر للشركات والمؤسسات حلولًا قانونية شاملة تدعم استمرارية الأعمال وتحميها من المخاطر النظامية.
 </p>
                 <?php
-                    // Get companies-services category using Polylang
-                    $companies_en_category = get_category_by_slug('companies-services');
-                    if (!$companies_en_category) {
-                        $companies_en_category = get_term_by('name', 'Companies Services', 'category');
-                    }
-                    
+                    // Get companies-services category - try multiple approaches
                     $companies_ar_category = null;
-                    if ($companies_en_category && function_exists('pll_get_term')) {
-                        $companies_ar_id = pll_get_term($companies_en_category->term_id, 'ar');
-                        if ($companies_ar_id) {
-                            $companies_ar_category = get_category($companies_ar_id);
+                    
+                    // Try Arabic slug first
+                    $companies_ar_category = get_category_by_slug('companies-services-ar');
+                    
+                    // Try Polylang if slug not found
+                    if (!$companies_ar_category) {
+                        $companies_en_category = get_category_by_slug('companies-services');
+                        if (!$companies_en_category) {
+                            $companies_en_category = get_term_by('name', 'Companies Services', 'category');
+                        }
+                        
+                        if ($companies_en_category && function_exists('pll_get_term')) {
+                            $companies_ar_id = pll_get_term($companies_en_category->term_id, 'ar');
+                            if ($companies_ar_id) {
+                                $companies_ar_category = get_category($companies_ar_id);
+                            }
                         }
                     }
                     
-                    // Fallback: try to get by Arabic name if Polylang translation not found
+                    // Fallback: try by Arabic name
                     if (!$companies_ar_category) {
                         $companies_ar_category = get_term_by('name', 'خدمات الشركات', 'category');
                     }
@@ -61,21 +68,28 @@
                     <h2 class="text-center">خدمات الأفراد</h2>
                     <p>تهدف خدماتنا للأفراد إلى توفير الحماية القانونية وضمان الحقوق في مختلف الجوانب الشخصية والمالية.</p>
                 <?php
-                    // Get individual-services category using Polylang
-                    $individual_en_category = get_category_by_slug('individual-services');
-                    if (!$individual_en_category) {
-                        $individual_en_category = get_term_by('name', 'Individual Services', 'category');
-                    }
-                    
+                    // Get individual-services category - try multiple approaches
                     $individual_ar_category = null;
-                    if ($individual_en_category && function_exists('pll_get_term')) {
-                        $individual_ar_id = pll_get_term($individual_en_category->term_id, 'ar');
-                        if ($individual_ar_id) {
-                            $individual_ar_category = get_category($individual_ar_id);
+                    
+                    // Try Arabic slug first
+                    $individual_ar_category = get_category_by_slug('individual-services-ar');
+                    
+                    // Try Polylang if slug not found
+                    if (!$individual_ar_category) {
+                        $individual_en_category = get_category_by_slug('individual-services');
+                        if (!$individual_en_category) {
+                            $individual_en_category = get_term_by('name', 'Individual Services', 'category');
+                        }
+                        
+                        if ($individual_en_category && function_exists('pll_get_term')) {
+                            $individual_ar_id = pll_get_term($individual_en_category->term_id, 'ar');
+                            if ($individual_ar_id) {
+                                $individual_ar_category = get_category($individual_ar_id);
+                            }
                         }
                     }
                     
-                    // Fallback: try to get by Arabic name if Polylang translation not found
+                    // Fallback: try by Arabic name
                     if (!$individual_ar_category) {
                         $individual_ar_category = get_term_by('name', 'خدمات الأفراد', 'category');
                     }

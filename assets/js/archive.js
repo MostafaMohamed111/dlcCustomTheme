@@ -400,14 +400,21 @@
                         $mainContainer.html($tempDiv.html());
                     }
                     
-                    // Update pagination wrapper (use pagination from response or separate pagination_html)
+                    // ALWAYS update or clear pagination wrapper based on response
                     if ($paginationWrapper.length) {
                         if ($paginationInResponse.length) {
-                            // Use pagination from posts_html
-                            $paginationWrapper.html($paginationInResponse.html());
-                        } else if (response.data.pagination_html) {
-                            // Use separate pagination_html if available
-                        $paginationWrapper.html(response.data.pagination_html);
+                            // Replace entire pagination wrapper with new one from response
+                            $paginationWrapper.replaceWith($paginationInResponse);
+                        } else {
+                            // No pagination in response = hide/clear pagination
+                            $paginationWrapper.hide().empty();
+                        }
+                    } else if ($paginationInResponse.length) {
+                        // No wrapper exists, but response has pagination - append it after grid
+                        if ($gridContainer.length) {
+                            $gridContainer.after($paginationInResponse);
+                        } else {
+                            $mainContainer.append($paginationInResponse);
                         }
                     }
                     

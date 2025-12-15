@@ -48,6 +48,26 @@
                     <div class="post-content-single">
                         <?php the_content(); ?>
                     </div>
+                    
+                    <!-- Post Tags -->
+                    <?php
+                    $tags = get_the_tags();
+                    if (!empty($tags)) :
+                    ?>
+                    <div class="post-tags-single">
+                        <span class="tags-label">
+                            <i class="fa-solid fa-tags"></i>
+                            الوسوم:
+                        </span>
+                        <div class="tags-list">
+                            <?php foreach($tags as $tag) : ?>
+                                <a href="<?php echo get_tag_link($tag->term_id); ?>" class="tag-link">
+                                    <?php echo esc_html($tag->name); ?>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
 
                     <!-- Post Footer -->
                     <footer class="post-footer-single">

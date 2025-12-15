@@ -19,7 +19,8 @@ $args = wp_parse_args($args ?? array(), array(
     'anchor_id' => '#services-title',
     'page_text' => 'Page %s of %s',
     'category_id' => 0,
-    'parent_category_id' => 0
+    'parent_category_id' => 0,
+    'is_rtl' => false
 ));
 
 $paged = $args['paged'];
