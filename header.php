@@ -172,7 +172,7 @@
 
 
                     <div class="row align-items-center mobile-nav-bottom"  >
-                        <div class="mobile-actions text-center d-flex align-items-center justify-content-center">
+                        <div class="mobile-actions text-center">
                             <?php
                             // Check if we're on international category page or single post in international category
                             $is_international = false;
@@ -213,11 +213,11 @@
                                 $button_icon = 'fa-solid fa-globe';
                             }
                             ?>
-                            <a href="<?php echo esc_url($button_url); ?>" class="btn nav-btn btn-define mx-4">
+                            <a href="<?php echo esc_url($button_url); ?>" class="btn nav-btn btn-define">
                                 <?php echo esc_html($button_text); ?>
                                 <span class="<?php echo esc_attr($button_icon); ?> mx-2"></span>
                             </a>
-                            <div class="sign-in-dropdown mx-4">
+                            <div class="sign-in-dropdown">
                                 <button class="btn nav-btn sign-in sign-in-toggle px-5" type="button">
                                     Sign In
                                     <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>

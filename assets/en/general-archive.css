@@ -63,6 +63,11 @@
     background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
 }
 
+.archive-hero-content {
+padding: 30px;
+}
+
+
 /* Language Switcher */
 .archive-language-switcher {
     position: relative;
@@ -308,18 +313,38 @@
 /* Posts Container */
 .archive-posts-container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px 80px 20px;
+    margin: 0 auto !important;
+    padding: 40px 20px 80px 20px !important;
+    
 }
 
 /* Override posts grid for general archive - show 3 columns */
 .archive-posts-container .posts-grid {
-    grid-template-columns: repeat(3, 1fr);
+    /* Use minmax(0, 1fr) to prevent grid-item min-content overflow (common cause of horizontal scroll) */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+}
+
+/* Prevent post cards from forcing horizontal overflow due to long words/URLs/titles */
+.archive-posts-container .post-card,
+.archive-posts-container .post-content,
+.archive-posts-container .post-title,
+.archive-posts-container .post-excerpt,
+.archive-posts-container .post-title a {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* Keep card internals clipped if something still overflows */
+.archive-posts-container .post-card {
+    overflow: hidden;
 }
 
 @media (max-width: 992px) {
     .archive-posts-container .posts-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -346,13 +371,18 @@
     }
     
     .archive-hero {
-        padding: 40px 20px;
-        margin-bottom: 40px;
+        padding: 40px 15px;
+        margin-bottom: 30px;
     }
     
     .archive-header-actions {
         top: 15px;
         right: 15px;
+    }
+    
+    .archive-home-btn {
+        padding: 8px 14px;
+        font-size: 13px;
     }
     
     .archive-language-switch-btn {
@@ -364,16 +394,34 @@
         font-size: 14px;
     }
     
+    .archive-type-badge {
+        font-size: 13px;
+        padding: 8px 16px;
+    }
+    
     .archive-main-title {
-        font-size: 36px;
+        font-size: 32px;
+    }
+    
+    .archive-subtitle {
+        font-size: 16px;
     }
     
     .archive-description {
+        font-size: 15px;
+    }
+    
+    .archive-meta-item {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+    
+    .archive-meta-item strong {
         font-size: 16px;
     }
     
     .archive-posts-container {
-        padding: 30px 15px 60px 15px;
+        padding: 30px 10px 60px 10px;
     }
     
     .archive-category-nav-container {
@@ -402,6 +450,10 @@
         right: 10px;
     }
     
+    .archive-home-btn {
+        padding: 8px 12px;
+    }
+    
     .archive-home-btn span {
         display: none;
     }
@@ -416,16 +468,53 @@
     }
     
     .archive-language-switch-btn {
-        padding: 6px 12px;
+        padding: 8px 12px;
         font-size: 12px;
     }
     
+    .archive-hero {
+        padding: 30px 10px;
+    }
+    
+    .archive-type-badge {
+        font-size: 12px;
+        padding: 6px 14px;
+        margin-bottom: 15px;
+    }
+    
     .archive-main-title {
-        font-size: 28px;
+        font-size: 26px;
+    }
+    
+    .archive-subtitle {
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .archive-description {
+        font-size: 14px;
     }
     
     .archive-meta-info {
-        gap: 15px;
+        gap: 12px;
+        margin-top: 20px;
+    }
+    
+    .archive-meta-item {
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+    
+    .archive-meta-item i {
+        font-size: 14px;
+    }
+    
+    .archive-meta-item strong {
+        font-size: 15px;
+    }
+    
+    .archive-posts-container {
+        padding: 20px 5px 50px 5px;
     }
     
     .archive-category-nav-list {

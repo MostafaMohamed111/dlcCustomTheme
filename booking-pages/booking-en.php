@@ -177,7 +177,7 @@
                         <input type="text" id="city" name="city" placeholder="City" value="Riyadh">
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-prev" onclick="goBackToServiceSelection()">Previous</button>
+                        <button type="button" class="btn btn-prev" id="phase1-prev-btn" onclick="goBackToServiceSelection()">Previous</button>
                         <button type="button" class="btn btn-next" onclick="nextPhase()">Next</button>
                     </div>
                 </div>
@@ -265,6 +265,22 @@
         </div>
     </div>
 </div>
+
+<script>
+// Check if there's a service parameter in the URL and hide previous button in phase 1
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    
+    if (serviceParam) {
+        // Hide the previous button in phase 1 when coming from a direct service link
+        const phase1PrevBtn = document.getElementById('phase1-prev-btn');
+        if (phase1PrevBtn) {
+            phase1PrevBtn.style.display = 'none';
+        }
+    }
+})();
+</script>
 
 <?php wp_footer(); ?>
 

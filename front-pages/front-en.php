@@ -68,7 +68,7 @@ $clients_count = (int) get_field('clients');
     </section>
 
     <!-- Parallax Divider -->
-    <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Services.jpg');">
+    <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Riydah.jpg');">
         <div class="parallax-overlay"></div>
     </section>
 

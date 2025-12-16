@@ -116,9 +116,34 @@ form .btn:hover {
 
 @media (max-width: 767.98px) {
     .contact-us .contact-us-body {
-        padding: 20px 16px;
+        padding: 20px 10px;
         box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07);
     }
+    
+    form {
+        padding: 15px 10px;
+    }
+    
+    form .btn {
+        width: 100%;
+        padding: 13px 30px;
+    }
+    
+    .contact-cards {
+        margin: 15px 0 30px 0;
+    }
+    
+    .contact-card {
+        padding: 20px 15px;
+    }
+     .contact-us-form {
+        padding : 15px 0px;
+    }
+    .form-image {
+        padding : 15px 0px;
+    }
+
+   
 }
 
 
@@ -331,11 +356,29 @@ form .btn:hover {
 }
 
 @media (max-width: 575.98px) {
+    .contact-us .contact-us-body {
+        padding: 15px 5px;
+    }
+    
+    form {
+        padding: 10px 5px;
+    }
+    
     .quick-link {
         padding: 12px 14px;
+        width: 100%;
     }
+    
     .contact-card {
-        padding: 20px 16px;
+        padding: 18px 12px;
+    }
+    
+    .contact-us h1 {
+        font-size: 28px;
+    }
+    
+    .contact-form-title {
+        font-size: 20px;
     }
 }
 

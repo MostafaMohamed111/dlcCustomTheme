@@ -487,8 +487,17 @@
     }
     
     .why-choose-grid {
-        grid-template-columns: 1fr;
         gap: 30px;
+    }
+    
+    .achievement-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 25px;
+    }
+    
+    .achievement-icon {
+        margin-bottom: 15px;
     }
 }
 
@@ -515,14 +524,23 @@
     
     .team-why-choose,
     .team-achievements {
-        padding: 40px 30px;
-        margin: 60px 20px;
+        padding: 40px 20px;
+        margin: 60px 10px;
     }
     
     .team-why-choose h2,
     .team-achievements h2,
     .team-section-title h2 {
         font-size: 1.7rem;
+    }
+    
+    .why-choose-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .why-choose-item {
+        padding: 25px 15px;
     }
     
     .team-carousel-prev,
@@ -556,7 +574,12 @@
     
     .team-why-choose,
     .team-achievements {
-        padding: 30px 20px;
+        padding: 30px 10px;
+        margin: 60px 5px;
+    }
+    
+    .why-choose-item {
+        padding: 25px 15px;
     }
     
     .why-choose-icon {
@@ -570,11 +593,15 @@
         height: 50px;
         min-width: 50px;
         font-size: 1.5rem;
+        margin-bottom: 10px;
     }
     
     .achievement-item {
-        padding: 20px;
-        gap: 15px;
+        padding: 25px 15px;
+    }
+    
+    .achievement-item p {
+        font-size: 1rem;
     }
 }
 

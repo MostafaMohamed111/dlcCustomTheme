@@ -894,6 +894,30 @@
         font-size: 16px;
     }
     
+    .faq-title {
+        font-size: 30px;
+    }
+    
+    .faq-subtitle {
+        font-size: 15px;
+    }
+    
+    .faq-question-text {
+        font-size: 16px;
+    }
+    
+    .faq-answer-text {
+        font-size: 15px;
+    }
+    
+    .comments-title {
+        font-size: 22px;
+    }
+    
+    .related-posts-title {
+        font-size: 20px;
+    }
+    
     .post-footer-single {
         flex-direction: column;
         align-items: flex-start;
@@ -944,12 +968,62 @@
         font-size: 13px;
     }
     
+    .post-content-single {
+        font-size: 15px;
+    }
+    
     .post-content-single h2 {
-        font-size: 24px;
+        font-size: 22px;
     }
     
     .post-content-single h3 {
+        font-size: 19px;
+    }
+    
+    .post-content-single h4 {
+        font-size: 17px;
+    }
+    
+    .faq-title {
+        font-size: 26px;
+    }
+    
+    .faq-subtitle {
+        font-size: 14px;
+    }
+    
+    .faq-question-text {
+        font-size: 15px;
+    }
+    
+    .faq-answer-text {
+        font-size: 14px;
+    }
+    
+    .faq-question {
+        padding: 20px 20px;
+    }
+    
+    .comments-title {
         font-size: 20px;
+    }
+    
+    .related-posts-title {
+        font-size: 18px;
+    }
+    
+    .related-post-title {
+        font-size: 14px;
+    }
+    
+    .book-now-cta-btn {
+        font-size: 15px;
+        padding: 14px 28px;
+    }
+    
+    .service-cta-btn {
+        font-size: 14px;
+        padding: 12px 24px;
     }
     
     .share-buttons {

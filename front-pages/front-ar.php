@@ -17,7 +17,7 @@ $clients_count = (int) get_field('clients');
             <p class="hero-subtitle"> منصة قانونية رقمية تقدّم حلولًا دقيقة واحترافية للأفراد والشركات في المملكة العربية السعودية.    </p>
             <div class="hero-buttons">
                 <a href="<?php echo esc_url(dlc_get_booking_page_url('ar')); ?>" class="btn-primary">احجز الآن</a>
-                <a href="<?php echo esc_url(dlc_get_about_us_page_url('ar')); ?>" class="btn-secondary">تعرف أكثر</a>
+                <a href="<?php echo esc_url(dlc_get_about_us_page_url('ar')); ?>" class="btn-secondary">اعرف أكثر</a>
             </div>
         </div>
     </section>
@@ -69,7 +69,7 @@ $clients_count = (int) get_field('clients');
 
 
     <!-- Parallax Divider -->
-    <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Services.jpg');">
+    <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Riydah.jpg');">
         <div class="parallax-overlay"></div>
     </section>
 

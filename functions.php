@@ -100,8 +100,28 @@ function dlc_get_polylang_switcher() {
     
     $alternate_url = '#';
     
+    // Special handling for team custom post type archive
+    if (is_post_type_archive('team')) {
+        // Get the team archive URL for the target language
+        $team_archive_url = get_post_type_archive_link('team');
+        // Replace language slug in URL
+        if ($current_lang === 'ar') {
+            // Switch from Arabic to English - remove /ar/
+            $alternate_url = str_replace('/ar/team/', '/team/', $team_archive_url);
+        } else {
+            // Switch from English to Arabic - add /ar/
+            $alternate_url = str_replace('/team/', '/ar/team/', $team_archive_url);
+        }
+    }
+    // Special handling for team single posts
+    elseif (is_singular('team') && function_exists('pll_get_post')) {
+        $translated_post_id = pll_get_post(get_the_ID(), $target_lang);
+        if ($translated_post_id) {
+            $alternate_url = get_permalink($translated_post_id);
+        }
+    }
     // Special handling for category archives
-    if (is_category() && function_exists('pll_get_term')) {
+    elseif (is_category() && function_exists('pll_get_term')) {
         $queried_object = get_queried_object();
         $current_category_id = $queried_object->term_id ?? 0;
         
@@ -263,7 +283,7 @@ function enqueue_theme_css() {
 
         } elseif ($is_secure) {
             // Load service card styles (companies-individual-services.css) for service-card component
-            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
+            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.3', 'all');
             wp_enqueue_style('services-page');
             // Load secure-yourself specific styles
             wp_register_style('secure-yourself-page', get_template_directory_uri() . '/assets/en/secure-yourself.css', array('services-page'), '1.0.0', 'all');
@@ -271,7 +291,7 @@ function enqueue_theme_css() {
             
         
         } elseif ($is_companies || $is_individual || $is_international) {
-            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.0', 'all');
+            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.3', 'all');
             wp_enqueue_style('services-page');
             
             if ($is_international) {
@@ -2775,6 +2795,7 @@ function show_faq_if_in_category($cmb) {
 
 add_filter( 'pll_get_post_types', function( $post_types ) {
     $post_types['post'] = 'post';
+    $post_types['team'] = 'team';  // Register team CPT with Polylang
     return $post_types;
 });
 

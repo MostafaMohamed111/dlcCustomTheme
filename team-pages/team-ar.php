@@ -1,5 +1,5 @@
 <?php
-get_header();
+get_header('ar');
 ?>
 
 <main class="team-archive-wrapper">
@@ -153,4 +153,4 @@ get_header();
 </main>
 
 <?php
-get_footer();
+get_footer('ar');

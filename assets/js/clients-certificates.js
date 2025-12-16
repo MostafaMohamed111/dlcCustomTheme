@@ -117,9 +117,14 @@
                 carouselTrack.style.transition = 'transform 0.5s ease-in-out';
             }
             
-            // Move by one complete item width at a time
-            // Each item is 100% / visibleItems wide
+            // Ensure all items have the correct flex-basis based on current visibleItems
+            const allItems = carouselTrack.querySelectorAll('.certificate-item');
             const itemWidthPercent = 100 / visibleItems;
+            allItems.forEach(item => {
+                item.style.setProperty('flex', `0 0 ${itemWidthPercent}%`, 'important');
+            });
+            
+            // Move by one complete item width at a time
             const translatePercent = -(currentSlide * itemWidthPercent);
             carouselTrack.style.transform = `translateX(${translatePercent}%)`;
         }
@@ -219,7 +224,20 @@
                 
                 // Reset position if visible items changed
                 if (oldVisibleItems !== visibleItems) {
+                    // Calculate which actual item we're currently showing
+                    const actualCurrentItem = currentSlide % totalItems;
+                    
+                    // Recreate clones with new setup
                     cloneItemsForInfiniteLoop();
+                    
+                    // Set position to show the same actual item
+                    // This keeps the carousel synced when screen size changes
+                    if (totalItems > visibleItems) {
+                        currentSlide = totalItems + actualCurrentItem;
+                    } else {
+                        currentSlide = 0;
+                    }
+                    
                     updateCarouselPosition(false);
                 }
                 

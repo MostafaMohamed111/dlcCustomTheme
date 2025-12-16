@@ -90,42 +90,60 @@
 
 .hero-subtitle {
     font-size: 20px;
-    color: var(--light-blue);
+    color: var(--white);
     margin-bottom: 30px;
     font-weight: 500;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 
 .hero-btn {
     margin: 10px 15px;
-    padding: 12px 24px;
-    font-size: 16px;
+    padding: 12px 28px;
+    font-size: 15px;
     border: none;
-    border-radius: 4px;
+    border-radius: 50px;
     cursor: pointer;
-    margin-right: 10px;
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .learn-more-btn {
-    color: var(--light-blue);
-    border: solid 2px var(--primary-blue);
-    transition: all 0.3s ease;
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid var(--white);
+    backdrop-filter: blur(10px);
+}
+
+.learn-more-btn:hover {
+    background: var(--white);
+    color: var(--primary-blue);
+    border-color: var(--white);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
 }
 
 .download-btn {
-    background-color: var(--primary-blue);
-    color: var(--white);
-    transition: all 0.3s ease;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);    color: var(--white);
+    border: 2px solid transparent;
 }
 
-.hero .hero-btn:hover {
-    background-color: var(--white);
-    border: solid 2px var(--primary-blue) ;
-    transform: scale(1.05);
-    color: var(--primary-blue) ;
+.download-btn:hover {
+    background: var(--white);
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(26, 58, 95, 0.4);
+}
+
+.hero-btn:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 
@@ -601,15 +619,15 @@
 
 @media (max-width: 600px) {
    
-    .hero-body::after {
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 90%, rgba(255, 255, 255, 1) 100%);
+    .hero::after {
+        display: none;
     }
     
     .hero-content{
-
-        margin-top: 30px;
-
+        margin-top: 120px;
+        padding: 0 20px;
     }
+    
     .hero-row{
         margin: auto;
     }
@@ -620,6 +638,10 @@
 
     .hero-subtitle {
         font-size: 18px;
+    }
+    
+    .learn-more-btn {
+        display: none;
     }
 
     .mission-title {

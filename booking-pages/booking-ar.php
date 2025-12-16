@@ -176,7 +176,7 @@
                         <label for="name">الاسم *</label>
                         <input type="text" id="name" name="name" placeholder="الاسم" required>
                     </div>
-                    <div class="form-group arabic-phone">
+                    <div class="form-group phone-ar " dir="rtl">
                         <label for="phone">رقم الهاتف *</label>
                         <input type="tel" id="phone" name="phone" placeholder="رقم الهاتف" required>
                     </div>
@@ -189,7 +189,7 @@
                         <input type="text" id="city" name="city" placeholder="المدينة" value="الرياض">
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-prev" onclick="goBackToServiceSelection()">السابق</button>
+                        <button type="button" class="btn btn-prev" id="phase1-prev-btn" onclick="goBackToServiceSelection()">السابق</button>
                         <button type="button" class="btn btn-next" onclick="nextPhase()">التالي</button>
                     </div>
                 </div>
@@ -277,6 +277,22 @@
         </div>
     </div>
 </div>
+
+<script>
+// Check if there's a service parameter in the URL and hide previous button in phase 1
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    
+    if (serviceParam) {
+        // Hide the previous button in phase 1 when coming from a direct service link
+        const phase1PrevBtn = document.getElementById('phase1-prev-btn');
+        if (phase1PrevBtn) {
+            phase1PrevBtn.style.display = 'none';
+        }
+    }
+})();
+</script>
 
 <?php wp_footer(); ?>
 

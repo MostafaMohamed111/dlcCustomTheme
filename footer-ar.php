@@ -52,7 +52,10 @@
         <hr class="footer-divider">
         <div class="row footer-bottom gy-3 align-items-center">
             <div class="col-12 text-center">
-                <small class="footer-copy">&copy; <?php echo date('Y'); ?>   القانون والاستشارات. جميع الحقوق محفوظة شركة داغ للمحاماة والاستشارات القانونية</small>
+                <small class="footer-copy">   جميع الحقوق محفوظة شركة داغ للمحاماة والاستشارات القانونية &copy; <?php echo date('Y'); ?>    </small>
+                <div class="footer-developer-credit">
+                    <small>Website developed by <a href="https://mostafa-elbebany.netlify.app/" target="_blank" rel="noopener noreferrer">Elbebany</a></small>
+                </div>
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center gap-3">
                 <button type="button" class="footer-to-top-icon" aria-label="Back to top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">

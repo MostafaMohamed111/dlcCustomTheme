@@ -538,6 +538,95 @@ nav {
     cursor: pointer;
     transition: color 0.3s ease;
 }
+
+/* Mobile Nav Responsive Styles */
+@media (max-width: 768px) {
+    .mobile-logo {
+        width: 80px;
+        -webkit-margin-start: 20px;
+    }
+    
+    .mobile-language-changer {
+        width: 80px;
+        -webkit-margin-end: 20px;
+    }
+    
+    .mobile-logo-container {
+        width: 110px;
+    }
+    
+    .mobile-nav-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    /* Stack buttons vertically with full width */
+    .mobile-actions {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px;
+        width: 100%;
+        padding: 0 20px;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .mobile-actions .btn-define,
+    .mobile-actions .sign-in-dropdown {
+        width: 100% !important;
+        max-width: 100%;
+        margin: 0 auto !important;
+        display: block;
+    }
+    
+    .mobile-actions .btn-define,
+    .mobile-actions .sign-in {
+        width: 100% !important;
+        display: block !important;
+        text-align: center !important;
+        padding: 10px 16px;
+        font-size: 0.95rem;
+        margin: 0 auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-logo {
+        width: 70px;
+        -webkit-margin-start: 15px;
+    }
+    
+    .mobile-language-changer {
+        width: 70px;
+        -webkit-margin-end: 15px;
+    }
+    
+    .mobile-logo-container {
+        width: 100px;
+    }
+    
+    .mobile-nav-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .mobile-actions {
+        padding: 0 15px;
+    }
+    
+    .mobile-actions .btn-define,
+    .mobile-actions .sign-in-dropdown {
+        margin: 0 auto !important;
+    }
+    
+    .mobile-actions .btn-define,
+    .mobile-actions .sign-in {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+}
     
     
     
@@ -649,6 +738,25 @@ nav {
 
 .site-footer .footer-copy {
     color: rgba(255, 255, 255, 0.7);
+}
+
+.site-footer .footer-developer-credit {
+    margin-top: 8px;
+}
+
+.site-footer .footer-developer-credit small {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.site-footer .footer-developer-credit a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.site-footer .footer-developer-credit a:hover {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .site-footer .footer-to-top-icon {

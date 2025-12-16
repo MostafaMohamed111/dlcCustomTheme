@@ -7,12 +7,12 @@
     position: relative;
     min-height: 100vh;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     text-align: center;
     color: var(--white);
     margin-top: 0;
-    padding-top: 70px;
+    padding-top: 400px !important;
     padding-bottom: 60px;
     overflow: hidden;
 }
@@ -39,11 +39,13 @@
     animation: fadeInUp 1s ease;
     width: 100%;
     margin-bottom: 40px;
+    
 }
 
 .hero-company {
 
     font-size: 72px;
+    padding-top: 40px;
     font-weight: bold;
     margin-bottom: 10px;
     letter-spacing: 2px;
@@ -120,30 +122,10 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-secondary::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: var(--primary-blue);
-    transform: translate(-50%, -50%);
-    transition: width 0.4s ease, height 0.4s ease;
-    z-index: -1;
-}
-
-.btn-secondary:hover::before {
-    width: 300%;
-    height: 300%;
 }
 
 .btn-secondary:hover {
+    background-color: var(--primary-blue);
     color: var(--white);
     border-color: var(--primary-blue);
     transform: translateY(-3px);
@@ -317,41 +299,64 @@ section {
 }
 
 @media (max-width: 767.98px) {
+    
     section {
-        padding: 60px 0;
+        padding: 40px 0;
+    }
+    
+    .section-header {
+        padding: 20px 15px;
+        margin-bottom: 40px;
+    }
+    
+    .section-title {
+        font-size: 32px;
     }
     
     .about-text h3 {
-        font-size: 28px;
+        font-size: 26px;
     }
     
     .stat-item {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
     
     .service-card {
         margin-bottom: 20px;
+        padding: 30px 20px;
+    }
+    
+    .card-content {
+        padding: 25px 15px;
     }
     
     .about-img {
         min-height: 250px;
     }
 
+    .hero {
+        padding-top: 30px;
+        padding-bottom: 40px;
+    }
+
     .hero-company {
-        font-size: 48px;
+        font-size: 42px;
+        padding-top: 20px;
     }
 
     .hero-title {
-        font-size: 34px;
+        font-size: 30px;
     }
 
     .hero-subtitle {
         font-size: 18px;
+        margin-bottom: 30px;
     }
 
     .hero-buttons {
         flex-direction: column;
         align-items: center;
+        gap: 15px;
     }
 
     .hero-buttons a {
@@ -359,35 +364,164 @@ section {
         min-width: 220px;
         text-align: center;
     }
+    
+    .btn-primary, .btn-secondary {
+        padding: 14px 35px;
+        font-size: 16px;
+    }
+    
+    .services-section .container,
+    .legal-services-section .container,
+    .about-section .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .services-grid {
+        margin-top: 30px;
+    }
+    
+    .legal-services-grid {
+        margin-top: 30px;
+    }
 
     .about-stats .stat-item {
-        padding: 10px 0;
+        padding: 8px 0;
     }
 
     .stat-item h4 {
-        font-size: 30px;
+        font-size: 28px;
     }
+    
+    .static-item-inner {
+        padding: 15px;
+    }
+
 }
 
 @media (max-width: 575.98px) {
+    
+    section {
+        padding: 30px 0;
+    }
+    
     .hero {
-        padding: 100px 0 60px;
+        padding-top: 20px;
+        padding-bottom: 30px;
     }
 
     .hero-content {
         padding: 0 10px;
+        margin-bottom: 20px;
+    }
+    
+    .hero-company {
+        font-size: 36px;
+        padding-top: 10px;
+    }
+    
+    .hero-title {
+        font-size: 26px;
+        margin-bottom: 15px;
+    }
+    
+    .hero-subtitle {
+        font-size: 16px;
+        margin-bottom: 25px;
+    }
+    
+    .hero-buttons {
+        gap: 12px;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 12px 30px;
+        font-size: 15px;
+        min-width: 200px;
+    }
+
+    .section-header {
+        padding: 15px 10px;
+        margin-bottom: 30px;
     }
 
     .section-title {
-        font-size: 32px;
+        font-size: 28px;
     }
 
     .section-subtitle {
-        font-size: 16px;
+        font-size: 15px;
+        margin-top: 15px;
+    }
+    
+    .about-text h3 {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+    
+    .about-text p {
+        font-size: 15px;
+        margin-bottom: 15px;
     }
 
     .stat-item p {
         font-size: 13px;
+    }
+    
+    .stat-item h4 {
+        font-size: 26px;
+    }
+    
+    .static-item-inner {
+        padding: 12px;
+    }
+    
+    .service-card {
+        padding: 25px 15px;
+        margin-bottom: 15px;
+    }
+    
+    .card-content {
+        padding: 20px 12px;
+    }
+    
+    .service-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+    
+    .service-card p {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .service-icon {
+        width: 65px;
+        height: 65px;
+        font-size: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .service-btn {
+        padding: 10px 25px;
+        font-size: 15px;
+    }
+    
+    .services-section .container,
+    .legal-services-section .container,
+    .about-section .container,
+    .accreditations-section .container {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    .services-grid,
+    .legal-services-grid {
+        margin-top: 20px;
+    }
+    
+    .about-stats {
+        margin-top: 30px;
     }
 }
 
@@ -734,24 +868,61 @@ section {
 @media (max-width: 767.98px) {
     .legal-services-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
     
     .legal-card-content {
-        padding: 35px 25px;
+        padding: 30px 20px;
     }
     
     .legal-service-icon {
-        width: 80px;
-        height: 80px;
-        font-size: 36px;
+        width: 75px;
+        height: 75px;
+        font-size: 32px;
+        margin-bottom: 20px;
     }
     
     .legal-card-content h3 {
         font-size: 22px;
+        margin-bottom: 15px;
     }
     
     .legal-card-content p {
         font-size: 15px;
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .legal-services-grid {
+        gap: 10px;
+    }
+    
+    .legal-card-content {
+        padding: 25px 12px;
+    }
+    
+    .legal-service-icon {
+        width: 65px;
+        height: 65px;
+        font-size: 28px;
+        margin-bottom: 18px;
+    }
+    
+    .legal-card-content h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+    
+    .legal-card-content p {
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+    
+    .legal-service-link {
+        font-size: 14px;
+        padding: 8px 20px;
     }
 }
 

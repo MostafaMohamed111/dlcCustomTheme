@@ -227,9 +227,7 @@
 
 /* Responsive Design */
 @media (max-width: 992px) {
-    .certificate-item {
-        flex: 0 0 calc(100% / 4);
-    }
+    /* flex-basis is now controlled by JavaScript */
     
     .certificate-logo {
         width: 120px;
@@ -250,15 +248,11 @@
 }
 
 @media (max-width: 768px) {
-    .certificate-item {
-        flex: 0 0 calc(100% / 3);
-        padding: 15px;
-    }
+    /* flex-basis is now controlled by JavaScript */
     
     .certificate-logo {
         width: 100px;
         height: 100px;
-        padding: 15px;
     }
     
     .certificates-carousel-wrapper {
@@ -295,15 +289,11 @@
         padding: 30px 15px;
     }
     
-    .certificate-item {
-        flex: 0 0 calc(100% / 2);
-        padding: 15px;
-    }
+    /* flex-basis is now controlled by JavaScript */
     
     .certificate-logo {
         width: 90px;
         height: 90px;
-        padding: 12px;
     }
     
     .certificates-carousel-wrapper {

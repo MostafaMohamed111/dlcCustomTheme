@@ -64,3 +64,33 @@ body {
     direction: ltr;
     text-align: left;
 }
+
+.phone-ar input[type="tel"]::placeholder {
+    direction: rtl;
+}
+
+/* RTL placeholders for all Arabic form inputs */
+#booking-form input::placeholder,
+#booking-form textarea::placeholder {
+    direction: rtl;
+    text-align: right;
+}
+
+.site-footer .footer-developer-credit {
+    margin-top: 8px;
+}
+
+.site-footer .footer-developer-credit small {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.site-footer .footer-developer-credit a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.site-footer .footer-developer-credit a:hover {
+    color: rgba(255, 255, 255, 0.9);
+}

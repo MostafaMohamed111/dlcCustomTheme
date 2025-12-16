@@ -383,7 +383,7 @@
             <p class="consultation-cta-description">
                 تتيح شركة داغ للمحاماة والاستشارات القانونية حجز الاستشارات القانونية عبر قنوات متعددة، وذلك لتقديم الدعم النظامي في الوقت المناسب وبما يتوافق مع طبيعة كل حالة.
             </p>
-            <a href="<?php echo esc_url(home_url('/booking')); ?>" class="consultation-cta-button">
+            <a href="<?php echo esc_url(dlc_get_booking_page_url('ar')); ?>" class="consultation-cta-button">
                 <span>طلب استشارة قانونية</span>
                 <i class="fa-solid fa-arrow-left"></i>
             </a>

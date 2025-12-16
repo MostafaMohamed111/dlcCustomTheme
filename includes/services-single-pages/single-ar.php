@@ -227,7 +227,7 @@ if (!empty($faq_items) && is_array($faq_items)) :
                     }
                     ?>
                     <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
-                        <i class="fa-solid fa-arrow-left"></i>
+                        <i class="fa-solid fa-arrow-right"></i>
                         <?php echo $back_text; ?>
                     </a>
                 </div>
