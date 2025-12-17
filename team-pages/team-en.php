@@ -43,14 +43,14 @@ get_header();
 
                                     <?php 
                                     // Display Objective ACF field (full text, no excerpt)
-                                    $objective = get_field('objective');
+                                    $objective = function_exists('get_field') ? get_field('objective') : '';
                                     if ( !empty($objective) ) : ?>
                                         <p class="team-card-objective"><?php echo esc_html($objective); ?></p>
                                     <?php endif; ?>
 
                                     <?php 
                                     // Try ACF position field first, fallback to excerpt
-                                    $position = get_field('position');
+                                    $position = function_exists('get_field') ? get_field('position') : '';
                                     if ( empty($position) && has_excerpt() ) {
                                         $position = get_the_excerpt();
                                     }
@@ -62,7 +62,7 @@ get_header();
 
                                     <?php 
                                     // Display LinkedIn if URL exists
-                                    $linkedin = get_field('linkedin');
+                                    $linkedin = function_exists('get_field') ? get_field('linkedin') : '';
                                     if ( !empty($linkedin) ) : ?>
                                         <div class="team-card-linkedin">
                                             <a href="<?php echo esc_url($linkedin); ?>" target="_blank" rel="noopener noreferrer" class="team-linkedin-link">

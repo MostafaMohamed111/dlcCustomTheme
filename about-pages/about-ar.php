@@ -1,8 +1,6 @@
 
 <?php
-
-
-$company_pdf      = get_field('company_pdf');
+$company_pdf      = function_exists('get_field') ? get_field('company_pdf') : '';
 $company_pdf_url  = '';
 
 if (is_array($company_pdf) && isset($company_pdf['url'])) {
@@ -246,10 +244,17 @@ get_header('ar'); ?>
 </section>
 
 <?php
-$cases_count = (int) get_field('cases');
-$contracts_count = (int) get_field('contracts');
-$clients_count = (int) get_field('clients');
-$intellectual_properties_count = (int) get_field('intellectual_properties');
+$cases_count = 0;
+$contracts_count = 0;
+$clients_count = 0;
+$intellectual_properties_count = 0;
+
+if (function_exists('get_field')) {
+    $cases_count = (int) get_field('cases');
+    $contracts_count = (int) get_field('contracts');
+    $clients_count = (int) get_field('clients');
+    $intellectual_properties_count = (int) get_field('intellectual_properties');
+}
 ?>
 <section class="achievements-section">
     <div class="container">

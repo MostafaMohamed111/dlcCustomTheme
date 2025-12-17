@@ -1,10 +1,16 @@
 <?php
-
 get_header('ar');
 
-$cases_count = (int) get_field('cases');
-$contracts_count = (int) get_field('contracts');
-$clients_count = (int) get_field('clients');
+// Get statistics with ACF or fallback to defaults
+$cases_count = 0;
+$contracts_count = 0;
+$clients_count = 0;
+
+if (function_exists('get_field')) {
+    $cases_count = (int) get_field('cases');
+    $contracts_count = (int) get_field('contracts');
+    $clients_count = (int) get_field('clients');
+}
 ?>
 <main>
 

@@ -332,10 +332,17 @@
 
 
 <?php
-$cases_count = (int) get_field('cases');
-$contracts_count = (int) get_field('contracts');
-$clients_count = (int) get_field('clients');
-$intellectual_properties_count = (int) get_field('intellectual_properties');
+$cases_count = 0;
+$contracts_count = 0;
+$clients_count = 0;
+$intellectual_properties_count = 0;
+
+if (function_exists('get_field')) {
+    $cases_count = (int) get_field('cases');
+    $contracts_count = (int) get_field('contracts');
+    $clients_count = (int) get_field('clients');
+    $intellectual_properties_count = (int) get_field('intellectual_properties');
+}
 ?>
 <section class="achievements-section">
     <div class="container">
