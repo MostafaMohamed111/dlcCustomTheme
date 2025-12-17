@@ -7,20 +7,20 @@ $settings_page_id = 539; // Settings page ID
 $whatsapp = '';
 $phone = '';
 
-if ($settings_page_id > 0) {
+if ($settings_page_id > 0 && function_exists('get_field')) {
     // Get fields from settings page (field names: whatsapp_link and phone_number)
     $whatsapp = get_field('whatsapp_link', $settings_page_id);
     $phone = get_field('phone_number', $settings_page_id);
 }
 
 // Fallback to current page/post
-if (!$whatsapp) {
+if (!$whatsapp && function_exists('get_field')) {
     $whatsapp = get_field('whatsapp_link');
     if (!$whatsapp) {
         $whatsapp = get_field('whatsapp'); // Legacy fallback
     }
 }
-if (!$phone) {
+if (!$phone && function_exists('get_field')) {
     $phone = get_field('phone_number');
     if (!$phone) {
         $phone = get_field('phone'); // Legacy fallback

@@ -66,10 +66,10 @@
         <!-- Contact Cards -->
         <div class="contact-cards row gx-4 gy-4">
             <?php
-            $phone = get_field('phone');
-            $mail = get_field('mail');
-            $working_hours = get_field('working_hours');
-            $closed = get_field('closed');
+            $phone = function_exists('get_field') ? get_field('phone') : '';
+            $mail = function_exists('get_field') ? get_field('mail') : '';
+            $working_hours = function_exists('get_field') ? get_field('working_hours') : '';
+            $closed = function_exists('get_field') ? get_field('closed') : '';
             ?>
             <div class=" col-lg-3 col-md-6 col-sm-12">
                 <div class="contact-card">
@@ -78,7 +78,7 @@
                     </div>
                     <h3>Office Location</h3>
                     <?php
-                    $location_url = get_field('location');
+                    $location_url = function_exists('get_field') ? get_field('location') : '';
                     if (!$location_url) {
                         $location_url = 'https://maps.google.com/?q=Riyadh';
                     }

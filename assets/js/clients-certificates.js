@@ -11,13 +11,10 @@
         // Get all carousel wrappers on the page
         const carouselWrappers = document.querySelectorAll('.certificates-carousel-wrapper');
         
-        console.log('Certificates/Clients Carousel: Found ' + carouselWrappers.length + ' carousel(s)');
-        
         if (carouselWrappers.length === 0) return;
 
         // Initialize each carousel independently
         carouselWrappers.forEach(function(carouselWrapper, index) {
-            console.log('Initializing carousel #' + (index + 1));
             initCarousel(carouselWrapper);
         });
     });

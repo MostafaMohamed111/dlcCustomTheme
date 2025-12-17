@@ -20,7 +20,7 @@ get_header();
                         <h1 class="team-name"><?php the_title(); ?></h1>
                         <?php 
                         // Try ACF position field first, fallback to excerpt
-                        $position = get_field('position');
+                        $position = function_exists('get_field') ? get_field('position') : '';
                         if ( empty($position) && has_excerpt() ) {
                             $position = get_the_excerpt();
                         }
@@ -36,7 +36,7 @@ get_header();
 
                 <?php 
                 // Display Objective ACF field
-                $objective = get_field('objective');
+                $objective = function_exists('get_field') ? get_field('objective') : '';
                 if ( !empty($objective) ) : ?>
                     <section class="team-objective">
                         <h2 class="team-section-title">
@@ -51,7 +51,7 @@ get_header();
 
                 <?php 
                 // Display Experience ACF field
-                $experience = get_field('experience');
+                $experience = function_exists('get_field') ? get_field('experience') : '';
                 if ( !empty($experience) ) : ?>
                     <section class="team-experience">
                         <h2 class="team-section-title">
@@ -66,7 +66,7 @@ get_header();
 
                 <?php 
                 // Display Education ACF field
-                $education = get_field('education');
+                $education = function_exists('get_field') ? get_field('education') : '';
                 if ( !empty($education) ) : ?>
                     <section class="team-education">
                         <h2 class="team-section-title">
@@ -81,7 +81,7 @@ get_header();
 
                 <?php 
                 // Display LinkedIn ACF field
-                $linkedin = get_field('linkedin');
+                $linkedin = function_exists('get_field') ? get_field('linkedin') : '';
                 if ( !empty($linkedin) ) : ?>
                     <section class="team-linkedin">
                         <h2 class="team-section-title">

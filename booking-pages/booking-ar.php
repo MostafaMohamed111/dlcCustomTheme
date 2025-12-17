@@ -20,14 +20,14 @@
 <div class="row page">
     <div class="image-sector col-lg-6">
         <?php
-        // Get ACF fields
-        $phone = get_field('phone');
-        $facebook = get_field('facebook');
-        $instagram = get_field('instagram');
-        $linkedin = get_field('linkedin');
-        $twitter = get_field('twitter');
-        $snapchat = get_field('snapchat');
-        $whatsapp = get_field('whatsapp');
+        // Get ACF fields with fallback
+        $phone = function_exists('get_field') ? get_field('phone') : '';
+        $facebook = function_exists('get_field') ? get_field('facebook') : '';
+        $instagram = function_exists('get_field') ? get_field('instagram') : '';
+        $linkedin = function_exists('get_field') ? get_field('linkedin') : '';
+        $twitter = function_exists('get_field') ? get_field('twitter') : '';
+        $snapchat = function_exists('get_field') ? get_field('snapchat') : '';
+        $whatsapp = function_exists('get_field') ? get_field('whatsapp') : '';
         ?>
         
         <div class="logo">

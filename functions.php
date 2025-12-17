@@ -9,6 +9,17 @@ define('DLC_EXCERPT_LENGTH_POST', 300);
 // Set your GTM Container ID here (format: GTM-XXXXXX)
 define('DLC_GTM_CONTAINER_ID', ''); // Leave empty until GTM is ready
 
+// Helper: Safe ACF field getter with fallback
+if (!function_exists('dlc_get_field')) {
+    function dlc_get_field($selector, $post_id = false, $format_value = true, $default = '') {
+        if (function_exists('get_field')) {
+            $value = get_field($selector, $post_id, $format_value);
+            return ($value !== false && $value !== null && $value !== '') ? $value : $default;
+        }
+        return $default;
+    }
+}
+
 // Helper: Detect if current page is Arabic
 function dlc_is_arabic_page() {
     static $is_arabic_page = null;
@@ -142,7 +153,10 @@ function dlc_get_polylang_switcher() {
     
     // If category handling didn't work, try pll_translate_url
     if ($alternate_url === '#' && function_exists('pll_translate_url')) {
-        $current_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+        $host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+        $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '';
+        $current_url = $protocol . '://' . $host . $request_uri;
         $alternate_url = pll_translate_url($current_url, $target_lang);
     }
     
