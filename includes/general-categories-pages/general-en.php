@@ -29,26 +29,49 @@
                 <!-- Language Switcher -->
                 <div class="archive-language-switcher">
                     <?php
-                    $switcher = dlc_get_polylang_switcher();
-                    if ($switcher) :
-                        // Determine target language and labels
-                        $current_lang = function_exists('pll_current_language') ? pll_current_language() : 'en';
-                        $target_lang = ($current_lang === 'ar') ? 'en' : 'ar';
-                        $label = ($target_lang === 'ar') ? 'العربية' : 'English';
-                        $title = ($target_lang === 'ar') ? 'Switch to Arabic' : 'Switch to English';
+                    // For tags, just switch to home page of other language
+                    // For categories, use the Polylang switcher
+                    $current_lang = function_exists('pll_current_language') ? pll_current_language() : 'en';
+                    $target_lang = ($current_lang === 'ar') ? 'en' : 'ar';
+                    $label = ($target_lang === 'ar') ? 'العربية' : 'English';
+                    $title = ($target_lang === 'ar') ? 'Switch to Arabic' : 'Switch to English';
+                    
+                    if (is_tag() || is_date() || is_author()) {
+                        // For non-translatable archives, go to home page
+                        $switch_url = function_exists('pll_home_url') ? pll_home_url($target_lang) : home_url();
+                    } else {
+                        // For categories, try to get translated version
+                        $switcher = dlc_get_polylang_switcher();
+                        $switch_url = $switcher ? $switcher['url'] : home_url();
+                    }
                     ?>
-                    <a href="<?php echo esc_url($switcher['url']); ?>" class="archive-language-switch-btn" title="<?php echo esc_attr($title); ?>">
+                    <a href="<?php echo esc_url($switch_url); ?>" class="archive-language-switch-btn" title="<?php echo esc_attr($title); ?>">
                         <i class="fa-solid fa-globe"></i>
                         <span><?php echo esc_html($label); ?></span>
                     </a>
-                    <?php endif; ?>
                 </div>
             </div>
             <?php
-            // Get current language using Polylang
+            // Get current language - detect from queried term first, then fallback
             $current_lang = 'en';
-            if (function_exists('pll_current_language')) {
+            $queried_object = get_queried_object();
+            
+            // Try to get language from the queried term (tag/category)
+            if (function_exists('pll_get_term_language') && $queried_object && isset($queried_object->term_id)) {
+                $term_lang = pll_get_term_language($queried_object->term_id);
+                if ($term_lang) {
+                    $current_lang = $term_lang;
+                }
+            }
+            
+            // Fallback to current page language
+            if (!$current_lang && function_exists('pll_current_language')) {
                 $current_lang = pll_current_language();
+            }
+            
+            // Final fallback
+            if (!$current_lang) {
+                $current_lang = 'en';
             }
             
             // Determine archive type and set appropriate content
@@ -57,7 +80,6 @@
             $archive_subtitle = '';
             $badge_icon = '';
             $badge_text = '';
-            $queried_object = get_queried_object();
             
             if (is_category()) {
                 $category = $queried_object;
@@ -124,7 +146,7 @@
                     <?php endif; ?>
                     
                     <?php
-                    // Setup query with Polylang language filter
+                    // Setup query
                     $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
                     
                     $args = array(
@@ -134,16 +156,17 @@
                         'post_status' => 'publish'
                     );
                     
-                    // Add Polylang language filter
-                    if (function_exists('pll_current_language')) {
-                        $args['lang'] = $current_lang;
-                    }
-                    
                     // Add archive-specific filters
                     if (is_category()) {
                         $args['cat'] = get_queried_object_id();
+                        // Only filter by English language for categories
+                        if (function_exists('pll_current_language')) {
+                            $args['lang'] = 'en';
+                        }
                     } elseif (is_tag()) {
                         $args['tag_id'] = get_queried_object_id();
+                        // Tags show ALL posts - disable Polylang language filter
+                        $args['lang'] = '';
                     } elseif (is_date()) {
                         $args['year'] = get_query_var('year');
                         $args['monthnum'] = get_query_var('monthnum');

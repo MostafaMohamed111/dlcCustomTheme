@@ -2309,25 +2309,6 @@ function load_archive_posts_ajax() {
                                     <?php echo esc_html($read_more_text); ?>
                                     <i class="fa-solid fa-arrow-right"></i>
                                 </a>
-                                <div class="post-meta-footer">
-                                    <?php
-                                    $tags = get_the_tags();
-                                    if (!empty($tags)) {
-                                        // Limit to first 2 tags
-                                        $tags = array_slice($tags, 0, 2);
-                                        ?>
-                                        <div class="post-tags">
-                                            <?php foreach($tags as $tag) : ?>
-                                                <a href="<?php echo get_tag_link($tag->term_id); ?>" class="post-tag-link">
-                                                    <i class="fa-solid fa-hashtag"></i>
-                                                    <?php echo esc_html($tag->name); ?>
-                                                </a>
-                                            <?php endforeach; ?>
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
                             </div>
                         </div>
                     </article>
