@@ -5,6 +5,10 @@ define('DLC_POSTS_PER_PAGE', 6);
 define('DLC_EXCERPT_LENGTH_SERVICE', 120);
 define('DLC_EXCERPT_LENGTH_POST', 300);
 
+// Google Tag Manager Configuration
+// Set your GTM Container ID here (format: GTM-XXXXXX)
+define('DLC_GTM_CONTAINER_ID', ''); // Leave empty until GTM is ready
+
 // Helper: Detect if current page is Arabic
 function dlc_is_arabic_page() {
     static $is_arabic_page = null;
@@ -2804,5 +2808,90 @@ add_filter( 'pll_get_taxonomies', function( $taxonomies ) {
     $taxonomies['post_tag'] = 'post_tag';
     return $taxonomies;
 });
+
+
+
+// ============================================================================
+// Google Tag Manager Integration
+// ============================================================================
+
+/**
+ * Output GTM Head Script
+ * Adds GTM script to <head> section
+ */
+function dlc_gtm_head() {
+    $gtm_id = defined('DLC_GTM_CONTAINER_ID') ? DLC_GTM_CONTAINER_ID : '';
+    
+    if (empty($gtm_id)) {
+        return; // GTM not configured yet
+    }
+    ?>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','<?php echo esc_js($gtm_id); ?>');</script>
+    <!-- End Google Tag Manager -->
+    <?php
+}
+add_action('wp_head', 'dlc_gtm_head', 1);
+
+/**
+ * Output GTM Body Script (noscript fallback)
+ * Adds GTM noscript iframe immediately after <body>
+ */
+function dlc_gtm_body() {
+    $gtm_id = defined('DLC_GTM_CONTAINER_ID') ? DLC_GTM_CONTAINER_ID : '';
+    
+    if (empty($gtm_id)) {
+        return; // GTM not configured yet
+    }
+    ?>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr($gtm_id); ?>"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <?php
+}
+add_action('wp_body_open', 'dlc_gtm_body', 1);
+
+/**
+ * Initialize dataLayer
+ * Ensures dataLayer is available before any tracking events
+ */
+function dlc_gtm_init_datalayer() {
+    ?>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    </script>
+    <?php
+}
+add_action('wp_head', 'dlc_gtm_init_datalayer', 0);
+
+/**
+ * Enqueue GTM tracking script
+ * Handles all click-based tracking events (WhatsApp, phone)
+ */
+function dlc_enqueue_gtm_tracking() {
+    wp_enqueue_script(
+        'dlc-gtm-tracking',
+        get_template_directory_uri() . '/assets/js/gtm-tracking.js',
+        array(),
+        '1.0.0',
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'dlc_enqueue_gtm_tracking');
+
+/**
+ * Polyfill for wp_body_open hook
+ * Ensures compatibility with older WordPress versions
+ */
+if (!function_exists('wp_body_open')) {
+    function wp_body_open() {
+        do_action('wp_body_open');
+    }
+}
 
 

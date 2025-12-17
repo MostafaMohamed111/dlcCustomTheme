@@ -57,6 +57,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Track successful form submission in GTM
+                    if (window.dlcPushToDataLayer) {
+                        window.dlcPushToDataLayer('contact_form_submit', {
+                            'form_type': 'contact'
+                        });
+                    }
+                    
                     // Show success modal
                     openModal();
                     

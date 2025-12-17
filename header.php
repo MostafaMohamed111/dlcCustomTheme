@@ -7,6 +7,12 @@
     <?php wp_head(); ?>
 </head>
 <body>
+<?php 
+// GTM noscript - right after body tag
+if (function_exists('dlc_gtm_body')) {
+    dlc_gtm_body();
+}
+?>
 
     <nav class="top-nav">
         <div class= "container-fluid site-nav">

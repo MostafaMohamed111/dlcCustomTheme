@@ -377,6 +377,14 @@
             data: formData,
             success: function(response) {
                 if (response.success) {
+                    // Track successful booking submission in GTM
+                    if (window.dlcPushToDataLayer) {
+                        window.dlcPushToDataLayer('booking_form_submit', {
+                            'form_type': 'booking',
+                            'service_type': formData.service_type
+                        });
+                    }
+                    
                     // Show success message
                     $('#booking-form-container').removeClass('active');
                     $('#success-message').addClass('active');
