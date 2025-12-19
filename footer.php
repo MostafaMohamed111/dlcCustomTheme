@@ -61,7 +61,7 @@
             <div class="col-12 text-center">
                 <small class="footer-copy">&copy; <?php echo date('Y'); ?> DLC Law &amp; Consultation. All rights reserved.</small>
                 <div class="footer-developer-credit">
-                    <small>Website developed by <a href="https://mostafa-elbebany.netlify.app/" target="_blank" rel="noopener noreferrer">Elbebany</a></small>
+                    <small>Website developed by <a href="https://mostafa-elbebany.netlify.app/" target="_blank" rel="noopener noreferrer">Mostafa Elbebany</a></small>
                 </div>
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center gap-3">

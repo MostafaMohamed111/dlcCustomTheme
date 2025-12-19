@@ -16,10 +16,17 @@ if (function_exists('get_field')) {
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-background" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Dag-team.webp');"></div>
+        <?php $dlc_hero_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/Dag-team.webp') : null; ?>
+        <div class="hero-background" aria-hidden="true">
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/Dag-team.webp"
+                 alt=""
+                 fetchpriority="high"
+                 loading="eager"
+                 decoding="async"        >
+        </div>
         <div class="hero-content">
-            <h1 class="hero-company">Dag</h1>
-            <h2 class="hero-title">Law Firm & Legal Consultations</h2>
+            <h1 class="hero-company">Dag <br>
+            <span class="hero-title">Law Firm & Legal Consultations</span></h1>
             <p class="hero-subtitle">A Digital Legal Platform For Accurate Solutions</p>
             <div class="hero-buttons" aria-label="Primary actions">
                 <a href="<?php echo esc_url(home_url('/booking')); ?>" class="btn-primary">Book Now <i class="fas fa-calendar-check"></i> </a>
@@ -83,7 +90,7 @@ if (function_exists('get_field')) {
     </section>
 
     <!-- Parallax Divider -->
-    <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Riydah.jpg');">
+    <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Riydah.webp');">
         <div class="parallax-overlay"></div>
     </section>
 

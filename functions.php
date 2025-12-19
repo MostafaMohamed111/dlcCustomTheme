@@ -9,6 +9,64 @@ define('DLC_EXCERPT_LENGTH_POST', 300);
 // Set your GTM Container ID here (format: GTM-XXXXXX)
 define('DLC_GTM_CONTAINER_ID', 'GTM-KZW8JTF2'); // Leave empty until GTM is ready
 
+// Browser Language Detection & Redirect
+// Redirects Arabic-speaking visitors to Arabic homepage on first visit
+function dlc_redirect_by_browser_language() {
+    if (!is_front_page() || !function_exists('pll_current_language')) {
+        return;
+    }
+
+    if (isset($_COOKIE['pll_language']) || isset($_GET['lang_override'])) {
+        return;
+    }
+
+    $current = pll_current_language();
+    $default = pll_default_language();
+
+    if ($current !== $default) {
+        return;
+    }
+
+    $lang = '';
+    if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $lang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+    }
+
+    if ($lang === 'ar' && $current === 'en') {
+        $target = pll_home_url('ar');
+        if ($target) {
+            setcookie('pll_language', 'ar', time() + YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
+            wp_redirect($target);
+            exit;
+        }
+    }
+}
+add_action('template_redirect', 'dlc_redirect_by_browser_language');
+
+// Enqueue browser translation detection script
+function dlc_enqueue_translation_detector() {
+    if (!function_exists('pll_current_language') || !function_exists('pll_the_languages')) {
+        return;
+    }
+    
+    wp_enqueue_script('dlc-translation-detector', get_template_directory_uri() . '/assets/js/translation-detector.js', array(), '1.0.1', true);
+    
+    // Pass Polylang URLs to JavaScript
+    $languages = pll_the_languages(array('raw' => 1));
+    $lang_urls = array();
+    foreach ($languages as $lang_code => $lang_data) {
+        $lang_urls[$lang_code] = $lang_data['url'];
+    }
+    
+    wp_localize_script('dlc-translation-detector', 'polylangUrls', $lang_urls);
+    
+    // Pass cookie configuration to match PHP settings
+    wp_localize_script('dlc-translation-detector', 'polylangConfig', array(
+        'cookieDomain' => defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN : ''
+    ));
+}
+add_action('wp_enqueue_scripts', 'dlc_enqueue_translation_detector');
+
 // Helper: Safe ACF field getter with fallback
 if (!function_exists('dlc_get_field')) {
     function dlc_get_field($selector, $post_id = false, $format_value = true, $default = '') {
@@ -589,6 +647,7 @@ function dlc_defer_frontend_scripts($tag, $handle, $src) {
         'services-faq',
         'team-carousel',
         'clients-certificates-carousel',
+        'dlc-translation-detector',
         'dlc-gtm-tracking',
     );
 
@@ -610,6 +669,25 @@ function dlc_defer_frontend_scripts($tag, $handle, $src) {
     return str_replace(' src=', ' defer src=', $tag);
 }
 add_filter('script_loader_tag', 'dlc_defer_frontend_scripts', 10, 3);
+
+/**
+ * Resource hints for third-party origins that are required early (kept minimal for mobile).
+ */
+function dlc_resource_hints($urls, $relation_type) {
+    if (is_admin()) {
+        return $urls;
+    }
+
+    // If GTM is enabled, it loads from googletagmanager.com early.
+    if (!empty(DLC_GTM_CONTAINER_ID)) {
+        if ($relation_type === 'preconnect' || $relation_type === 'dns-prefetch') {
+            $urls[] = 'https://www.googletagmanager.com';
+        }
+    }
+
+    return $urls;
+}
+add_filter('wp_resource_hints', 'dlc_resource_hints', 10, 2);
 
 /**
  * Remove wp-embed on front-end (saves a request + small JS work).
@@ -685,9 +763,33 @@ function dlc_preload_frontpage_hero_image() {
 
     $hero_rel = 'assets/images/Dag-team.webp';
     $hero_url = trailingslashit(get_template_directory_uri()) . ltrim($hero_rel, '/');
-    echo '<link rel="preload" as="image" href="' . esc_url($hero_url) . '">' . "\n";
+    echo '<link rel="preload" as="image" href="' . esc_url($hero_url) . '" type="image/webp">' . "\n";
 }
 add_action('wp_head', 'dlc_preload_frontpage_hero_image', 1);
+
+/**
+ * Preload hero images used as CSS backgrounds on key templates (improves LCP/FCP without layout changes).
+ */
+function dlc_preload_template_hero_images() {
+    if (is_admin()) {
+        return;
+    }
+
+    // Services page hero background (CSS)
+    if (is_page_template('services.php')) {
+        $hero_rel = 'assets/images/servicesHero.webp';
+        $hero_url = trailingslashit(get_template_directory_uri()) . ltrim($hero_rel, '/');
+        echo '<link rel="preload" as="image" href="' . esc_url($hero_url) . '" type="image/webp">' . "\n";
+    }
+
+    // About Us hero background (CSS)
+    if (is_page_template('about-us.php')) {
+        $hero_rel = 'assets/images/Riydah.jpg';
+        $hero_url = trailingslashit(get_template_directory_uri()) . ltrim($hero_rel, '/');
+        echo '<link rel="preload" as="image" href="' . esc_url($hero_url) . '" type="image/jpeg">' . "\n";
+    }
+}
+add_action('wp_head', 'dlc_preload_template_hero_images', 1);
 
 /**
  * Helper: Get width/height for an image stored in the theme directory.

@@ -460,6 +460,7 @@ nav {
 
 .mobile-toggle {
     display: none;
+    color: var(--white);
     background: none;
     border: 0;
     padding: 0;
@@ -535,7 +536,11 @@ nav {
     -webkit-overflow-scrolling: touch;
 }
 
-
+.mobile-nav-close{
+    color: var(--white);
+    background-color: transparent;
+    border: none;
+}
 .close-button:hover {
     color: var(--accent-color);
     cursor: pointer;
