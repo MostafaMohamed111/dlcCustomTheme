@@ -7,7 +7,7 @@ define('DLC_EXCERPT_LENGTH_POST', 300);
 
 // Google Tag Manager Configuration
 // Set your GTM Container ID here (format: GTM-XXXXXX)
-define('DLC_GTM_CONTAINER_ID', ''); // Leave empty until GTM is ready
+define('DLC_GTM_CONTAINER_ID', 'GTM-KZW8JTF2'); // Leave empty until GTM is ready
 
 // Helper: Safe ACF field getter with fallback
 if (!function_exists('dlc_get_field')) {

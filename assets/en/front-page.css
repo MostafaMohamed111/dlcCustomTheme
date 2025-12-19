@@ -15,6 +15,7 @@
     padding-top: 400px !important;
     padding-bottom: 60px;
     overflow: hidden;
+    overflow-x: hidden;
 }
 
 .hero-background {
@@ -135,6 +136,7 @@
 
 section {
     padding: 80px 0;
+    overflow-x: hidden;
 }
 
 .section-header {
@@ -563,6 +565,7 @@ section {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    overflow-x: hidden;
 }
 
 .services-section .container .section-header .section-title {

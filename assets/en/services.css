@@ -9,6 +9,7 @@
     margin-top: 0;
     padding-top: 70px;
     overflow: hidden;
+    overflow-x: hidden;
 }
 
 .hero-background {
@@ -136,6 +137,7 @@
 .services {
     width: 90%;
     margin: 50px auto;
+    overflow-x: hidden;
 }
 
 .services img {
@@ -369,7 +371,9 @@
     padding: 80px 0;
     background: linear-gradient(160deg, #0f2747 0%, #1c3d6e 50%, #20497f 100%);
     margin-top: 60px;
-    border-radius: 12px;
+    margin-left: 0px;
+    margin-right: 0px;
+    overflow-x: hidden;
 }
 
 .commitment-section .section-title {
@@ -408,6 +412,7 @@
     padding: 80px 0;
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     width: 100%;
+    overflow-x: hidden;
 }
 
 .faq-container {
