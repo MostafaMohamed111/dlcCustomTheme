@@ -39,12 +39,27 @@
                     echo esc_url(home_url('/'));
                 }
             ?>">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking-logo.png" alt="Dag Law Firm Logo">
+                <?php $dlc_booking_logo_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/booking-logo.png') : null; ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking-logo.png"
+                     alt="Dag Law Firm Logo"
+                     <?php if ($dlc_booking_logo_dims) : ?>
+                         width="<?php echo esc_attr($dlc_booking_logo_dims['width']); ?>"
+                         height="<?php echo esc_attr($dlc_booking_logo_dims['height']); ?>"
+                     <?php endif; ?>
+                     decoding="async">
             </a>
         </div>
 
         <div class="gif">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking.gif" alt="Booking Illustration">
+            <?php $dlc_booking_gif_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/booking.gif') : null; ?>
+            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/booking.gif"
+                 alt="Booking Illustration"
+                 <?php if ($dlc_booking_gif_dims) : ?>
+                     width="<?php echo esc_attr($dlc_booking_gif_dims['width']); ?>"
+                     height="<?php echo esc_attr($dlc_booking_gif_dims['height']); ?>"
+                 <?php endif; ?>
+                 decoding="async"
+                 loading="lazy">
         </div>
 
         <div class="phone">

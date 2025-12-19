@@ -20,7 +20,13 @@
            </div>
            <div class="main-header-image col-lg-5 col-md-12">
                 <div class="image-container">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/SecureYourself.webp" alt="Blog Header Image" class="blog-header-img">
+                    <?php $dlc_blog_header_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/SecureYourself.webp') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/SecureYourself.webp"
+                         alt="Blog Header Image"
+                         class="blog-header-img"
+                       
+                         decoding="async"
+                         loading="lazy">
                 </div>
                
 

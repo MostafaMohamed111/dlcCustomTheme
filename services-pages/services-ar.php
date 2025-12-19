@@ -28,7 +28,15 @@
             </div>
             <div class="services-grid">
                 <div class="service-card companies">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies-services-ar.webp" alt="Corporate Law">
+                    <?php $dlc_companies_img_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/companies-services-ar.webp') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies-services-ar.webp"
+                         alt="Corporate Law"
+                         <?php if ($dlc_companies_img_dims) : ?>
+                             width="<?php echo esc_attr($dlc_companies_img_dims['width']); ?>"
+                             height="<?php echo esc_attr($dlc_companies_img_dims['height']); ?>"
+                         <?php endif; ?>
+                         decoding="async"
+                         loading="lazy">
                     <h2 class="text-center">خدمات الشركات </h2>
                     <p>نوفّر للشركات والمؤسسات حلولًا قانونية شاملة تدعم استمرارية الأعمال وتحميها من المخاطر النظامية.
 </p>
@@ -64,7 +72,15 @@
                     <a class="service-btn btn" href="<?php echo esc_url($companies_ar_url); ?>"> استعرض خدمات الشركات</a>
                 </div>
                 <div class="service-card individuals">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individual-services-ar.webp" alt="Individual Law">
+                    <?php $dlc_individuals_img_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/individual-services-ar.webp') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individual-services-ar.webp"
+                         alt="Individual Law"
+                         <?php if ($dlc_individuals_img_dims) : ?>
+                             width="<?php echo esc_attr($dlc_individuals_img_dims['width']); ?>"
+                             height="<?php echo esc_attr($dlc_individuals_img_dims['height']); ?>"
+                         <?php endif; ?>
+                         decoding="async"
+                         loading="lazy">
                     <h2 class="text-center">خدمات الأفراد</h2>
                     <p>تهدف خدماتنا للأفراد إلى توفير الحماية القانونية وضمان الحقوق في مختلف الجوانب الشخصية والمالية.</p>
                 <?php

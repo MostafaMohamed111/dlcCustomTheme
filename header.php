@@ -13,6 +13,12 @@ if (function_exists('dlc_gtm_body')) {
     dlc_gtm_body();
 }
 ?>
+<?php
+// Precompute theme image dimensions to add explicit width/height (reduces CLS)
+$dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions')
+    ? dlc_get_theme_image_dimensions('assets/images/DLC_logo.webp')
+    : null;
+?>
 
     <nav class="top-nav">
         <div class= "container-fluid site-nav">
@@ -20,7 +26,13 @@ if (function_exists('dlc_gtm_body')) {
                 <div class="col-1 ms-3 logo-container">
                    <div class="logo">
                         <a href="<?php echo home_url(); ?>">
-                            <img src= "<?php echo get_template_directory_uri(); ?>/assets/images/DLC_logo.webp" alt="Dag Law Firm And Consultation Logo">
+                            <img src= "<?php echo get_template_directory_uri(); ?>/assets/images/DLC_logo.webp"
+                                 alt="Dag Law Firm And Consultation Logo"
+                                 <?php if ($dlc_logo_dims) : ?>
+                                     width="<?php echo esc_attr($dlc_logo_dims['width']); ?>"
+                                     height="<?php echo esc_attr($dlc_logo_dims['height']); ?>"
+                                 <?php endif; ?>
+                                 decoding="async">
                         </a>
                    </div>         
 
@@ -51,8 +63,8 @@ if (function_exists('dlc_gtm_body')) {
                         $switcher = dlc_get_polylang_switcher();
                         if ($switcher) :
                         ?>
-                        <a href="<?php echo esc_url($switcher['url']); ?>">
-                            <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon">
+                        <a href="<?php echo esc_url($switcher['url']); ?>" aria-label="Switch language">
+                            <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon" width="28" height="28" decoding="async">
                         </a>
                         <?php endif; ?>
                     </div>
@@ -104,7 +116,7 @@ if (function_exists('dlc_gtm_body')) {
                         <span class="<?php echo esc_attr($button_icon); ?> mx-2"></span>
                     </a>
                     <div class="sign-in-dropdown ms-2">
-                        <button class="btn nav-btn sign-in sign-in-toggle" type="button">
+                        <button class="btn nav-btn sign-in sign-in-toggle" type="button" aria-label="Open sign in menu">
                             Sign In
                             <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
                         </button>
@@ -121,7 +133,10 @@ if (function_exists('dlc_gtm_body')) {
                     </div>
                 </div>
                 <div class="toggle-container col-1 ms-auto me-3">
-                    <li onclick="toggleMobileNav()" class="mobile-toggle fs-1 fa solid fa-bars"></li>
+                    <button type="button"
+                            onclick="toggleMobileNav()"
+                            class="mobile-toggle fs-1 fa-solid fa-bars"
+                            aria-label="Open menu"></button>
                 </div>
             </div>
         </div>
@@ -130,14 +145,23 @@ if (function_exists('dlc_gtm_body')) {
         <div class="mobile-nav">
             <div class="container-fluid mobile-nav-body">
                 <div class="row justify-content-end close-button">
-                    <span onclick="closeMobileNav()" class="fa fa-solid fa-xmark fs-2 pt-4 px-5"></span>
+                    <button type="button"
+                            onclick="closeMobileNav()"
+                            class="mobile-nav-close fa fa-solid fa-xmark fs-2 pt-4 px-5"
+                            aria-label="Close menu"></button>
                 </div>
                     <div class="row justify-content-between align-items-center mt-3 mb-4">
                         <div class="mobile-logo-container">
     
                             <div class="logo mobile-logo">
                                 <a href="<?php echo home_url(); ?>">
-                                    <img src= "<?php echo get_template_directory_uri(); ?>/assets/images/DLC_logo.webp" alt="Dag Law Firm And Consultation Logo">
+                                    <img src= "<?php echo get_template_directory_uri(); ?>/assets/images/DLC_logo.webp"
+                                         alt="Dag Law Firm And Consultation Logo"
+                                         <?php if ($dlc_logo_dims) : ?>
+                                             width="<?php echo esc_attr($dlc_logo_dims['width']); ?>"
+                                             height="<?php echo esc_attr($dlc_logo_dims['height']); ?>"
+                                         <?php endif; ?>
+                                         decoding="async">
                                 </a>                        
                             </div>
                         </div>
@@ -146,8 +170,8 @@ if (function_exists('dlc_gtm_body')) {
                             $switcher = dlc_get_polylang_switcher();
                             if ($switcher) :
                             ?>
-                            <a href="<?php echo esc_url($switcher['url']); ?>">
-                                <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon">
+                            <a href="<?php echo esc_url($switcher['url']); ?>" aria-label="Switch language">
+                                <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon" width="28" height="28" decoding="async">
                             </a>
                             <?php endif; ?>
                         </div>

@@ -30,7 +30,15 @@
             </div>
             <div class="services-grid">
                 <div class="service-card companies">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies.png" alt="Corporate Law">
+                    <?php $dlc_companies_img_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/companies.png') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/companies.png"
+                         alt="Corporate Law"
+                         <?php if ($dlc_companies_img_dims) : ?>
+                             width="<?php echo esc_attr($dlc_companies_img_dims['width']); ?>"
+                             height="<?php echo esc_attr($dlc_companies_img_dims['height']); ?>"
+                         <?php endif; ?>
+                         decoding="async"
+                         loading="lazy">
                     <h2 class="text-center">Corporate Legal Services</h2>
                     <p>
                         We provide companies and institutions with comprehensive legal support that promotes business continuity and minimizes regulatory and operational risks.
@@ -42,7 +50,15 @@
                     <a class="service-btn btn" href="<?php echo $companies_url; ?>">Explore Corporate Legal Services</a>
                 </div>
                 <div class="service-card individuals">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individuals.webp" alt="Individual Law">
+                    <?php $dlc_individuals_img_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/individuals.webp') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/individuals.webp"
+                         alt="Individual Law"
+                         <?php if ($dlc_individuals_img_dims) : ?>
+                             width="<?php echo esc_attr($dlc_individuals_img_dims['width']); ?>"
+                             height="<?php echo esc_attr($dlc_individuals_img_dims['height']); ?>"
+                         <?php endif; ?>
+                         decoding="async"
+                         loading="lazy">
                     <h2 class="text-center">Explore Individual Services</h2>
                     <p>
                         Our individual services are tailored to protect your personal and financial rights across various legal aspects.

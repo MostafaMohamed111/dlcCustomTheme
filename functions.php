@@ -523,6 +523,203 @@ function enqueue_theme_scripts() {
 
 add_action( 'wp_enqueue_scripts', 'enqueue_theme_scripts' );
 
+// ============================================================================
+// Performance / SEO / Accessibility Optimizations (theme-level, safe defaults)
+// ============================================================================
+
+/**
+ * Disable WP emoji scripts/styles on the front-end.
+ */
+function dlc_disable_emojis_frontend() {
+    if (is_admin()) {
+        return;
+    }
+
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+}
+add_action('init', 'dlc_disable_emojis_frontend');
+
+/**
+ * Remove jquery-migrate on the front-end (can be disabled by defining DLC_DISABLE_JQUERY_MIGRATE=false).
+ */
+function dlc_maybe_disable_jquery_migrate($scripts) {
+    if (is_admin()) {
+        return;
+    }
+
+    $disable = !defined('DLC_DISABLE_JQUERY_MIGRATE') ? true : (bool) DLC_DISABLE_JQUERY_MIGRATE;
+    if (!$disable) {
+        return;
+    }
+
+    if (!empty($scripts->registered['jquery']) && is_array($scripts->registered['jquery']->deps)) {
+        $scripts->registered['jquery']->deps = array_diff($scripts->registered['jquery']->deps, array('jquery-migrate'));
+    }
+}
+add_action('wp_default_scripts', 'dlc_maybe_disable_jquery_migrate');
+
+/**
+ * Defer non-critical front-end scripts (keeps execution order via `defer`).
+ * Note: only applies to known theme handles + jQuery, to avoid breaking plugin code.
+ */
+function dlc_defer_frontend_scripts($tag, $handle, $src) {
+    if (is_admin()) {
+        return $tag;
+    }
+
+    // Don't touch scripts without src (inline) or core essentials we don't control.
+    if (empty($src)) {
+        return $tag;
+    }
+
+    $defer_handles = array(
+        // Theme / vendor enqueued by this theme
+        'bootstrap-js',
+        'main-js',
+        'scroll-animations',
+        'contact-us',
+        'booking',
+        'archive-ajax',
+        'services-faq',
+        'team-carousel',
+        'clients-certificates-carousel',
+        'dlc-gtm-tracking',
+    );
+
+    // Defer jQuery ONLY if explicitly enabled (can break plugins that output inline scripts expecting jQuery immediately).
+    if (defined('DLC_DEFER_JQUERY') && DLC_DEFER_JQUERY) {
+        $defer_handles[] = 'jquery';
+        $defer_handles[] = 'jquery-core';
+    }
+
+    if (!in_array($handle, $defer_handles, true)) {
+        return $tag;
+    }
+
+    // If it's already deferred/async, leave it.
+    if (strpos($tag, ' defer') !== false || strpos($tag, ' async') !== false) {
+        return $tag;
+    }
+
+    return str_replace(' src=', ' defer src=', $tag);
+}
+add_filter('script_loader_tag', 'dlc_defer_frontend_scripts', 10, 3);
+
+/**
+ * Remove wp-embed on front-end (saves a request + small JS work).
+ */
+function dlc_disable_wp_embed_frontend() {
+    if (is_admin()) {
+        return;
+    }
+    wp_deregister_script('wp-embed');
+}
+add_action('wp_enqueue_scripts', 'dlc_disable_wp_embed_frontend', 100);
+
+/**
+ * Output a reasonable meta description if no SEO plugin is active.
+ * Keeps titles/descriptions unique by using page context (home, single, archive).
+ */
+function dlc_output_meta_description() {
+    if (is_admin() || is_feed()) {
+        return;
+    }
+
+    // If a popular SEO plugin is present, don't duplicate meta descriptions.
+    if (defined('WPSEO_VERSION') || defined('RANK_MATH_VERSION') || defined('AIOSEO_VERSION')) {
+        return;
+    }
+
+    $description = '';
+
+    if (is_front_page()) {
+        $description = get_bloginfo('description');
+    } elseif (is_singular()) {
+        $excerpt = get_the_excerpt();
+        if (!empty($excerpt)) {
+            $description = wp_strip_all_tags($excerpt);
+        }
+    } elseif (is_category() || is_tag() || is_tax()) {
+        $term_desc = term_description();
+        if (!empty($term_desc)) {
+            $description = wp_strip_all_tags($term_desc);
+        }
+    }
+
+    if (empty($description)) {
+        $description = get_bloginfo('description');
+    }
+
+    $description = trim(preg_replace('/\s+/', ' ', $description));
+    if (empty($description)) {
+        return;
+    }
+
+    // Keep it within common SERP limits (avoid hard dependency on mbstring).
+    if (function_exists('mb_substr')) {
+        $description = mb_substr($description, 0, 160);
+    } else {
+        $description = substr($description, 0, 160);
+    }
+    echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+}
+add_action('wp_head', 'dlc_output_meta_description', 2);
+
+/**
+ * Preload the front-page hero background image to improve LCP.
+ */
+function dlc_preload_frontpage_hero_image() {
+    if (is_admin()) {
+        return;
+    }
+
+    if (!is_front_page()) {
+        return;
+    }
+
+    $hero_rel = 'assets/images/Dag-team.webp';
+    $hero_url = trailingslashit(get_template_directory_uri()) . ltrim($hero_rel, '/');
+    echo '<link rel="preload" as="image" href="' . esc_url($hero_url) . '">' . "\n";
+}
+add_action('wp_head', 'dlc_preload_frontpage_hero_image', 1);
+
+/**
+ * Helper: Get width/height for an image stored in the theme directory.
+ * Used to add explicit dimensions to hardcoded <img> tags (prevents CLS).
+ *
+ * @param string $relative_path Path relative to theme root, e.g. 'assets/images/DLC_logo.webp'
+ * @return array{width:int,height:int}|null
+ */
+function dlc_get_theme_image_dimensions($relative_path) {
+    static $cache = array();
+
+    $key = ltrim($relative_path, '/');
+    if (isset($cache[$key])) {
+        return $cache[$key];
+    }
+
+    $file_path = trailingslashit(get_template_directory()) . $key;
+    if (!file_exists($file_path)) {
+        $cache[$key] = null;
+        return null;
+    }
+
+    $size = @getimagesize($file_path);
+    if (!$size || empty($size[0]) || empty($size[1])) {
+        $cache[$key] = null;
+        return null;
+    }
+
+    $cache[$key] = array('width' => (int) $size[0], 'height' => (int) $size[1]);
+    return $cache[$key];
+}
+
 
 
 // Theme setup
@@ -2845,6 +3042,8 @@ function dlc_gtm_body() {
     ?>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr($gtm_id); ?>"
+    title="Google Tag Manager"
+    aria-hidden="true"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <?php

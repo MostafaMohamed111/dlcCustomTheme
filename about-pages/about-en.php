@@ -31,7 +31,13 @@ get_header(); ?>
                 </div>
 
                 <div class="col-xl-5 col-md-6   hero-image">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/mrDag.webp" alt="Mr. Dag" class="ceo-image">
+                    <?php $dlc_mrdag_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/mrDag.webp') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/mrDag.webp"
+                         alt="Mr. Dag"
+                         class="ceo-image"
+                   
+                         decoding="async"
+                         loading="lazy">
 
                 </div>
             </div>
@@ -103,7 +109,12 @@ Founded in 2000, Dag Legal Firm reflects the vision of Mohammed Dagistani, who a
             <div class="image-container col-lg-5">
                 <div class="geometric-background-pattern">
                     <div class="mr-dag-image">
-                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/mrDag.webp" alt="Mr. Dagestani">
+                        <?php $dlc_mrdag_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/mrDag.webp') : null; ?>
+                        <img src="<?php echo get_template_directory_uri(); ?>/assets/images/mrDag.webp"
+                             alt="Mr. Dagestani"
+                      
+                             decoding="async"
+                             loading="lazy">
                     </div>
                 </div>
 

@@ -67,7 +67,16 @@ if (function_exists('get_field')) {
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12 about-image">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/Justice.webp" alt="Blindfolded statue of justice holding scales" class="about-img" loading="lazy">
+                    <?php $dlc_justice_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/Justice.webp') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/Justice.webp"
+                         alt="Blindfolded statue of justice holding scales"
+                         class="about-img"
+                         loading="lazy"
+                         <?php if ($dlc_justice_dims) : ?>
+                             width="<?php echo esc_attr($dlc_justice_dims['width']); ?>"
+                             height="<?php echo esc_attr($dlc_justice_dims['height']); ?>"
+                         <?php endif; ?>
+                         decoding="async">
                 </div>
             </div>
         </div>

@@ -163,6 +163,8 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
     margin-top: 40px;
+        /* Prevent image hover transforms from creating horizontal scroll/overflow */
+        overflow: hidden;
 }
 
 .service-card {
@@ -174,6 +176,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+
 }
 
 .service-card.companies.animate {
@@ -204,6 +207,8 @@
 .service-card img {
     width: 100%;
     height: auto;
+    max-width: 100%;
+    display: block;
 }
 
 

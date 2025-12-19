@@ -460,6 +460,9 @@ nav {
 
 .mobile-toggle {
     display: none;
+    background: none;
+    border: 0;
+    padding: 0;
 }
 
 

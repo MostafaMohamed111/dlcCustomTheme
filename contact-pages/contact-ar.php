@@ -41,7 +41,15 @@
             </form>
 
             <div class="form-image col-lg-6 col-md-12 ">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services.jpg" alt="Contact Us">
+                <?php $dlc_contact_img_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/services.jpg') : null; ?>
+                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services.jpg"
+                     alt="Contact Us"
+                     <?php if ($dlc_contact_img_dims) : ?>
+                         width="<?php echo esc_attr($dlc_contact_img_dims['width']); ?>"
+                         height="<?php echo esc_attr($dlc_contact_img_dims['height']); ?>"
+                     <?php endif; ?>
+                     decoding="async"
+                     loading="lazy">
                    <a class="quick-link calendar" href="<?php echo esc_url(dlc_get_booking_page_url('ar')); ?>">
                     <i class="fas fa-calendar-check"></i>
                     <span>حجز استشارة</span>

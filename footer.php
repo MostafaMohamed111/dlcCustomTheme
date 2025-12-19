@@ -5,7 +5,14 @@
         <div class="row footer-top  gy-4">
             <div class="col-md-3 footer-brand text-center ">
                 <a href="<?php echo home_url(); ?>" class="footer-logo d-inline-flex align-items-center gap-2">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/DLC_logo.webp" alt="Dag Law Firm And Consultation Logo">
+                    <?php $dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/DLC_logo.webp') : null; ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/DLC_logo.webp"
+                         alt="Dag Law Firm And Consultation Logo"
+                         <?php if ($dlc_logo_dims) : ?>
+                             width="<?php echo esc_attr($dlc_logo_dims['width']); ?>"
+                             height="<?php echo esc_attr($dlc_logo_dims['height']); ?>"
+                         <?php endif; ?>
+                         decoding="async">
                     <span class="fw-semibold">DLC Law &amp; Consultation</span>
                 </a>
                 <p class="footer-tagline mb-0">Legal expertise with a human touch.</p>
@@ -31,7 +38,7 @@
                 <div class="footer-buttons ">
                     <a href="<?php echo esc_url(dlc_get_booking_page_url('en')); ?>" class="btn nav-btn get-in-touch me-2">Book Now</a>
                     <div class="sign-in-dropdown">
-                        <button class="btn nav-btn sign-in sign-in-toggle footer-sign-in" type="button">
+                        <button class="btn nav-btn sign-in sign-in-toggle footer-sign-in" type="button" aria-label="Open sign in menu">
                             Sign In
                             <i class="fa-solid fa-chevron-down ms-1 dropdown-chevron"></i>
                         </button>
