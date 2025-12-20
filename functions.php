@@ -274,176 +274,168 @@ function dlc_get_archive_service_type() {
     
     return null;
 }
-
 function enqueue_theme_css() {
-    $is_arabic_page = dlc_is_arabic_page();
 
-    // Conditionally load Bootstrap CSS - RTL for Arabic, regular for English
-    if ($is_arabic_page) {
-        // Load Bootstrap RTL for Arabic pages
-        wp_register_style( 'bootstrap', get_template_directory_uri() . '/bootstrap/css/bootstrap.rtl.min.css', array(), '4.5.2', 'all' );
+    $is_arabic = function_exists('dlc_is_arabic_page') ? dlc_is_arabic_page() : false;
+
+    // Helper to register + enqueue with cache busting
+    function dlc_enqueue_style($handle, $path, $deps = array()) {
+        $full_path = get_template_directory() . $path;
+        $version = file_exists($full_path) ? filemtime($full_path) : false;
+
+        wp_register_style(
+            $handle,
+            get_template_directory_uri() . $path,
+            $deps,
+            $version,
+            'all'
+        );
+        wp_enqueue_style($handle);
+    }
+
+    /**
+     * 1️⃣ Bootstrap (RTL or LTR)
+     */
+    if ($is_arabic) {
+        dlc_enqueue_style('bootstrap', '/bootstrap/css/bootstrap.rtl.min.css');
     } else {
-        // Load regular Bootstrap for English pages
-        wp_register_style( 'bootstrap', get_template_directory_uri() . '/bootstrap/css/bootstrap.min.css', array(), '4.5.2', 'all' );
-    }
-    wp_enqueue_style( 'bootstrap' );
-
-    // Font Awesome CSS
-    wp_register_style( 'font-awesome', get_template_directory_uri() . '/assets/webfonts/all.min.css', array(), '6.0.0', 'all' );
-    wp_enqueue_style( 'font-awesome' );
-    
-    // Enqueue main CSS (base styles for all pages)
-    wp_register_style('main', get_template_directory_uri() . '/assets/en/main.css', array(), false, 'all');
-    wp_enqueue_style('main');
-
-    // Enqueue main RTL overrides for Arabic pages (header, footer, navigation)
-    if ( $is_arabic_page ) {
-        wp_register_style('main-ar', get_template_directory_uri() . '/assets/ar/main-ar.css', array('main'), '1.0.1', 'all');
-        wp_enqueue_style('main-ar');
+        dlc_enqueue_style('bootstrap', '/bootstrap/css/bootstrap.min.css');
     }
 
-    // Enqueue page-specific CSS
-    switch (true) {
-        case is_front_page():
-            wp_register_style('front-page', get_template_directory_uri() . '/assets/en/front-page.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('front-page');
-            // Certificates and clients carousel
-            wp_register_style('clients-certificates', get_template_directory_uri() . '/assets/en/clients-certificates.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('clients-certificates');
-            break;
-            
-        case is_page_template('services.php'):
-            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/services.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('services-page');
-            break;
-            
-        case is_page_template('contact-us.php'):
-            wp_register_style('contact-us-page', get_template_directory_uri() . '/assets/en/contact-us.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('contact-us-page');
-            break;
-            
-        case is_page_template('about-us.php'):
-            wp_register_style('about-us-page', get_template_directory_uri() . '/assets/en/about-us.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('about-us-page');
-            break;
-            
-        case is_page_template('privacy-policy.php'):
-        case is_page(get_option('wp_page_for_privacy_policy')):
-            wp_register_style('privacy-policy-page', get_template_directory_uri() . '/assets/en/privacy-policy.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('privacy-policy-page');
-            break;
+    /**
+     * 2️⃣ Font Awesome
+     */
+    dlc_enqueue_style('font-awesome', '/assets/webfonts/all.min.css');
 
-        case is_page_template('booking.php'):
-            wp_register_style('booking-page', get_template_directory_uri() . '/assets/en/booking.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('booking-page');
-            break;
-            
-        case is_404():
-            wp_register_style('error-page', get_template_directory_uri() . '/assets/en/error.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('error-page');
-            break;
+    /**
+     * 3️⃣ Main Stylesheet (base)
+     */
+    dlc_enqueue_style('main', '/assets/en/main.css');
+
+    /**
+     * 4️⃣ RTL Overrides
+     */
+    if ($is_arabic) {
+        dlc_enqueue_style('main-ar', '/assets/ar/main-ar.css', ['main']);
     }
 
+    /**
+     * 5️⃣ Conditional Page Styles
+     */
+    if (is_front_page()) {
+        dlc_enqueue_style('front-page', '/assets/en/front-page.css', ['main']);
+        dlc_enqueue_style('clients-certificates', '/assets/en/clients-certificates.css', ['main']);
+
+    } elseif (is_page_template('services.php')) {
+        dlc_enqueue_style('services-page', '/assets/en/services.css', ['main']);
+
+    } elseif (is_page_template('contact-us.php')) {
+        dlc_enqueue_style('contact-us-page', '/assets/en/contact-us.css', ['main']);
+
+    } elseif (is_page_template('about-us.php')) {
+        dlc_enqueue_style('about-us-page', '/assets/en/about-us.css', ['main']);
+
+    } elseif (is_page_template('privacy-policy.php') || is_page(get_option('wp_page_for_privacy_policy'))) {
+        dlc_enqueue_style('privacy-policy-page', '/assets/en/privacy-policy.css', ['main']);
+
+    } elseif (is_page_template('booking.php')) {
+        dlc_enqueue_style('booking-page', '/assets/en/booking.css', ['main']);
+
+    } elseif (is_404()) {
+        dlc_enqueue_style('error-page', '/assets/en/error.css', ['main']);
+    }
+
+    /**
+     * 6️⃣ Archive Types
+     */
     if (is_archive()) {
-        $service_type = dlc_get_archive_service_type();
-        $queried_object = get_queried_object();
-        $is_news = dlc_is_news_category($queried_object->term_id ?? 0);
-        $is_companies = dlc_is_companies_services_category($queried_object->term_id ?? 0);
-        $is_individual = dlc_is_individual_services_category($queried_object->term_id ?? 0);
-        $is_international = dlc_is_home_international_category($queried_object->term_id ?? 0);
-        $is_secure = dlc_is_secure_yourself_category($queried_object->term_id ?? 0);
-        
-        if ($is_news) {
-            wp_register_style('news-page', get_template_directory_uri() . '/assets/en/news.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('news-page');
+        $obj = get_queried_object();
+        $id = $obj->term_id ?? 0;
 
-        } elseif ($is_secure) {
-            // Load service card styles (companies-individual-services.css) for service-card component
-            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.3', 'all');
-            wp_enqueue_style('services-page');
-            // Load secure-yourself specific styles
-            wp_register_style('secure-yourself-page', get_template_directory_uri() . '/assets/en/secure-yourself.css', array('services-page'), '1.0.0', 'all');
-            wp_enqueue_style('secure-yourself-page');
-            
-        
-        } elseif ($is_companies || $is_individual || $is_international) {
-            wp_register_style('services-page', get_template_directory_uri() . '/assets/en/companies-individual-services.css', array('main'), '1.0.3', 'all');
-            wp_enqueue_style('services-page');
-            
-            if ($is_international) {
-                wp_register_style('home-international-page', get_template_directory_uri() . '/assets/en/home-international.css', array('services-page'), '1.0.0', 'all');
-                wp_enqueue_style('home-international-page');
-            }
+        if (function_exists('dlc_is_news_category') && dlc_is_news_category($id)) {
+            dlc_enqueue_style('news-page', '/assets/en/news.css', ['main']);
+
+        } elseif (function_exists('dlc_is_secure_yourself_category') && dlc_is_secure_yourself_category($id)) {
+            dlc_enqueue_style('services-base', '/assets/en/companies-individual-services.css', ['main']);
+            dlc_enqueue_style('secure-yourself', '/assets/en/secure-yourself.css', ['services-base']);
+
+        } elseif (function_exists('dlc_is_home_international_category') && dlc_is_home_international_category($id)) {
+            dlc_enqueue_style('services-base', '/assets/en/companies-individual-services.css', ['main']);
+            dlc_enqueue_style('home-international', '/assets/en/home-international.css', ['services-base']);
+
+        } elseif (
+            function_exists('dlc_is_companies_services_category') && dlc_is_companies_services_category($id)
+            || function_exists('dlc_is_individual_services_category') && dlc_is_individual_services_category($id)
+        ) {
+            dlc_enqueue_style('services-base', '/assets/en/companies-individual-services.css', ['main']);
+
         } else {
-            // Blog archive
-            wp_register_style('blog-page', get_template_directory_uri() . '/assets/en/blog.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('blog-page');
+            dlc_enqueue_style('blog-page', '/assets/en/blog.css', ['main']);
+            dlc_enqueue_style('general-archive', '/assets/en/general-archive.css', ['blog-page']);
         }
-    }
-    
-    // Generic archive template (categories, tags, dates, authors)
-    // Check if it's a general archive (not routed to specific templates)
-    if (is_archive()) {
-        $category_type = dlc_get_category_type_slug();
-        // Only enqueue if it's not a specific category type (will use general template)
-        if (!$category_type || !in_array($category_type, ['news', 'blog', 'companies-services', 'individual-services', 'home-international'])) {
-            // Enqueue blog.css first for post-card styles, then general-archive.css
-            wp_register_style('blog-page', get_template_directory_uri() . '/assets/en/blog.css', array('main'), '1.0.0', 'all');
-            wp_enqueue_style('blog-page');
-            wp_register_style('general-archive', get_template_directory_uri() . '/assets/en/general-archive.css', array('blog-page'), '1.0.0', 'all');
-            wp_enqueue_style('general-archive');
-        }
-    }
-    
-    if (is_single() && get_post_type() == 'post') {
-        // Single post page
-        wp_register_style('single-page', get_template_directory_uri() . '/assets/en/single.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('single-page');
-        
-     
     }
 
-    // Team archive page
+    /**
+     * 7️⃣ Single Blog
+     */
+    if (is_single() && get_post_type() === 'post') {
+        dlc_enqueue_style('single-page', '/assets/en/single.css', ['main']);
+    }
+
+    /**
+     * 8️⃣ Team Archive + Single
+     */
     if (is_post_type_archive('team')) {
-        wp_register_style('team-page', get_template_directory_uri() . '/assets/en/team.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('team-page');
+        dlc_enqueue_style('team-page', '/assets/en/team.css', ['main']);
     }
 
-    // Team single page
     if (is_singular('team')) {
-        wp_register_style('team-single-page', get_template_directory_uri() . '/assets/en/team-single.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('team-single-page');
+        dlc_enqueue_style('team-single-page', '/assets/en/team-single.css', ['main']);
     }
 
-    // Generic page layout (fallback for normal pages that are not using a special template)
-    if (is_page()
-        && !is_front_page()
-        && !is_page_template('services.php')
-        && !is_page_template('secure-yourself.php')
-        && !is_page_template('contact-us.php')
-        && !is_page_template('about-us.php')
-        && !is_page_template('privacy-policy.php')
-        && !is_page_template('booking.php')
+    /**
+     * 9️⃣ Fallback Generic Page
+     */
+    if (
+        is_page() &&
+        !is_front_page() &&
+        !is_page_template([
+            'services.php',
+            'secure-yourself.php',
+            'contact-us.php',
+            'about-us.php',
+            'privacy-policy.php',
+            'booking.php'
+        ])
     ) {
-        wp_register_style('generic-page', get_template_directory_uri() . '/assets/en/page.css', array('main'), '1.0.0', 'all');
-        wp_enqueue_style('generic-page');
+        dlc_enqueue_style('generic-page', '/assets/en/page.css', ['main']);
     }
-
-
-   
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_theme_css' );
+add_action('wp_enqueue_scripts', 'enqueue_theme_css');
+
 
 // Helper: Get top parent category
-
 function dlc_get_top_parent_category($cat_id) {
+    static $cache = array();
+    
+    if (isset($cache[$cat_id])) {
+        return $cache[$cat_id];
+    }
+    
     $term = get_term($cat_id);
+    if (is_wp_error($term)) {
+        return $term;
+    }
 
     while ($term->parent != 0) {
         $term = get_term($term->parent);
+        if (is_wp_error($term)) {
+            break;
+        }
     }
-
-    return $term; // This is the TOP parent
+    
+    $cache[$cat_id] = $term;
+    return $term;
 }
 
 /**
@@ -454,6 +446,8 @@ function dlc_get_top_parent_category($cat_id) {
  * @return string|null English slug of the top parent category, or null if not found
  */
 function dlc_get_category_type_slug($cat_id = null) {
+    static $cache = array();
+    
     if (!$cat_id) {
         $queried_object = get_queried_object();
         $cat_id = $queried_object->term_id ?? 0;
@@ -463,9 +457,14 @@ function dlc_get_category_type_slug($cat_id = null) {
         return null;
     }
     
+    if (isset($cache[$cat_id])) {
+        return $cache[$cat_id];
+    }
+    
     // Get top parent category
     $top_parent = dlc_get_top_parent_category($cat_id);
     if (!$top_parent || is_wp_error($top_parent)) {
+        $cache[$cat_id] = null;
         return null;
     }
     
@@ -481,12 +480,14 @@ function dlc_get_category_type_slug($cat_id = null) {
         if ($en_parent_id) {
             $en_parent = get_term($en_parent_id);
             if ($en_parent && !is_wp_error($en_parent)) {
+                $cache[$cat_id] = $en_parent->slug;
                 return $en_parent->slug;
             }
         }
     }
     
     // Return the slug (already English or fallback)
+    $cache[$cat_id] = $top_parent->slug;
     return $top_parent->slug;
 }
 
@@ -503,31 +504,34 @@ function dlc_localize_ajax_script($handle, $nonce_action = null) {
 }
 
 function enqueue_theme_scripts() {
+    // Cache directory URI
+    $theme_uri = get_template_directory_uri();
+    
     wp_enqueue_script( 'jquery' );
 
-    wp_register_script( 'bootstrap-js', get_template_directory_uri() . '/bootstrap/js/bootstrap.min.js', array( 'jquery' ), '4.5.2', true );
+    wp_register_script( 'bootstrap-js', $theme_uri . '/bootstrap/js/bootstrap.min.js', array( 'jquery' ), '4.5.2', true );
     wp_enqueue_script( 'bootstrap-js' );
 
-    wp_register_script( 'main-js', get_template_directory_uri() . '/assets/js/main.js', array(), '1.0.0', true );
+    wp_register_script( 'main-js', $theme_uri . '/assets/js/main.js', array(), '1.0.0', true );
     wp_enqueue_script( 'main-js' );
 
-    wp_register_script( 'scroll-animations', get_template_directory_uri() . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
+    wp_register_script( 'scroll-animations', $theme_uri . '/assets/js/scroll-animations.js', array(), '1.0.0', true );
     wp_enqueue_script( 'scroll-animations' );
 
     if ( is_page_template('contact-us.php')  ) {
-        wp_register_script( 'contact-us', get_template_directory_uri() . '/assets/js/contact-us.js', array(), '1.0.0', true );
+        wp_register_script( 'contact-us', $theme_uri . '/assets/js/contact-us.js', array(), '1.0.0', true );
         wp_enqueue_script( 'contact-us' );
         dlc_localize_ajax_script('contact-us');
     }
 
     if ( is_page_template('booking.php') ) {
-        wp_register_script( 'booking', get_template_directory_uri() . '/assets/js/booking.js', array('jquery'), '1.0.0', true );
+        wp_register_script( 'booking', $theme_uri . '/assets/js/booking.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'booking' );
         dlc_localize_ajax_script('booking');
     }
 
     if ( is_archive() || is_category() || is_tag() ) {
-        wp_register_script( 'archive-ajax', get_template_directory_uri() . '/assets/js/archive.js', array('jquery'), '1.0.0', true );
+        wp_register_script( 'archive-ajax', $theme_uri . '/assets/js/archive.js', array('jquery'), '1.0.0', true );
         wp_enqueue_script( 'archive-ajax' );
         dlc_localize_ajax_script('archive-ajax', 'archive_ajax_nonce');
         
@@ -544,27 +548,27 @@ function enqueue_theme_scripts() {
         }
         
         if ($is_international || $is_individual || $is_companies) {
-            wp_register_script( 'services-faq', get_template_directory_uri() . '/assets/js/services-faq.js', array(), '1.0.0', true );
+            wp_register_script( 'services-faq', $theme_uri . '/assets/js/services-faq.js', array(), '1.0.0', true );
             wp_enqueue_script( 'services-faq' );
         }
     }
 
     // Team archive page carousel
     if ( is_post_type_archive('team') ) {
-        wp_register_script( 'team-carousel', get_template_directory_uri() . '/assets/js/team.js', array(), '1.0.0', true );
+        wp_register_script( 'team-carousel', $theme_uri . '/assets/js/team.js', array(), '1.0.0', true );
         wp_enqueue_script( 'team-carousel' );
     }
 
     // Certificates and clients carousel (on front page)
     if ( is_front_page() ) {
-        wp_register_script( 'clients-certificates-carousel', get_template_directory_uri() . '/assets/js/clients-certificates.js', array(), '1.0.0', true );
+        wp_register_script( 'clients-certificates-carousel', $theme_uri . '/assets/js/clients-certificates.js', array(), '1.0.0', true );
         wp_enqueue_script( 'clients-certificates-carousel' );
     }
 
     // Services FAQ toggle for services page template
     if ( is_page_template('services.php') ) {
         if (!wp_script_is('services-faq', 'enqueued')) {
-            wp_register_script( 'services-faq', get_template_directory_uri() . '/assets/js/services-faq.js', array(), '1.0.0', true );
+            wp_register_script( 'services-faq', $theme_uri . '/assets/js/services-faq.js', array(), '1.0.0', true );
             wp_enqueue_script( 'services-faq' );
         }
     }
@@ -573,7 +577,7 @@ function enqueue_theme_scripts() {
     if ( is_single() && get_post_type() == 'post' ) {
         $service_type = dlc_get_service_type(get_the_ID());
         if ($service_type && !wp_script_is('services-faq', 'enqueued')) {
-            wp_register_script( 'services-faq', get_template_directory_uri() . '/assets/js/services-faq.js', array(), '1.0.0', true );
+            wp_register_script( 'services-faq', $theme_uri . '/assets/js/services-faq.js', array(), '1.0.0', true );
             wp_enqueue_script( 'services-faq' );
         }
     }
@@ -678,6 +682,29 @@ function dlc_resource_hints($urls, $relation_type) {
         return $urls;
     }
 
+    // Preconnect to Google Fonts for faster font loading
+    if ($relation_type === 'preconnect') {
+        $urls[] = array(
+            'href' => 'https://fonts.googleapis.com',
+        );
+        $urls[] = array(
+            'href' => 'https://fonts.gstatic.com',
+            'crossorigin' => 'anonymous',
+        );
+        
+        // Preconnect to Bootstrap CDN (if switching to CDN in future)
+        $urls[] = array(
+            'href' => 'https://cdn.jsdelivr.net',
+            'crossorigin' => 'anonymous',
+        );
+        
+        // Preconnect to Font Awesome CDN (if using CDN for webfonts)
+        $urls[] = array(
+            'href' => 'https://cdnjs.cloudflare.com',
+            'crossorigin' => 'anonymous',
+        );
+    }
+
     // If GTM is enabled, it loads from googletagmanager.com early.
     if (!empty(DLC_GTM_CONTAINER_ID)) {
         if ($relation_type === 'preconnect' || $relation_type === 'dns-prefetch') {
@@ -750,8 +777,156 @@ function dlc_output_meta_description() {
 add_action('wp_head', 'dlc_output_meta_description', 2);
 
 /**
+ * Output inline critical CSS for above-the-fold content
+ * Improves First Contentful Paint (FCP) and Largest Contentful Paint (LCP)
+ */
+function dlc_output_critical_css() {
+    if (is_admin()) {
+        return;
+    }
+    
+    $critical_css = '';
+    
+    // Critical CSS for all pages (header, navigation, base styles)
+    $critical_css .= ':root{--primary-blue:#1a3a5f;--light-blue:#2a5a8a;--dark-blue:#0d1f33;--white:#fff;--light-gray:#f5f5f5;--gray:#ddd;--dark-gray:#666;--text-dark:#333}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Cairo,sans-serif;line-height:1.6;color:var(--text-dark);overflow-x:hidden}.navbar{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:1000}.navbar-brand img{max-height:50px;width:auto}';
+    
+    // Page-specific critical CSS (without background gradients to avoid covering images)
+    if (is_front_page()) {
+        $critical_css .= '.hero{min-height:600px;color:#fff;display:flex;align-items:center;position:relative;overflow:hidden}.hero h1{font-size:3rem;font-weight:700;margin-bottom:1.5rem}.hero .lead{font-size:1.2rem;margin-bottom:2rem}';
+    } elseif (is_page_template('about-us.php')) {
+        $critical_css .= '.about-hero{min-height:400px;color:#fff;display:flex;align-items:center}.about-hero h1{font-size:2.5rem;font-weight:700}';
+    } elseif (is_page_template('contact-us.php')) {
+        $critical_css .= '.contact-hero{min-height:350px;color:#fff;display:flex;align-items:center}.contact-hero h1{font-size:2.5rem;font-weight:700}';
+    } elseif (is_page_template('services.php')) {
+        $critical_css .= '.services-hero{min-height:400px;color:#fff;display:flex;align-items:center}.services-hero h1{font-size:2.5rem;font-weight:700}';
+    } elseif (is_archive()) {
+        $obj = get_queried_object();
+        $id = $obj->term_id ?? 0;
+        if (function_exists('dlc_is_news_category') && dlc_is_news_category($id)) {
+            $critical_css .= '.news-hero{min-height:350px;position:relative;overflow:hidden;color:#fff}.news-hero h1{font-size:2.3rem;font-weight:700}';
+        } else {
+            $critical_css .= '.blog-hero{min-height:350px;position:relative;overflow:hidden;color:#fff}.blog-hero h1{font-size:2.3rem;font-weight:700}';
+        }
+    }
+    
+    if (!empty($critical_css)) {
+        echo '<style id="critical-css">' . $critical_css . '</style>' . "\n";
+    }
+}
+add_action('wp_head', 'dlc_output_critical_css', 0);
+
+/**
+ * Preload hero images with fetchpriority for improved LCP
+ */
+function dlc_preload_hero_images() {
+    if (is_admin()) {
+        return;
+    }
+    
+    $preload_image = '';
+    
+    if (is_front_page()) {
+        $preload_image = 'assets/images/Dag-team.webp';
+    } elseif (is_page_template('about-us.php')) {
+        // Update with actual about page hero image if different
+        $preload_image = 'assets/images/Dag-team.webp';
+    } elseif (is_page_template('contact-us.php')) {
+        // Update with actual contact page hero image if different
+        $preload_image = 'assets/images/Dag-team.webp';
+    } elseif (is_page_template('services.php')) {
+        // Update with actual services page hero image if different
+        $preload_image = 'assets/images/Dag-team.webp';
+    }
+    
+    if (!empty($preload_image)) {
+        $image_url = trailingslashit(get_template_directory_uri()) . ltrim($preload_image, '/');
+        echo '<link rel="preload" as="image" href="' . esc_url($image_url) . '" fetchpriority="high">' . "\n";
+    }
+}
+add_action('wp_head', 'dlc_preload_hero_images', 1);
+
+/**
+ * Add loading="lazy" and other optimization attributes to images
+ * Improves page load time by deferring below-the-fold images
+ */
+function dlc_optimize_images($content) {
+    if (is_admin() || is_feed()) {
+        return $content;
+    }
+    
+    // Don't process if content is empty
+    if (empty($content)) {
+        return $content;
+    }
+    
+    // Match all <img> tags
+    preg_match_all('/<img[^>]+>/i', $content, $matches);
+    
+    if (empty($matches[0])) {
+        return $content;
+    }
+    
+    foreach ($matches[0] as $img_tag) {
+        // Skip if already has loading attribute
+        if (strpos($img_tag, 'loading=') !== false) {
+            continue;
+        }
+        
+        // Skip images with specific classes that should load eagerly (hero images, logos)
+        if (strpos($img_tag, 'class="') !== false && 
+            (strpos($img_tag, 'hero-image') !== false || 
+             strpos($img_tag, 'logo') !== false ||
+             strpos($img_tag, 'eager') !== false)) {
+            continue;
+        }
+        
+        // Add lazy loading attributes
+        $new_img_tag = $img_tag;
+        
+        // Add loading="lazy"
+        $new_img_tag = str_replace('<img', '<img loading="lazy"', $new_img_tag);
+        
+        // Add decoding="async"
+        if (strpos($new_img_tag, 'decoding=') === false) {
+            $new_img_tag = str_replace('<img', '<img decoding="async"', $new_img_tag);
+        }
+        
+        // Add fetchpriority="low" for truly below-the-fold images
+        if (strpos($new_img_tag, 'fetchpriority=') === false) {
+            $new_img_tag = str_replace('<img', '<img fetchpriority="low"', $new_img_tag);
+        }
+        
+        // Replace in content
+        $content = str_replace($img_tag, $new_img_tag, $content);
+    }
+    
+    return $content;
+}
+add_filter('the_content', 'dlc_optimize_images', 20);
+add_filter('post_thumbnail_html', 'dlc_optimize_images', 20);
+
+/**
+ * DISABLED - Duplicate of dlc_resource_hints() filter above
+ * Add preconnect hints for external resources
+ * Improves connection time for fonts and external assets
+ */
+/*
+function dlc_add_resource_hints() {
+    if (is_admin()) {
+        return;
+    }
+    
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+}
+add_action('wp_head', 'dlc_add_resource_hints', 1);
+*/
+
+/**
+ * DISABLED - Duplicate of dlc_preload_hero_images() function above
  * Preload the front-page hero background image to improve LCP.
  */
+/*
 function dlc_preload_frontpage_hero_image() {
     if (is_admin()) {
         return;
@@ -766,10 +941,13 @@ function dlc_preload_frontpage_hero_image() {
     echo '<link rel="preload" as="image" href="' . esc_url($hero_url) . '" type="image/webp">' . "\n";
 }
 add_action('wp_head', 'dlc_preload_frontpage_hero_image', 1);
+*/
 
 /**
+ * DISABLED - Functionality merged into dlc_preload_hero_images() above
  * Preload hero images used as CSS backgrounds on key templates (improves LCP/FCP without layout changes).
  */
+/*
 function dlc_preload_template_hero_images() {
     if (is_admin()) {
         return;
@@ -790,6 +968,7 @@ function dlc_preload_template_hero_images() {
     }
 }
 add_action('wp_head', 'dlc_preload_template_hero_images', 1);
+*/
 
 /**
  * Helper: Get width/height for an image stored in the theme directory.
@@ -1146,8 +1325,15 @@ function dlc_truncate_excerpt($excerpt, $length) {
 
 // Helper: Get category with children IDs
 function dlc_get_category_tree_ids($category_slug) {
+    static $cache = array();
+    
+    if (isset($cache[$category_slug])) {
+        return $cache[$category_slug];
+    }
+    
     $category = get_category_by_slug($category_slug);
     if (!$category) {
+        $cache[$category_slug] = array();
         return array();
     }
     
@@ -1157,6 +1343,7 @@ function dlc_get_category_tree_ids($category_slug) {
         $category_ids = array_merge($category_ids, $children);
     }
     
+    $cache[$category_slug] = $category_ids;
     return $category_ids;
 }
 
@@ -1254,15 +1441,22 @@ function dlc_get_category_ids_by_type($category_type = 'blog', $include_children
 
 // Helper to determine service type (companies, individual, or home-international) for a given post
 function dlc_get_service_type($post_id = null) {
+    static $cache = array();
+    
     if (!$post_id) {
         $post_id = get_the_ID();
     }
     if (!$post_id) {
         return null;
     }
+    
+    if (isset($cache[$post_id])) {
+        return $cache[$post_id];
+    }
 
     $categories = get_the_category($post_id);
     if (empty($categories)) {
+        $cache[$post_id] = null;
         return null;
     }
 
@@ -1271,19 +1465,30 @@ function dlc_get_service_type($post_id = null) {
 
         switch ($top_slug) {
             case 'companies-services':
+                $cache[$post_id] = 'companies';
                 return 'companies';
             case 'individual-services':
-            return 'individual';
+                $cache[$post_id] = 'individual';
+                return 'individual';
             case 'home-international':
-            return 'home-international';
+                $cache[$post_id] = 'home-international';
+                return 'home-international';
         }
     }
 
+    $cache[$post_id] = null;
     return null;
 }
 
 // Helper to get all category IDs for a given service type and language
 function dlc_get_service_category_ids($service_type = 'companies', $language = 'en') {
+    static $cache = array();
+    $cache_key = $service_type . '_' . $language;
+    
+    if (isset($cache[$cache_key])) {
+        return $cache[$cache_key];
+    }
+    
     $base_slug_map = array(
         'individual'        => 'individual-services',
         'home-international'=> 'home-international',
@@ -1300,6 +1505,7 @@ function dlc_get_service_category_ids($service_type = 'companies', $language = '
         $parent_category = get_term_by('name', ucwords(str_replace('-', ' ', $base_slug)), 'category');
         
         if (!$parent_category) {
+            $cache[$cache_key] = array();
             return array();
         }
     }
@@ -1319,7 +1525,9 @@ function dlc_get_service_category_ids($service_type = 'companies', $language = '
         $category_ids = array_merge($category_ids, $children);
     }
 
-    return array_unique($category_ids);
+    $result = array_unique($category_ids);
+    $cache[$cache_key] = $result;
+    return $result;
 }
 
 // Helper to get the archive URL for services (companies, individual, or home-international) based on post language
@@ -1932,7 +2140,7 @@ function get_booking_services() {
             $services_query->the_post();
             $services[] = array(
                 'id' => get_the_ID(),
-                'title' => get_the_title(),
+                'title' => html_entity_decode(get_the_title(), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
                 'slug' => get_post_field('post_name', get_the_ID())
             );
         }
