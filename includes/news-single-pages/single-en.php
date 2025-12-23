@@ -98,32 +98,6 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="post-navigation-inline">
-                            <?php
-                            // Get previous/next posts filtered by English language and category type (news/blog)
-                            $prev_post = get_previous_post_by_language_and_category('en');
-                            $next_post = get_next_post_by_language_and_category('en');
-                            ?>
-                            <?php if ( $prev_post ) : ?>
-                                <a href="<?php echo get_permalink($prev_post->ID); ?>" class="nav-arrow nav-prev" title="<?php echo esc_attr(get_the_title($prev_post->ID)); ?>">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </a>
-                            <?php else : ?>
-                                <span class="nav-arrow nav-prev disabled">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                            <?php endif; ?>
-                            
-                            <?php if ( $next_post ) : ?>
-                                <a href="<?php echo get_permalink($next_post->ID); ?>" class="nav-arrow nav-next" title="<?php echo esc_attr(get_the_title($next_post->ID)); ?>">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </a>
-                            <?php else : ?>
-                                <span class="nav-arrow nav-next disabled">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </span>
-                            <?php endif; ?>
-                        </div>
                     </footer>
                 </article>
                 
@@ -192,13 +166,12 @@
         ?>
         
         <div class="back-to-posts">
-            <?php 
-            // Get the correct archive URL based on post type (news/blog) and language
-            $back_url = dlc_get_post_archive_url(get_the_ID(), 'en');
+            <?php
+            $back_url = wp_validate_redirect(wp_get_referer(), home_url('/'));
             ?>
-            <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
+            <a href="<?php echo esc_url($back_url); ?>" class="back-btn" onclick="if (window.history.length > 1) { history.back(); } else { window.location.href = this.href; } return false;">
                 <i class="fa-solid fa-arrow-left"></i>
-                Back to All News
+                Go Back
             </a>
         </div>
     </div>

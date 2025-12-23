@@ -1,7 +1,7 @@
 <?php
 // Get WhatsApp URL and Phone from ACF fields
 // For ACF Free: Use a dedicated settings page ID (update this with your page ID)
-$settings_page_id = 539; // Settings page ID
+$settings_page_id = 11334; // Settings page ID
 
 // Try settings page first, then current page/post, then options (if Pro)
 $whatsapp = '';

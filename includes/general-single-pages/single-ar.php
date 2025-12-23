@@ -106,59 +106,6 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="post-navigation-inline">
-                            <?php
-                            // Get previous/next posts in the same language using Polylang
-                            $prev_post = null;
-                            $next_post = null;
-                            
-                            if (function_exists('pll_current_language')) {
-                                $current_lang = pll_current_language();
-                                // Get posts in same language, same category if possible
-                                $post_categories = wp_get_post_categories(get_the_ID());
-                                $category_id = !empty($post_categories) ? $post_categories[0] : 0;
-                                
-                                // Use WordPress adjacent posts with Polylang filter
-                                $prev_post = get_previous_post(true, '', 'category');
-                                $next_post = get_next_post(true, '', 'category');
-                                
-                                // Verify language matches
-                                if ($prev_post && function_exists('pll_get_post_language')) {
-                                    if (pll_get_post_language($prev_post->ID) !== $current_lang) {
-                                        $prev_post = null;
-                                    }
-                                }
-                                if ($next_post && function_exists('pll_get_post_language')) {
-                                    if (pll_get_post_language($next_post->ID) !== $current_lang) {
-                                        $next_post = null;
-                                    }
-                                }
-                            } else {
-                                // Fallback: use standard adjacent posts
-                                $prev_post = get_previous_post(true);
-                                $next_post = get_next_post(true);
-                            }
-                            ?>
-                            <?php if ( $next_post ) : ?>
-                                <a href="<?php echo get_permalink($next_post->ID); ?>" class="nav-arrow nav-next" title="<?php echo esc_attr(get_the_title($next_post->ID)); ?>">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </a>
-                            <?php else : ?>
-                                <span class="nav-arrow nav-next disabled">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </span>
-                            <?php endif; ?>
-                            
-                            <?php if ( $prev_post ) : ?>
-                                <a href="<?php echo get_permalink($prev_post->ID); ?>" class="nav-arrow nav-prev" title="<?php echo esc_attr(get_the_title($prev_post->ID)); ?>">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </a>
-                            <?php else : ?>
-                                <span class="nav-arrow nav-prev disabled">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                            <?php endif; ?>
-                        </div>
                     </footer>
                 </article>
                 
@@ -227,24 +174,12 @@
         ?>
         
         <div class="back-to-posts">
-            <?php 
-            // Get the first category of the post for the back link
-            $categories = get_the_category();
-            $back_url = home_url();
-            $back_text = 'العودة إلى المنشورات';
-            
-            if (!empty($categories)) {
-                $first_category = $categories[0];
-                $back_url = get_category_link($first_category->term_id);
-                $back_text = 'العودة إلى ' . esc_html($first_category->name);
-            } elseif (function_exists('pll_home_url')) {
-                $back_url = pll_home_url('ar');
-                $back_text = 'العودة إلى الرئيسية';
-            }
+            <?php
+            $back_url = wp_validate_redirect(wp_get_referer(), home_url('/'));
             ?>
-            <a href="<?php echo esc_url($back_url); ?>" class="back-btn">
+            <a href="<?php echo esc_url($back_url); ?>" class="back-btn" onclick="if (window.history.length > 1) { history.back(); } else { window.location.href = this.href; } return false;">
                 <i class="fa-solid fa-arrow-left"></i>
-                <?php echo $back_text; ?>
+                العودة
             </a>
         </div>
     </div>
