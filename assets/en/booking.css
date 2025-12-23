@@ -148,6 +148,13 @@
     z-index: 100;
 }
 
+.booking-home-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
 .language-switch-btn {
     display: flex;
     align-items: center;
@@ -206,6 +213,7 @@
 
 /* Service Type Selection */
 #service-type-selection h1 {
+    
     color: var(--white);
     font-size: 32px;
     margin-bottom: 40px;
@@ -253,7 +261,7 @@
 
 /* Form Header */
 .form-header {
-    margin-top: 30px;
+    margin-top: 40px !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -643,6 +651,10 @@
         max-width: 100%;
     }
 
+    #booking-form-container {
+        padding-top: 60px;
+    }
+
     .progress-steps {
         padding: 0 10px;
     }
@@ -676,6 +688,11 @@
     .booking-language-switcher {
         top: 15px;
         right: 15px;
+    }
+    
+    .booking-home-button {
+        top: 15px;
+        left: 15px;
     }
     
     .language-switch-btn {

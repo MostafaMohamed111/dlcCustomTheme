@@ -9,39 +9,10 @@ define('DLC_EXCERPT_LENGTH_POST', 300);
 // Set your GTM Container ID here (format: GTM-XXXXXX)
 define('DLC_GTM_CONTAINER_ID', 'GTM-KZW8JTF2'); // Leave empty until GTM is ready
 
-// Browser Language Detection & Redirect
-// Redirects Arabic-speaking visitors to Arabic homepage on first visit
-function dlc_redirect_by_browser_language() {
-    if (!is_front_page() || !function_exists('pll_current_language')) {
-        return;
-    }
-
-    if (isset($_COOKIE['pll_language']) || isset($_GET['lang_override'])) {
-        return;
-    }
-
-    $current = pll_current_language();
-    $default = pll_default_language();
-
-    if ($current !== $default) {
-        return;
-    }
-
-    $lang = '';
-    if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-        $lang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
-    }
-
-    if ($lang === 'ar' && $current === 'en') {
-        $target = pll_home_url('ar');
-        if ($target) {
-            setcookie('pll_language', 'ar', time() + YEAR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN);
-            wp_redirect($target);
-            exit;
-        }
-    }
-}
-add_action('template_redirect', 'dlc_redirect_by_browser_language');
+// Browser language redirect removed: Arabic is the site's main front page now.
+// The previous `dlc_redirect_by_browser_language` was intentionally removed
+// to avoid automatic client-side redirects. If needed later, restore from
+// version control and ensure redirects are implemented safely.
 
 // Enqueue browser translation detection script
 function dlc_enqueue_translation_detector() {

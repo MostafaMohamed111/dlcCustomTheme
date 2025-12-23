@@ -110,6 +110,14 @@
     </div>
 
     <div class="form-sector col-lg-6">
+        <!-- Home Button -->
+        <div class="booking-home-button">
+            <a href="<?php echo esc_url(home_url()); ?>" class="language-switch-btn" title="Go to Home Page">
+                <i class="fa-solid fa-home"></i>
+                <span>Home</span>
+            </a>
+        </div>
+        
         <!-- Language Switcher -->
         <div class="booking-language-switcher">
             <?php

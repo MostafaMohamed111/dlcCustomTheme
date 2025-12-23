@@ -4,7 +4,7 @@
 
 <div class="hero-international">
     <div class="hero-content-international">
-        <h1 class="hero-company-international">شركة داج للمحاماة والاستشارات القانونية</h1>
+        <h1 class="hero-company-international">شركة داغ للمحاماة والاستشارات القانونية</h1>
         <h2 class="hero-title-international">شريكك القانوني الموثوق <br><span>للأعمال</span> عالمياً</h2>
         <p class="hero-subtitle-international lead">حلول قانونية متخصصة تلبي احتياجاتك.
         </p>

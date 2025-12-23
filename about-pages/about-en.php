@@ -51,11 +51,14 @@ get_header(); ?>
     <div class="container">
         <div class="about-dag" id="about-dag">
             <h2>About Dag</h2>
-            <p class="lead">
-                Learn more about Dag Legal Firm, founded by attorney Mohammed Dagistani in Riyadh, Saudi Arabia. A trusted Saudi law firm offering over 80 legal and consultancy services for individuals and companies with professional excellence and deep legal expertise.
-            </p>
+
 
             <div class="paragraph">
+
+                <p >
+                    Learn more about Dag Legal Firm, founded by attorney Mohammed Dagistani in Riyadh, Saudi Arabia. A trusted Saudi law firm offering over 80 legal and consultancy services for individuals and companies with professional excellence and deep legal expertise.
+                </p>
+
                 <p>Dag Legal Firm, founded by attorney Mohammed Dagistani and based in Riyadh, Saudi Arabia, is a licensed law firm specializing in providing comprehensive legal and consultancy services for individuals and businesses across the Kingdom.
                     The firm’s foundation is built on professional integrity, accuracy, and strict compliance with Saudi legal systems and regulations.
                 </p>

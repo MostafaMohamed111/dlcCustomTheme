@@ -64,7 +64,7 @@ $dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions')
                         if ($switcher) :
                         ?>
                         <a href="<?php echo esc_url($switcher['url']); ?>" aria-label="Switch language">
-                            <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon" width="28" height="28" decoding="async">
+                            <img class="arabic-img" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/saudiflag.webp' ); ?>" alt="Saudi Flag" width="28" height="28" decoding="async">
                         </a>
                         <?php endif; ?>
                     </div>
@@ -106,7 +106,7 @@ $dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions')
                         if ($home_international_category) {
                             $international_url = get_category_link($home_international_category->term_id);
                         }
-                        $button_text = 'International';
+                        $button_text = 'Foreign enterprise services';
                         $button_url = $international_url;
                         $button_icon = 'fa-solid fa-globe';
                     }
@@ -171,7 +171,7 @@ $dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions')
                             if ($switcher) :
                             ?>
                             <a href="<?php echo esc_url($switcher['url']); ?>" aria-label="Switch language">
-                                <img src="<?php echo esc_url($switcher['icon']); ?>" alt="Language Icon" class="language-icon" width="28" height="28" decoding="async">
+                                <img class ="arabic-img" src="<?php echo esc_url( get_template_directory_uri() . '/assets/images/saudiflag.webp' ); ?>" alt="Saudi Flag" class="language-icon" width="28" height="28" decoding="async">
                             </a>
                             <?php endif; ?>
                         </div>
@@ -238,7 +238,7 @@ $dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions')
                                 if ($home_international_category) {
                                     $international_url = get_category_link($home_international_category->term_id);
                                 }
-                                $button_text = 'International';
+                                $button_text = 'Foreign enterprise services';
                                 $button_url = $international_url;
                                 $button_icon = 'fa-solid fa-globe';
                             }

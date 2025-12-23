@@ -120,7 +120,7 @@ $dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions')
                             }
                             $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
                         }
-                        $button_text = 'دولي';
+                        $button_text = 'خدمات لشركات اجنبية';
                         $button_url = $international_url;
                         $button_icon = 'fa-solid fa-globe';
                     }
@@ -266,7 +266,7 @@ $dlc_logo_dims = function_exists('dlc_get_theme_image_dimensions')
                                     }
                                     $international_url = $home_international_category ? get_category_link($home_international_category->term_id) : '#';
                                 }
-                                $button_text = 'دولي';
+                                $button_text = 'خدمات لشركات اجنبية';
                                 $button_url = $international_url;
                                 $button_icon = 'fa-solid fa-globe';
                             }
