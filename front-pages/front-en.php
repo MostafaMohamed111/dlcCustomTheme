@@ -26,7 +26,7 @@ if (function_exists('get_field')) {
         </div>
         <div class="hero-content">
             <h1 class="hero-company">Dag 
-            <span class="hero-title">Law Firm & Legal Consultations</span></h1>
+            <span> Law Firm & Legal Consultations</span></h1>
             <p class="hero-subtitle">A Digital Legal Platform For Accurate Solutions</p>
             <div class="hero-buttons" aria-label="Primary actions">
                 <a href="<?php echo esc_url(home_url('/booking')); ?>" class="btn-primary">Book Now <i class="fas fa-calendar-check"></i> </a>

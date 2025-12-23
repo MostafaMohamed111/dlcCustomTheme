@@ -295,7 +295,7 @@ section {
     }
 
     .hero-company {
-        font-size: 56px;
+        font-size: 56px !important;
     }
 
     .hero-title {
@@ -312,6 +312,8 @@ section {
 }
 
 @media (max-width: 767.98px) {
+
+  
     
     section {
         padding: 40px 0;
@@ -353,8 +355,8 @@ section {
     }
 
     .hero-company {
-        font-size: 42px;
-        padding-top: 20px;
+        font-size: 42px !important;
+        padding-top: 20px !important;
     }
 
     .hero-title {
@@ -429,8 +431,8 @@ section {
     }
     
     .hero-company {
-        font-size: 36px;
-        padding-top: 10px;
+        font-size: 36px !important;
+        padding-top: 10px !important;
     }
     
     .hero-title {
