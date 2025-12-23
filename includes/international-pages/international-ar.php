@@ -267,7 +267,8 @@
                         while ($services_query->have_posts()) : $services_query->the_post();
                             get_template_part('includes/service-card', null, array(
                                 'button_text' => 'اقرأ المزيد',
-                                'excerpt_length' => 120
+                                'excerpt_length' => 120,
+                                'current_category_id' => $current_category > 0 ? $current_category : $parent_category->term_id
                             ));
                             endwhile;
                             ?>

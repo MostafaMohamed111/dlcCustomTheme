@@ -25,7 +25,7 @@ if (function_exists('get_field')) {
                  decoding="async"        >
         </div>
         <div class="hero-content">
-            <h1 class="hero-company">Dag <br>
+            <h1 class="hero-company">Dag 
             <span class="hero-title">Law Firm & Legal Consultations</span></h1>
             <p class="hero-subtitle">A Digital Legal Platform For Accurate Solutions</p>
             <div class="hero-buttons" aria-label="Primary actions">

@@ -2635,11 +2635,16 @@ function load_archive_posts_ajax() {
         }
         
         if ($is_services_page) :
+            // Determine badge category: use filtered category, or parent if showing all
+            $badge_category_id = $category_id > 0 ? $category_id : (isset($parent_category) ? $parent_category->term_id : 0);
             ?>
             <div class="services-grid">
             <?php
             while ($archive_query->have_posts()) : $archive_query->the_post();
-                get_template_part('includes/service-card', null, array('button_text' => $read_more_text));
+                get_template_part('includes/service-card', null, array(
+                    'button_text' => $read_more_text,
+                    'current_category_id' => $badge_category_id
+                ));
             endwhile;
             ?>
         </div>
@@ -2796,10 +2801,6 @@ function load_archive_posts_ajax() {
                                 <span class="post-date">
                                     <i class="fa-solid fa-calendar"></i>
                                     <?php echo get_the_date(); ?>
-                                </span>
-                                <span class="post-author">
-                                    <i class="fa-solid fa-user"></i>
-                                    <?php the_author(); ?>
                                 </span>
                             </div>
                             

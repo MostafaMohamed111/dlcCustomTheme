@@ -269,7 +269,10 @@ get_header('ar'); ?>
                 <div class="services-grid" id="services-grid">
                     <?php
                     while ($posts_query->have_posts()) : $posts_query->the_post();
-                        get_template_part('includes/service-card', null, array('button_text' => 'اقرأ المزيد'));
+                        get_template_part('includes/service-card', null, array(
+                            'button_text' => 'اقرأ المزيد',
+                            'current_category_id' => $category_id > 0 ? $category_id : $parent_category_id
+                        ));
                     endwhile;
                     wp_reset_postdata();
                     ?>

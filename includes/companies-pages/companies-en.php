@@ -173,7 +173,10 @@
                             <div class="services-grid" id="services-grid">
                         <?php
                         while ($services_query->have_posts()) : $services_query->the_post();
-                            get_template_part('includes/service-card', null, array('button_text' => 'Read More'));
+                            get_template_part('includes/service-card', null, array(
+                                'button_text' => 'Read More',
+                                'current_category_id' => $current_category > 0 ? $current_category : $parent_category->term_id
+                            ));
                         endwhile;
                             ?>
                             </div>

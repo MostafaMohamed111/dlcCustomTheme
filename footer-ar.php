@@ -59,7 +59,7 @@
         <hr class="footer-divider">
         <div class="row footer-bottom gy-3 align-items-center">
             <div class="col-12 text-center">
-                <small class="footer-copy">   جميع الحقوق محفوظة شركة داغ للمحاماة والاستشارات القانونية &copy; <?php echo date('Y'); ?>    </small>
+                <small class="footer-copy">   جميع الحقوق محفوظة شركة داغ للمحاماة والاستشارات القانونية &copy; <?php echo current_time('Y'); ?>    </small>
                 <div class="footer-developer-credit">
                     <small>Website developed by <a href="https://mostafa-elbebany.netlify.app/" target="_blank" rel="noopener noreferrer">Mostafa Elbebany</a></small>
                 </div>

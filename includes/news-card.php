@@ -41,10 +41,7 @@ $args = wp_parse_args($args ?? array(), array(
                 <i class="fa-solid fa-calendar"></i>
                 <?php echo get_the_date(); ?>
             </span>
-            <span class="news-author">
-                <i class="fa-solid fa-user"></i>
-                <?php the_author(); ?>
-            </span>
+      
         </div>
         
         <h3 class="news-title">

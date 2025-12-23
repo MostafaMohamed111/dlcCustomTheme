@@ -30,10 +30,7 @@
                                     <i class="fa-solid fa-calendar"></i>
                                     <?php echo get_the_date(); ?>
                                 </span>
-                                <span class="post-author">
-                                    <i class="fa-solid fa-user"></i>
-                                    <?php the_author(); ?>
-                                </span>
+    
                                 <span class="post-reading-time">
                                     <i class="fa-solid fa-clock"></i>
                                     <?php echo ceil(str_word_count(get_the_content()) / 200); ?> دقيقة قراءة

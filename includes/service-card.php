@@ -11,7 +11,8 @@
 
 $args = wp_parse_args($args ?? array(), array(
     'button_text' => 'Read More',
-    'excerpt_length' => DLC_EXCERPT_LENGTH_SERVICE
+    'excerpt_length' => DLC_EXCERPT_LENGTH_SERVICE,
+    'current_category_id' => 0  // Pass the contextual category ID for badge display
 ));
 ?>
 
@@ -29,9 +30,29 @@ $args = wp_parse_args($args ?? array(), array(
             </a>
             <div class="service-category-badge">
                 <?php
-                $categories = get_the_category();
-                if (!empty($categories)) {
-                    echo esc_html($categories[0]->name);
+                // Display contextual category badge based on current filter/page
+                $badge_category = null;
+                
+                // If a current category is specified (from filtration), use it
+                if (!empty($args['current_category_id'])) {
+                    $badge_category = get_category($args['current_category_id']);
+                    // Verify this post actually has this category
+                    if ($badge_category && !has_category($badge_category->term_id)) {
+                        $badge_category = null;
+                    }
+                }
+                
+                // Fallback to first category if no contextual category
+                if (!$badge_category) {
+                    $categories = get_the_category();
+                    if (!empty($categories)) {
+                        $badge_category = $categories[0];
+                    }
+                }
+                
+                // Display the badge
+                if ($badge_category) {
+                    echo esc_html($badge_category->name);
                 }
                 ?>
             </div>
