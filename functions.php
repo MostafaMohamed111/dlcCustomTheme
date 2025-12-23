@@ -580,6 +580,13 @@ function enqueue_theme_scripts() {
             wp_register_script( 'services-faq', $theme_uri . '/assets/js/services-faq.js', array(), '1.0.0', true );
             wp_enqueue_script( 'services-faq' );
         }
+        
+        // Enqueue AJAX comment handler for blog posts
+        if (comments_open() || get_comments_number()) {
+            wp_register_script( 'comments-ajax', $theme_uri . '/assets/js/comments.js', array('jquery'), '1.0.0', true );
+            wp_enqueue_script( 'comments-ajax' );
+            dlc_localize_ajax_script('comments-ajax');
+        }
     }
 }
 
@@ -2152,6 +2159,81 @@ function get_booking_services() {
 
 add_action('wp_ajax_submit_booking_form', 'handle_booking_form_submission');
 add_action('wp_ajax_nopriv_submit_booking_form', 'handle_booking_form_submission');
+
+// Custom Comment Submission Handler (bypasses wp-comments-post.php for GoDaddy firewall)
+add_action('wp_ajax_submit_comment', 'dlc_handle_comment_submission');
+add_action('wp_ajax_nopriv_submit_comment', 'dlc_handle_comment_submission');
+
+function dlc_handle_comment_submission() {
+    // Verify nonce
+    if (!isset($_POST['comment_nonce']) || !wp_verify_nonce($_POST['comment_nonce'], 'comment_nonce')) {
+        wp_send_json_error(array('message' => 'Security check failed.'));
+    }
+
+    $post_id = isset($_POST['comment_post_ID']) ? intval($_POST['comment_post_ID']) : 0;
+    $parent_id = isset($_POST['comment_parent']) ? intval($_POST['comment_parent']) : 0;
+    $author = isset($_POST['author']) ? sanitize_text_field($_POST['author']) : '';
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    $content = isset($_POST['comment']) ? trim($_POST['comment']) : '';
+
+    // Validate required fields
+    if (empty($post_id) || empty($content)) {
+        wp_send_json_error(array('message' => 'Missing required fields.'));
+    }
+
+    if (get_option('require_name_email')) {
+        if (empty($author) || empty($email)) {
+            wp_send_json_error(array('message' => 'Name and email are required.'));
+        }
+    }
+
+    if (!empty($email) && !is_email($email)) {
+        wp_send_json_error(array('message' => 'Invalid email address.'));
+    }
+
+    // Check if post exists and comments are open
+    $post = get_post($post_id);
+    if (!$post || !comments_open($post_id)) {
+        wp_send_json_error(array('message' => 'Comments are closed for this post.'));
+    }
+
+    // Prepare comment data
+    $comment_data = array(
+        'comment_post_ID' => $post_id,
+        'comment_content' => $content,
+        'comment_parent' => $parent_id,
+        'comment_author' => $author,
+        'comment_author_email' => $email,
+        'comment_author_url' => '',
+        'comment_type' => 'comment',
+        'comment_approved' => 0, // Will go through moderation
+    );
+
+    // Add user ID if logged in
+    if (is_user_logged_in()) {
+        $user = wp_get_current_user();
+        $comment_data['user_id'] = $user->ID;
+        $comment_data['comment_author'] = $user->display_name;
+        $comment_data['comment_author_email'] = $user->user_email;
+    }
+
+    // Insert comment
+    $comment_id = wp_insert_comment($comment_data);
+
+    if ($comment_id) {
+        // Check if comment was auto-approved
+        $comment = get_comment($comment_id);
+        $is_approved = ($comment->comment_approved == '1');
+
+        wp_send_json_success(array(
+            'message' => $is_approved ? 'Comment posted successfully!' : 'Your comment is awaiting moderation.',
+            'approved' => $is_approved,
+            'comment_id' => $comment_id
+        ));
+    } else {
+        wp_send_json_error(array('message' => 'Failed to submit comment. Please try again.'));
+    }
+}
 
 function handle_booking_form_submission() {
     // Verify nonce

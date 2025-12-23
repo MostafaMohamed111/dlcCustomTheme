@@ -235,10 +235,10 @@
                             comment_form( array(
                                 'title_reply'          => '',
                                 'label_submit'         => 'تعليق',
-                                'class_form'           => 'comment-form-styled',
+                                'class_form'           => 'comment-form-styled ajax-comment-form',
                                 'class_submit'         => 'comment-submit-btn',
                                 'comment_notes_before' => '',
-                                'comment_notes_after'  => '',
+                                'comment_notes_after'  => '<input type="hidden" name="comment_nonce" value="' . wp_create_nonce('comment_nonce') . '">',
                                 'logged_in_as'         => '',
                                 'fields'               => $fields,
                                 'comment_field'        => '<div class="comment-form-field">
