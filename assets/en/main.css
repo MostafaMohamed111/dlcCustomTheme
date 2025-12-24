@@ -35,7 +35,15 @@ body {
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+/* Prevent right-side header actions from shrinking and wrapping */
+.nav-right > a,
+.nav-right .sign-in-dropdown {
+    flex: 0 0 auto;
 }
 
 
@@ -163,6 +171,8 @@ nav {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    white-space: nowrap;
+    font-size: 0.9rem;
 }
 
 .btn-define:hover {
@@ -369,8 +379,9 @@ nav {
 }
 
 .sign-in-toggle {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    white-space: nowrap;
 }
 
 .dropdown-chevron {

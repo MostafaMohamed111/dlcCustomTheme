@@ -61,7 +61,7 @@
             <div class="col-12 text-center">
                 <small class="footer-copy">   جميع الحقوق محفوظة شركة داغ للمحاماة والاستشارات القانونية &copy; <?php echo current_time('Y'); ?>    </small>
                 <div class="footer-developer-credit">
-                    <small>Website developed by <a href="https://mostafa-elbebany.netlify.app/" target="_blank" rel="noopener noreferrer">Mostafa Elbebany</a></small>
+                    <small>Website developed by <a href="https://wildotz.com/" target="_blank" rel="noopener noreferrer">WILDOTZ</a></small>
                 </div>
             </div>
             <div class="col-12 d-flex justify-content-center align-items-center gap-3">

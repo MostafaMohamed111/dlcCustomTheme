@@ -18,7 +18,7 @@ if (function_exists('get_field')) {
     <section class="hero">
         <?php $dlc_hero_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/Dag-team.webp') : null; ?>
         <div class="hero-background" aria-hidden="true">
-            <img src="<?php echo get_template_directory_uri(); ?>/assets/images/Dag-team.webp"
+            <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/Dag-team.webp"
                  alt=""
                  fetchpriority="high"
                  loading="eager"
@@ -74,7 +74,7 @@ if (function_exists('get_field')) {
                 </div>
                 <div class="col-lg-6 col-md-12 about-image">
                     <?php $dlc_justice_dims = function_exists('dlc_get_theme_image_dimensions') ? dlc_get_theme_image_dimensions('assets/images/Justice.webp') : null; ?>
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/Justice.webp"
+                    <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/Justice.webp"
                          alt="Blindfolded statue of justice holding scales"
                          class="about-img"
                          loading="lazy"
@@ -90,7 +90,7 @@ if (function_exists('get_field')) {
 
 
     <!-- Parallax Divider -->
-    <section class="parallax-divider" style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/images/Riydah.webp');">
+    <section class="parallax-divider" style="background-image: url('<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/Riydah.webp');">
         <div class="parallax-overlay"></div>
     </section>
 
